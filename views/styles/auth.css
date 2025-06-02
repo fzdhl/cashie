@@ -1,0 +1,278 @@
+*,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    background-color: #6A9C89;
+
+    gap: 30px;
+    padding-left: 30px;
+    padding-top: 40px;
+    padding-bottom: 30px;
+    padding-right: 30px;
+    background-color: 4;
+    box-shadow: 0 0 10px rgba(151, 146, 146, 0.3);
+    border-radius: 7px;
+}
+
+.login-leftside {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+
+    
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.login-icon {
+    width: 150px;
+
+    margin-bottom: 20px;
+}
+
+.login-leftside h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 48px;
+    font-weight: 500;
+
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.login-leftside p {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+
+    /* margin-bottom: 20px; */
+}
+
+.login-rightside {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 7px;
+    background-color: white;
+
+    gap: 5px;
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-rightside__username, .login-rightside__password, .login-rightside__name, .login-rightside__email, .login-rightside__confirm-password {
+    border-radius: 5px;
+    border-style: none;
+    background-color: rgba(192, 192, 192, 0.3);
+
+    width: 250px;
+    height: 30px;
+    padding: 5px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.login-rightside__submit {
+    border-radius: 5px;
+    border-style: none;
+    background-color: black;
+
+    color: white;
+    cursor: pointer;
+
+    width: 100px;
+    height: 35px;
+    margin-top: 15px;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    justify-content: center;
+    align-self: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.login-rightside__recover {
+    text-decoration: none;
+    color: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8px;
+
+    justify-content: end;
+    align-self: flex-end;
+    margin-top: px;
+}
+
+.login-rightside__description {
+    display: flex;
+    flex-direction: row;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+
+    justify-content: center;
+    gap: 5px;
+
+    padding-top: 5px;
+}
+
+.login-rightside__description a {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* .login-rightside__description p {} */
+
+.login-rightside__submit:hover {
+    background-color: #333;
+    transform: scale(0.95);
+}
+
+.login-rightside__account {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.login-rightside__account-text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #333;
+
+}
+
+.login-rightside__account-logo {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    gap: 20px;
+
+    padding-top: 10px;
+}
+
+.login-rightside__account-logo .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 65px;
+    height: 40px;
+
+    background-color: #fff;
+    border: 1.8px solid #6A9C89;
+    border-radius: 10px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    /* Efek bayangan */
+    transition: transform 0.2s, box-shadow 0.2s;
+    /* Animasi hover */
+    cursor: pointer;
+}
+
+.logo-container img {
+    display: block;
+    margin: 0 auto;
+}
+
+.account-logo_google {
+    width: 23px;
+    height: 23px;
+}
+
+.account-logo_gmail {
+    width: 25px;
+    height: 25px;
+}
+
+.account-logo_apple {
+    width: 27px;
+    height: 27px;
+}
+
+/* .login-rightside__account-logo img {
+    width: 30px;
+    height: 30px;
+} */
+
+.login-rightside__account-logo .logo-container:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.login-rightside__username:hover,
+.login-rightside__password:hover {
+    background-color: rgba(192, 192, 192, 0.5);
+}
+
+/* .login-rightside__username::placeholder,
+.login-rightside__password::placeholder {
+    color: #555;
+    font-style: italic;
+} */
+
+/* footer {
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+}    */
+
+/* .body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+} */
+
+@media screen and (min-width: 768px) {
+    .login {
+        flex-direction: row;
+        padding-top: 30px;
+    }
+
+    .login-leftside {
+        margin-top: 5%;
+        align-self: flex-start;
+        /* align-items: flex-start; */
+    }
+
+    .login-leftside h1 {
+        padding-top: 10%;
+    }
+
+    .login-icon {
+        padding-top: 0px;
+        width: 200px;
+        margin-bottom: 20px;
+    }
+}

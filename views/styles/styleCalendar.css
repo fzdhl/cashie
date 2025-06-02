@@ -1,0 +1,178 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef8f3;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar {
+    /* max-width: 75%; */
+    max-width: 350px;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-bottom: 50px;
+
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px;
+}
+
+.monthYear {
+    text-align: center;
+    font-weight: 600;
+    width: 150px;
+}
+
+.header button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7,1fr);
+}
+
+.day {
+    text-align: center;
+    padding: 5px;
+    color: #999fa6;
+    font-weight: 500;
+}
+
+.dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    margin: auto;
+
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 50%;
+    
+    width: 40px;
+    height: 40px; 
+
+    transition: 0.2s;
+}
+
+.calendar__text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.calendar__text__outcomes {
+    color: #C5172E;
+}
+
+.calendar__text__incomes {
+    color: #B3D8A8;
+}
+
+
+.date:hover, .date.active {
+    background: #6A9C89;
+    color: #fff;
+}
+
+.date.inactive {
+    color: #d2d2d2d2;
+}
+
+.date.inactive:hover {
+    color: #fff;
+}
+
+.description__container {
+  width: 350px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.description__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.description__row {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* jarak antar elemen */
+  margin-top: 10px;
+
+  justify-content: space-around;
+}
+
+.icon-small {
+  width: 20px;
+  height: auto;
+}
+
+.description__item {
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+}
+
+.description__timestamp {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
+
+
+.description__money,
+.description__datenow {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.description__table-timestmp {
+    display: flex;
+    flex-direction: column;
+}
