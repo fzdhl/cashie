@@ -103,7 +103,7 @@
         // AJAX Filter
         document.getElementById('searchInput').addEventListener('input', function() {
             const searchValue = this.value;
-            fetch(/arsip/filter?search=${encodeURIComponent(searchValue)})
+            fetch(/arsip/filter?search=$:{encodeURIComponent:(searchValue)})
                 .then(response => response.json())
                 .then(data => updateTable(data));
         });
