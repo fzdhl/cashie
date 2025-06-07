@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction Categories</title>
-    <link rel="stylesheet" href="views/styles/kategori.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="views/styles/kategori.css">
 
 </head>
 <body>
@@ -15,8 +15,8 @@
 
     <main class="container main-content">
         <div class="categories-header">
-            <h2>Transaction Categories</h2>
-            <button id="addCategoryBtn" class="btn-primary">
+            <h2 class="fw-bold text-center text-md-start mb-3 mb-md-0">Transaction Categories</h2>
+            <button id="addCategoryBtn" class="btn btn-success">
                 <i class="fas fa-plus"></i> Add Category
             </button>
         </div>
@@ -81,5 +81,7 @@
     <?php include_once "footer.php" ?>
 
     <script src="views/scripts/kategori.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

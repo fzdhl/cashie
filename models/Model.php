@@ -15,5 +15,4 @@
                 die('Database connection failure');
             }
         }
-    
     }

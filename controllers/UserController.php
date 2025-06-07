@@ -47,7 +47,10 @@
             if ($result) {
                 $this->loadView("register", ['error' => 'Username already exists.']);
             } else {
-                $result = $model->createUser($user, $pass, $email);
+                $model->createUser($user, $pass, $email);
+                $userData = $model->getByUsername($user);
+                $model = $this->loadModel('Profile');
+                $model->createProfile($userData->user_id);
                 header("Location: ?c=UserController&m=loginView");
             }
         }
