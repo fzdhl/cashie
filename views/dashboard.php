@@ -15,9 +15,6 @@
   <main class="container my-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 header-date-row">
       <h2 class="fw-bold text-center text-md-start mb-3 mb-md-0">Dashboard</h2>
-      <div class="ms-md-3 w-100 w-md-auto">
-        <input type="month" class="form-control">
-      </div>
     </div>
 
     <div class="row g-3 g-md-4 mb-4">
