@@ -15,13 +15,11 @@
     <h1 class="judul">Kelola Profil Akun Anda</h1>
 
     <section class="profil-box">
-      <form class="profil-form" action="?c=ProfileController&m=updateProfile">
+      <form class="profil-form" action="?c=ProfileController&m=updateProcess" method="post" enctype="multipart/form-data">
         <div class="profil-foto">
-          <img src="default-avatar.png" alt="Foto Profil" class="foto-preview">
-          <div class="foto-btns">
-            <button class="icon-btn">Pilih Foto</button>
-            <span id="fileName" style="margin-left: 10px;">No file chosen</span>
-          </div>
+          <img src="<?=$profile->photo_dir?>" alt="Foto Profil" class="foto-preview">
+          <label id="fileName" class="text-muted fw-medium" style="cursor: pointer;">Ubah Foto</label>
+          <input type='file' name="photo" class="icon-btn d-none" accept=".jpg">
         </div>
 
         <div class="form-row">
@@ -32,18 +30,16 @@
         <div class="form-row">
           <label for="email">Email</label>
           <input type="email" id="email" disabled value="<?= htmlspecialchars($_SESSION['user']->email)?>">
-          <!-- <button class="icon-btn red">🗑</button> -->
         </div>
 
         <div class="form-row">
           <label for="telepon">No. HP</label>
-          <input type="tel" id="telepon" placeholder="Tambahkan atau ganti nomor HP">
-          <!-- <button class="icon-btn red">🗑</button> -->
+          <input type="tel" name="phone_no" id="telepon" placeholder="Tambahkan nomor HP" value="<?= htmlspecialchars($profile->phone_no)?>">
         </div>
 
         <div class="form-row">
           <label>Tanggal Bergabung</label>
-          <input type="text" disabled value="26 Mei 2025">
+          <input type="text" disabled value="<?= htmlspecialchars($_SESSION['user']->created_at)?>">
         </div>
 
         <button type="submit" class="submit-btn btn-success">Simpan Perubahan</button>
@@ -51,6 +47,28 @@
     </section>
   </main>
   <?php include_once "footer.php" ?>
+  <script>
+    const btn = document.getElementById("fileName");
+    const fileInput = document.querySelector('.icon-btn');
+    const preview = document.querySelector('.foto-preview');
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+    }
+
+    btn.addEventListener("click", function() {
+      fileInput.click();
+    })
+
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+      btn.innerText = `File: "${file.name}"`;
+      
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

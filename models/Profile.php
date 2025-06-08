@@ -15,9 +15,29 @@
             return $stmt->execute();
         }
 
-        public function updatePhone($userID, $photo_dir, $phone_no) {
-            $stmt = $this->dbconn->prepare("UPDATE PROFILE SET phone_no = ? WHERE user_id = ?");
-            $stmt->bind_param("is", $userID, $phone_no);
-            return $stmt->execute();
+        public function updatePhoto($userID, $photo_dir) {
+            $stmt = $this->dbconn->prepare("UPDATE profile SET photo_dir = ? WHERE user_id = ?");
+            $stmt->bind_param("si", $photo_dir, $userID);
+            
+            $result = $stmt->execute();
+
+            if (!$result) {
+                die("SQL error: " . $this->dbconn->error);
+            }
+
+            return $result;
+        }
+
+        public function updatePhone($userID, $phone_no) {
+            $stmt = $this->dbconn->prepare("UPDATE profile SET phone_no = ? WHERE user_id = ?");
+            $stmt->bind_param("si", $phone_no, $userID);
+
+            $result = $stmt->execute();
+
+            if (!$result) {
+                die("SQL error: " . $this->dbconn->error);
+            }
+
+            return $result;
         }
     }
