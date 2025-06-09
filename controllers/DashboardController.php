@@ -5,6 +5,9 @@
             if (!isset($_SESSION['user'])) {
                 header("Location: ?c=UserController&m=loginView");
             }
+            if ($_SESSION['user']->privilege = 'admin') {
+                header("Location: ?c=AdminController&m=index");
+            }
         }
 
         public function index() {
