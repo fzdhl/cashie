@@ -10,7 +10,9 @@
   <link href="views/styles/arsip.css" rel="stylesheet">
 </head>
 <body>
-  <?php include_once "header.php" ?> <div class="container py-4">
+  <?php include_once "header.php" ?>
+
+  <div class="container py-4">
     <h2 class="mb-4 text-center text-md-start">Arsip Struk</h2>
 
     <div class="card p-3 mb-4 shadow-sm">
@@ -32,8 +34,7 @@
 
     <div class="card p-3 shadow-sm">
         <h5 class="mb-3">Daftar Arsip Anda</h5>
-        <?php if ($arsipList->num_rows > 0): ?>
-            <div class="table-responsive">
+        <?php if (isset($arsipList) && is_object($arsipList) && $arsipList->num_rows > 0): ?> <div class="table-responsive">
                 <table class="table table-hover table-striped mt-3">
                     <thead class="table-light">
                         <tr>
@@ -75,9 +76,10 @@
     </div>
   </div>
 
-  <?php include_once "footer.php" ?> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <?php include_once "footer.php" ?>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Script untuk Update menggunakan AJAX (diperbaiki penanganan error)
     document.querySelectorAll('.deskripsi-form').forEach(form => {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -91,14 +93,6 @@
                 const response = await fetch('?c=ArsipController&m=update', { method: 'POST', body: formData });
                 if (response.ok) {
                     console.log('Deskripsi berhasil diperbarui.');
-                    // Tambahkan feedback visual jika diinginkan, misal:
-                    // const submitBtn = this.querySelector('button[type="submit"]');
-                    // submitBtn.classList.add('btn-success');
-                    // submitBtn.innerHTML = '<i class="fas fa-check"></i>';
-                    // setTimeout(() => {
-                    //     submitBtn.classList.remove('btn-success');
-                    //     submitBtn.innerHTML = '<i class="fas fa-save"></i>';
-                    // }, 2000);
                 } else {
                     const errorText = await response.text();
                     console.error('Gagal memperbarui deskripsi:', errorText);
