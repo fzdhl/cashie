@@ -1,63 +1,34 @@
 <?php
-class ArsipModel {
-    private $db;
-
-    public function __construct($db) {
-        $this->db = $db;
+class Arsip extends Model {
+    public function getByUser($user_id) {
+        $stmt = $this->dbconn->prepare("SELECT * FROM arsip WHERE user_id = ? ORDER BY created_at DESC");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        return $stmt->get_result();
     }
 
-    public function getAll() {
-        return $this->db->query("SELECT * FROM arsip_transaksi")->fetchAll(PDO::FETCH_ASSOC);
+    public function insert($user_id, $path, $desc) {
+        $stmt = $this->dbconn->prepare("INSERT INTO arsip (user_id, file_path, description) VALUES (?, ?, ?)");
+        $stmt->bind_param("iss", $user_id, $path, $desc);
+        return $stmt->execute();
     }
 
-    public function getFiltered($filters) {
-        $query = "SELECT * FROM arsip_transaksi WHERE 1";
-        $params = [];
-
-        if (!empty($filters['transaksi_id'])) {
-            $query .= " AND transaksi_id = :transaksi_id";
-            $params['transaksi_id'] = $filters['transaksi_id'];
-        }
-        if (!empty($filters['nama_file'])) {
-            $query .= " AND nama_file LIKE :nama_file";
-            $params['nama_file'] = '%'.$filters['nama_file'].'%';
-        }
-
-        $stmt = $this->db->prepare($query);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    public function updateDescription($id, $desc, $user_id) {
+        $stmt = $this->dbconn->prepare("UPDATE arsip SET description = ? WHERE id = ? AND user_id = ?");
+        $stmt->bind_param("sii", $desc, $id, $user_id);
+        return $stmt->execute();
     }
 
-    public function create($data) {
-        $stmt = $this->db->prepare("INSERT INTO arsip_transaksi 
-            (transaksi_id, nama_file, path_file, tanggal_upload) 
-            VALUES (:transaksi_id, :nama_file, :path_file, NOW())");
-        return $stmt->execute($data);
+    public function delete($id, $user_id) {
+        $stmt = $this->dbconn->prepare("DELETE FROM arsip WHERE id = ? AND user_id = ?");
+        $stmt->bind_param("ii", $id, $user_id);
+        return $stmt->execute();
     }
 
-    public function update($id, $data) {
-        $data['arsip_id'] = $id;
-        $stmt = $this->db->prepare("UPDATE arsip_transaksi SET 
-            transaksi_id = :transaksi_id, 
-            nama_file = :nama_file, 
-            path_file = :path_file 
-            WHERE arsip_id = :arsip_id");
-        return $stmt->execute($data);
-    }
-
-    public function delete($id) {
-        $arsip = $this->getById($id);
-        if ($arsip && file_exists($arsip['path_file'])) {
-            unlink($arsip['path_file']);
-        }
-        $stmt = $this->db->prepare("DELETE FROM arsip_transaksi WHERE arsip_id = :id");
-        return $stmt->execute(['id' => $id]);
-    }
-
-    public function getById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM arsip_transaksi WHERE arsip_id = :id");
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    public function getById($id, $user_id) {
+        $stmt = $this->dbconn->prepare("SELECT * FROM arsip WHERE id = ? AND user_id = ?");
+        $stmt->bind_param("ii", $id, $user_id);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_object();
     }
 }
-?>
