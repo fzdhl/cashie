@@ -14,13 +14,6 @@
             exit();
         }
     }
-    
-    public function addView() {
-        $this->checkLogin();
-        $transactionModel = $this->loadModel('Transaction');
-        $categories = $transactionModel->getCategoriesByUser($_SESSION['user_id']);
-        $this->loadView('add_transaction', ['categories' => $categories]);
-    }
 
     public function addProcess() {
         $this->checkLogin();

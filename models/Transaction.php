@@ -5,7 +5,7 @@
     
     // Mengambil semua kategori milik seorang pengguna
     public function getCategoriesByUser($userId) {
-        $query = "SELECT category_id, category, type FROM kategori WHERE user_id = ?";
+        $query = "SELECT kategori_id, kategori, type FROM kategori WHERE user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -15,7 +15,7 @@
 
     // [BARU] Mengambil semua tagihan (bills) yang belum lunas milik pengguna
     public function getBillsByUser($userId) {
-        $query = "SELECT bill_id, bill FROM bill WHERE user_id = ? AND paid_status = 'unpaid'";
+        $query = "SELECT tanggungan_id, nama FROM tanggungan WHERE user_id = ? AND status = 0";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -25,7 +25,7 @@
 
     // [BARU] Mengambil semua target (goals) milik pengguna
     public function getGoalsByUser($userId) {
-        $query = "SELECT goal_id, goal FROM goal WHERE user_id = ?";
+        $query = "SELECT target_id, target FROM target WHERE user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -35,7 +35,7 @@
 
     // [MODIFIKASI] Menyimpan data transaksi baru ke database termasuk bill_id dan goal_id
     public function insertTransaction($data) {
-        $query = "INSERT INTO transaksi (user_id, category_id, amount, note, date, bill_id, goal_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO transaksi (user_id, kategori_id, jumlah, keterangan, tanggal_transaksi, tanggungan_id, target_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->dbconn->prepare($query);
         
         $datetime = $data['date'] . ' ' . date('H:i:s');
@@ -60,7 +60,7 @@
     // ...
     public function getTransactionById($transactionId, $userId) {
         // [MODIFIKASI] Ambil juga bill_id dan goal_id
-        $query = "SELECT transaction_id, category_id, amount, note, DATE(date) as date, bill_id, goal_id FROM transaksi WHERE transaction_id = ? AND user_id = ?";
+        $query = "SELECT transaksi_id, kategori_id, jumlah, keterangan, DATE(date) as date, tanggungan_id, target_id FROM transaksi WHERE transaksi_id = ? AND user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("ii", $transactionId, $userId);
         $stmt->execute();
@@ -70,7 +70,7 @@
 
     public function updateTransaction($data) {
         // [MODIFIKASI] Query UPDATE sekarang menyertakan bill_id dan goal_id
-        $query = "UPDATE transaksi SET category_id = ?, amount = ?, note = ?, date = ?, bill_id = ?, goal_id = ? WHERE transaction_id = ? AND user_id = ?";
+        $query = "UPDATE transaksi SET kategori_id = ?, jumlah = ?, keterangan = ?, tanggal_transaksi = ?, tanggungan_id = ?, target_id = ? WHERE transaksi_id = ? AND user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         
         $datetime = $data['date'] . ' ' . date('H:i:s');
@@ -81,13 +81,13 @@
             "idssii", // Tipe data: amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
             // Saya ralat urutan dan tipe bind_param agar sesuai query
             // category(i), amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
-            $data['category_id'],
-            $data['amount'],
-            $data['note'],
+            $data['kategori_id'],
+            $data['jumlah'],
+            $data['keterangan'],
             $datetime,
             $bill_id,
             $goal_id,
-            $data['transaction_id'],
+            $data['transaksi_id'],
             $data['user_id']
         );
         return $stmt->execute();
@@ -95,7 +95,7 @@
 // ...
 
     public function deleteTransaction($transactionId, $userId) {
-        $query = "DELETE FROM transaksi WHERE transaction_id = ? AND user_id = ?";
+        $query = "DELETE FROM transaksi WHERE transaksi_id = ? AND user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("ii", $transactionId, $userId);
         return $stmt->execute();
