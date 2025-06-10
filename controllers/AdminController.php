@@ -9,7 +9,7 @@
 
         public function index() {
             $model = $this->loadModel('User');
-            $users = $model->getAllUser();
-            $this->loadView('Admin', ['user' => $model]);
+            $users = $model->getAll();
+            $this->loadView('admin', ['users' => $users]);
         }
     }

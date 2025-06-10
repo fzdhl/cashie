@@ -20,8 +20,8 @@
 
             if ($result && password_verify($password, $result->password)) {
                 $_SESSION['user'] = $result;
-                if ($_SESSION['user']->privilege = 'admin') {
-                    header('Location;: ?c=AdminController&m=index');
+                if ($_SESSION['user']->privilege == 'admin') {
+                    header('Location: ?c=AdminController&m=index');
                 }
                 header("Location: ?c=DashboardController&m=index");
             } else {

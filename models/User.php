@@ -16,4 +16,12 @@
             
             return $stmt->execute();
         }
+
+        public function getAll() {
+            $stmt = $this->dbconn->prepare("SELECT * FROM user");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
     }

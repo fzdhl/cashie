@@ -47,28 +47,7 @@
     </section>
   </main>
   <?php include_once "footer.php" ?>
-  <script>
-    const btn = document.getElementById("fileName");
-    const fileInput = document.querySelector('.icon-btn');
-    const preview = document.querySelector('.foto-preview');
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      preview.src = e.target.result;
-    }
-
-    btn.addEventListener("click", function() {
-      fileInput.click();
-    })
-
-    fileInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (file) {
-        reader.readAsDataURL(file);
-      }
-      btn.innerText = `File: "${file.name}"`;
-      
-    });
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="views/scripts/profile.js"></script>
 </body>
 </html>
