@@ -7,10 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="views/styles/kategori.css">
-
 </head>
 <body>
-    <!-- Header Template -->
     <?php include_once "header.php" ?>
 
     <main class="container main-content">
@@ -21,40 +19,61 @@
             </button>
         </div>
 
-        <!-- Category List -->
         <div class="categories-list" id="categoriesList">
-            <!-- Categories will be loaded here by JavaScript -->
+            <?php if (empty($categories)): ?>
+                <p class="no-categories">No categories found. Add your first category!</p>
+            <?php else: ?>
+                <?php foreach ($categories as $category): ?>
+                    <div class="category-item" data-id="<?= htmlspecialchars($category['kategori_id']) ?>" draggable="true">
+                        <div class="category-item-left">
+                            <div class="category-icon">
+                                <i class="fas fa-<?= htmlspecialchars($category['icon']) ?>"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3><?= htmlspecialchars($category['kategori']) ?></h3>
+                                <span><?= htmlspecialchars(ucfirst($category['tipe'])) ?></span>
+                            </div>
+                        </div>
+                        <div class="category-actions">
+                            <button class="action-btn edit" data-id="<?= htmlspecialchars($category['kategori_id']) ?>">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-id="<?= htmlspecialchars($category['kategori_id']) ?>">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
 
-        <!-- Add/Edit Category Modal -->
         <div class="modal" id="categoryModal">
             <div class="modal-content">
                 <span class="close-btn">&times;</span>
                 <h3 id="modalTitle">Add New Category</h3>
                 <form id="categoryForm">
-                    <input type="hidden" id="categoryId">
+                    <input type="hidden" id="categoryId" name="kategori_id">
                     <div class="form-group">
                         <label for="categoryName">Category Name</label>
-                        <input type="text" id="categoryName" required>
+                        <input type="text" id="categoryName" name="kategori" required>
                     </div>
                     <div class="form-group">
                         <label>Category Type</label>
                         <div class="radio-group">
                             <label>
-                                <input type="radio" name="categoryType" value="income" checked>
-                                <span>Income</span>
+                                <input type="radio" name="tipe" value="pemasukan" checked>
+                                <span>Pemasukan</span>
                             </label>
                             <label>
-                                <input type="radio" name="categoryType" value="expense">
-                                <span>Expense</span>
+                                <input type="radio" name="tipe" value="pengeluaran">
+                                <span>Pengeluaran</span>
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Select Icon</label>
                         <div class="icons-grid" id="iconsGrid">
-                            <!-- Icons will be loaded here by JavaScript -->
-                        </div>
+                            </div>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
@@ -64,7 +83,6 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation Modal -->
         <div class="modal" id="deleteModal">
             <div class="modal-content small">
                 <h3>Delete Category</h3>
@@ -77,11 +95,9 @@
         </div>
     </main>
 
-    <!-- Footer Template -->
     <?php include_once "footer.php" ?>
 
     <script src="views/scripts/kategori.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

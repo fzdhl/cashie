@@ -1,432 +1,594 @@
 /* Global Styles */
 :root {
-    --primary-color: #198754;
-    --secondary-color: #6c757d;
-    --danger-color: #dc3545;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
-    --success-color: #28a745;
-    --border-radius: 5px;
-    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --primary-color: #198754; /* Hijau Bootstrap Success */
+  --secondary-color: #6c757d; /* Abu-abu Bootstrap Secondary */
+  --danger-color: #dc3545;
+  --light-color: #f8f9fa;
+  --dark-color: #343a40;
+  --success-color: #28a745; /* Hijau yang lebih cerah untuk "Add Category" */
+  --border-radius: 5px;
+  --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #eef8f3;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  background-color: #eef8f3;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-} */
+/* Container utama untuk konten halaman, agar responsif dengan Bootstrap */
+.container {
+  width: 100%;
+  max-width: 1200px; /* Lebar maksimum untuk desktop */
+  margin: 0 auto;
+  padding: 0 15px; /* Padding default untuk sisi, akan disesuaikan oleh Bootstrap */
+}
 
 /* Header Styles */
 .header {
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  background-color: white; /* Mengubah header dari bg-success ke putih */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
 }
 
 .nav ul {
-    display: flex;
-    list-style: none;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav ul li {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .nav ul li a {
-    text-decoration: none;
-    color: var(--dark-color);
-    font-weight: 500;
-    transition: color 0.3s;
+  text-decoration: none;
+  color: var(--dark-color); /* Warna teks navbar default */
+  font-weight: 500;
+  transition: color 0.3s;
 }
 
 .nav ul li a:hover {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .nav ul li.active a {
-    color: var(--primary-color);
-    font-weight: 600;
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
 .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
 }
 
 .user-profile i {
-    font-size: 1.5rem;
-    color: var(--primary-color);
+  font-size: 1.5rem;
+  color: var(--primary-color);
 }
 
 /* Main Content Styles */
 .main-content {
-    padding: 30px 0;
+  padding: 30px 0;
+  flex-grow: 1; /* Memastikan main content mengisi ruang yang tersedia */
 }
 
 .categories-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap; /* Izinkan wrapping pada layar kecil */
 }
 
 .categories-header h2 {
-    font-size: 1.8rem;
-    color: var(--dark-color);
+  font-size: 1.8rem;
+  color: var(--dark-color);
+  margin-bottom: 0; /* Reset margin-bottom agar tidak ada dobel margin */
 }
 
-/* Button Styles */
+/* Button Styles - Konsisten dengan tombol 'Add Category' */
 .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none; /* Pastikan tidak ada underline pada tombol link */
+  color: white; /* Default warna teks untuk tombol */
 }
 
+/* Tombol utama untuk "Add Category" dan "Save" di modal */
 .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
+  background-color: var(--success-color); /* Menggunakan warna sukses untuk tombol utama */
+  color: white;
 }
 
 .btn-primary:hover {
-    background-color: #3a5a8f;
+  background-color: #218838; /* Slightly darker green on hover */
 }
 
+/* Tombol sekunder seperti "Cancel" */
 .btn-secondary {
-    background-color: var(--secondary-color);
-    color: white;
+  background-color: var(--secondary-color);
+  color: white;
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
+  background-color: #5a6268;
 }
 
+/* Tombol delete */
 .btn-danger {
-    background-color: var(--danger-color);
-    color: white;
+  background-color: var(--danger-color);
+  color: white;
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+  background-color: #c82333;
 }
 
-/* Categories List Styles */
+/* Kategori List Styles */
 .categories-list {
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    overflow: hidden;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  padding: 20px; /* Tambahkan padding di dalam list */
 }
 
 .category-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-    cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0; /* Sesuaikan padding vertikal, horizontal 0 karena padding container */
+  border-bottom: 1px solid #eee;
+  cursor: grab; /* Ubah cursor menjadi grab untuk drag */
+}
+
+.category-item.dragging {
+  opacity: 0.5; /* Efek saat di-drag */
 }
 
 .category-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .category-item-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-grow: 1; /* Biarkan bagian kiri mengambil ruang */
 }
 
 .category-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #e9f2ff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-color);
-    font-size: 1.2rem;
+  width: 45px; /* Sedikit lebih besar untuk desktop */
+  height: 45px; /* Sedikit lebih besar untuk desktop */
+  border-radius: 50%;
+  background-color: #e9f2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.3rem; /* Sesuaikan ukuran ikon */
+  flex-shrink: 0; /* Pastikan ikon tidak menyusut */
 }
 
 .category-info h3 {
-    font-size: 1.1rem;
-    margin-bottom: 3px;
+  font-size: 1.15rem; /* Sedikit lebih besar */
+  margin-bottom: 3px;
+  font-weight: 600;
+  color: var(--dark-color);
 }
 
 .category-info span {
-    font-size: 0.9rem;
-    color: var(--secondary-color);
+  font-size: 0.95rem; /* Sedikit lebih besar */
+  color: var(--secondary-color);
 }
 
 .category-actions {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0; /* Pastikan tombol aksi tidak menyusut */
 }
 
 .action-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--secondary-color);
-    font-size: 1rem;
-    transition: color 0.3s;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--secondary-color);
+  font-size: 1.1rem; /* Ukuran ikon tombol aksi */
+  transition: color 0.3s;
+  padding: 5px; /* Tambahkan padding untuk area klik */
 }
 
 .action-btn:hover {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .action-btn.delete:hover {
-    color: var(--danger-color);
+  color: var(--danger-color);
 }
 
 /* Modal Styles */
 .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1050; /* Sit on top, di atas navbar Bootstrap */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  padding: 20px; /* Padding di sekitar modal content */
 }
 
 .modal.active {
-    display: flex;
+  display: flex; /* Show the modal */
 }
 
 .modal-content {
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    width: 100%;
-    max-width: 500px;
-    padding: 25px;
-    position: relative;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  max-width: 550px; /* Meningkatkan max-width untuk modal */
+  padding: 30px; /* Lebih banyak padding */
+  position: relative;
+  animation: fadeInScale 0.3s ease-out; /* Animasi masuk */
+}
+
+/* Animasi masuk modal */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .modal-content.small {
-    max-width: 400px;
+  max-width: 400px;
 }
 
 .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--secondary-color);
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.8rem; /* Ukuran ikon tutup */
+  cursor: pointer;
+  color: var(--secondary-color);
+  transition: color 0.3s;
+}
+
+.close-btn:hover {
+  color: var(--dark-color);
 }
 
 /* Form Styles */
+.modal-content h3 {
+  /* Aturan untuk judul modal */
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 25px;
+  text-align: center;
+}
+
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--dark-color);
 }
 
-.form-group input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: var(--border-radius);
-    font-size: 1rem;
+.form-group input[type="text"],
+.form-group select {
+  /* Tambahkan select di sini jika ada */
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box; /* Penting untuk konsistensi padding/border */
+}
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25); /* Bootstrap success color shadow */
 }
 
 .radio-group {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 30px; /* Perluas jarak antar radio button */
 }
 
 .radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-weight: normal;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: normal;
+  color: var(--dark-color);
 }
 
 .radio-group input[type="radio"] {
-    margin: 0;
+  margin: 0;
+  transform: scale(1.1); /* Sedikit perbesar radio button */
 }
 
+/* Icons Grid Specific Styles */
 .icons-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    margin-top: 10px;
+  display: grid;
+  /* Ubah ini untuk mendapatkan 6 kolom di desktop dan menyesuaikan di mobile */
+  grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+  max-height: 200px; /* Batasi tinggi grid ikon */
+  overflow-y: auto; /* Tambahkan scroll jika ikon terlalu banyak */
+  padding: 5px; /* Padding untuk scrollbar */
+  border: 1px solid #eee; /* Border untuk area ikon */
+  border-radius: var(--border-radius);
+  background-color: #fcfcfc;
 }
 
 .icon-option {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
+  width: 100%; /* Agar memenuhi grid cell */
+  padding: 10px; /* Padding di dalam kotak ikon */
+  box-sizing: border-box; /* Pastikan padding tidak menambah lebar */
+  height: 100%; /* Agar memenuhi grid cell */
+  aspect-ratio: 1 / 1; /* Menjaga rasio aspek persegi */
+  border-radius: 8px; /* Sudut sedikit melengkung */
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1.3rem; /* Ukuran ikon di grid */
+  color: #666;
 }
 
 .icon-option:hover {
-    background-color: #e0e0e0;
+  background-color: #e0e0e0;
+  color: var(--dark-color);
 }
 
 .icon-option.selected {
-    background-color: var(--primary-color);
-    color: white;
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.5); /* Shadow saat terpilih */
 }
 
 .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px; /* Lebih banyak ruang di atas tombol */
 }
 
 /* Footer Styles */
 .footer {
-    background-color: var(--dark-color);
-    color: white;
-    padding: 40px 0 20px;
+  background-color: var(--dark-color);
+  color: white;
+  padding: 40px 0 20px;
+  margin-top: auto; /* Memastikan footer berada di bagian bawah halaman */
 }
 
 .footer-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
 }
 
 .footer-section h4 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
 }
 
 .footer-section ul {
-    list-style: none;
+  list-style: none;
+  padding: 0;
 }
 
 .footer-section ul li {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .footer-section ul li a {
-    color: #ddd;
-    text-decoration: none;
-    transition: color 0.3s;
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.3s;
 }
 
 .footer-section ul li a:hover {
-    color: white;
+  color: white;
 }
 
 .social-icons {
-    display: flex;
-    gap: 15px;
-    margin-top: 15px;
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .social-icons a {
-    color: white;
-    font-size: 1.2rem;
+  color: white;
+  font-size: 1.2rem;
 }
 
 .footer-bottom {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 1px solid #444;
-    font-size: 0.9rem;
-    color: #aaa;
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+  font-size: 0.9rem;
+  color: #aaa;
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
-    .header .container {
-        flex-direction: column;
-        gap: 15px;
-    }
+/* Tablet (Contoh: Lebar layar 768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .main-content .container {
+    padding: 0 25px; /* Padding lebih besar untuk tablet */
+  }
 
-    .nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+  .categories-header {
+    flex-direction: row; /* Kembali ke baris */
+    justify-content: space-between;
+    align-items: center;
+  }
+  .categories-header h2 {
+    margin-bottom: 0;
+  }
 
-    .nav ul li {
-        margin: 0 10px;
-    }
+  .nav ul li {
+    margin-left: 15px; /* Kurangi jarak antar item navbar */
+  }
 
-    .user-profile {
-        margin-top: 10px;
-    }
-
-    .categories-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .icons-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
+  .modal-content {
+    max-width: 600px; /* Sesuaikan lebar modal untuk tablet */
+    padding: 25px;
+  }
+  .icons-grid {
+    /* Untuk tablet, mungkin 6 kolom juga bagus, atau bisa 5 kolom */
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); /* 50px min-width untuk ikon */
+    gap: 12px;
+  }
+  .icon-option {
+    font-size: 1.4rem;
+    padding: 12px;
+  }
 }
 
-@media (max-width: 480px) {
-    .category-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
+/* Mobile (Contoh: Lebar layar di bawah 768px) */
+@media (max-width: 767px) {
+  .header .navbar-nav {
+    text-align: center; /* Pusatkan item navbar saat mode mobile */
+    width: 100%;
+  }
+  .header .navbar-nav .nav-item {
+    margin-left: 0;
+    margin-bottom: 5px; /* Beri jarak vertikal antar item */
+  }
+  .header .navbar-toggler {
+    margin-left: auto; /* Pastikan toggler ke kanan */
+  }
 
-    .category-actions {
-        align-self: flex-end;
-    }
+  .categories-header {
+    flex-direction: column; /* Tumpuk judul dan tombol */
+    align-items: center; /* Pusatkan */
+    gap: 15px;
+  }
 
-    .icons-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+  .categories-header h2 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+  .btn {
+    width: 100%; /* Tombol ambil lebar penuh */
+    justify-content: center; /* Pusatkan konten tombol */
+    padding: 12px 15px; /* Sesuaikan padding */
+  }
 
-    .modal-content {
-        padding: 20px 15px;
-    }
+  .categories-list {
+    padding: 15px; /* Kurangi padding list */
+  }
+
+  .category-item {
+    flex-direction: column; /* Tumpuk info dan aksi */
+    align-items: flex-start; /* Sejajarkan ke kiri */
+    gap: 10px;
+    padding: 12px 0;
+  }
+
+  .category-item-left {
+    width: 100%; /* Ambil lebar penuh */
+  }
+
+  .category-actions {
+    width: 100%; /* Ambil lebar penuh */
+    justify-content: flex-end; /* Aksi di kanan bawah */
+  }
+
+  .category-icon {
+    width: 40px; /* Ukuran ikon kategori sedikit lebih kecil di mobile */
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .modal-content {
+    padding: 20px; /* Kurangi padding modal di mobile */
+  }
+
+  .icons-grid {
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); /* 40px min-width untuk ikon di mobile */
+    gap: 8px; /* Kurangi jarak antar ikon */
+  }
+  .icon-option {
+    font-size: 1.2rem;
+    padding: 8px;
+  }
+
+  .form-actions {
+    flex-direction: column; /* Tumpuk tombol di form aksi */
+    gap: 15px;
+  }
+  .form-actions .btn {
+    width: 100%; /* Tombol di form aksi ambil lebar penuh */
+  }
+}
+
+/* Penyesuaian khusus untuk header (navbar) yang menggunakan Bootstrap */
+.header.bg-success {
+  background-color: white !important; /* Timpa warna background header menjadi putih */
+}
+
+.header .navbar-brand,
+.header .nav-link {
+  color: var(--dark-color) !important; /* Warna teks navbar default agar terlihat di background putih */
+}
+
+.header .nav-link:hover {
+  color: var(--primary-color) !important; /* Warna hover sesuai primary-color */
+}
+
+/* Pastikan dropdown toggle tetap terlihat */
+.header .nav-link.dropdown-toggle {
+  color: var(--dark-color) !important;
 }
