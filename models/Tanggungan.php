@@ -26,7 +26,7 @@ class Tanggungan extends Model // class model untuk mengelola data
     public function insert($data)
     {
         // menyiapkan statement SQL untuk insert data baru
-        $stmt = $this->dbconn->prepare("INSERT INTO tanggungan (user_id, nama, jadwal_pembayaran, jenis, jumlah, status) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $this->dbconn->prepare("INSERT INTO tanggungan (user_id, tanggungan, jadwal_pembayaran, kategori_id, jumlah, status) VALUES (?, ?, ?, ?, ?, ?)");
 
         // binding parameter ke statement SQL
         // i = integer, s = string

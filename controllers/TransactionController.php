@@ -15,12 +15,12 @@
         }
     }
     
-    public function addView() {
-        $this->checkLogin();
-        $transactionModel = $this->loadModel('Transaction');
-        $categories = $transactionModel->getCategoriesByUser($_SESSION['user_id']);
-        $this->loadView('add_transaction', ['categories' => $categories]);
-    }
+    // public function addView() {
+    //     $this->checkLogin();
+    //     $transactionModel = $this->loadModel('Transaction');
+    //     $categories = $transactionModel->getCategoriesByUser($_SESSION['user_id']);
+    //     $this->loadView('add_transaction', ['categories' => $categories]);
+    // }
 
     public function addProcess() {
         $this->checkLogin();
@@ -29,13 +29,13 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // [MODIFIKASI] Tangkap bill_id dan goal_id dari POST
             $data = [
-                'category_id' => $_POST['category_id'],
-                'amount' => $_POST['amount'],
-                'note' => $_POST['note'],
+                'kategori_id' => $_POST['category_id'],
+                'jumlah' => $_POST['amount'],
+                'keterangan' => $_POST['note'],
                 'date' => $_POST['date'],
                 'user_id' => $_SESSION['user_id'],
-                'bill_id' => isset($_POST['bill_id']) ? $_POST['bill_id'] : null,
-                'goal_id' => isset($_POST['goal_id']) ? $_POST['goal_id'] : null
+                'tagihan_id' => isset($_POST['bill_id']) ? $_POST['bill_id'] : null,
+                'target_id' => isset($_POST['goal_id']) ? $_POST['goal_id'] : null
             ];
 
             $transactionModel = $this->loadModel('Transaction');

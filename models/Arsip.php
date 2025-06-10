@@ -1,5 +1,5 @@
 <?php
-class ArsipModel {
+class Arsip {
     private $db;
 
     public function __construct($db) {

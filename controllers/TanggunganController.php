@@ -12,7 +12,7 @@ class TanggunganController extends Controller
         // mengecek apakah user sudah login
         if (!isset($_SESSION['user'])) {
             // jika user belum login maka diarahkan ke halaman login
-            header("Location: ?c=auth&m=login");
+            header("Location: ?c=UserController&m=loginView");
             // program berhenti dan tidak lanjut menjalankan method lainnya
             exit();
         }
@@ -23,12 +23,12 @@ class TanggunganController extends Controller
     public function index()
     {
         // mengambil id user yang login
-        $id_user = $_SESSION['user']['user_id'];
+        $id_user = $_SESSION['user']->user_id;
         // membuat objek baru agar bisa memanggil method di model tanggungan
         $model = $this->loadModel("Tanggungan");
         // mengambil semua data dari tabel tanggungan berdasarkan user_id 
         $tanggungan = $model->getByUser($id_user);
-
+        
         // menampilkan data hasik query ke tampilan html (ditampilkan ke browser user)
         $this->loadView("tanggungan", [
             'tanggungan' => $tanggungan
@@ -39,7 +39,7 @@ class TanggunganController extends Controller
     public function simpanPermanen()
     {
         // mengambil id user yang sedang login dari session
-        $id_user = $_SESSION['user']['user_id'];
+        $id_user = $_SESSION['user']->user_id;
 
         // mengambil input dari form yang dikirim via method post 
         // disimopan di array
@@ -79,11 +79,11 @@ class TanggunganController extends Controller
         }
 
         // mengecek apakah menyimpan data berhasil?
-        if ($berhasil) {
-            // jika berhasil maka tanggungan user akan di-update di kolom permanen
-            // permanen = 1, artinya tidak bisa diedit atau dihapus lagi
-            $model->setPermanen($id_user);
-        }
+        // if ($berhasil) {
+        //     // jika berhasil maka tanggungan user akan di-update di kolom permanen
+        //     // permanen = 1, artinya tidak bisa diedit atau dihapus lagi
+        //     $model->setPermanen($id_user);
+        // }
 
         // setelah selesai akan diarahkan ke halaman utama untuk melihat hasil akhirnya
         header('Location: ?c=TanggunganController&m=index');
@@ -94,7 +94,7 @@ class TanggunganController extends Controller
     public function resetAwalBulan()
     {
         // mengambil id user dari session
-        $id_user = $_SESSION['user']['user_id'];
+        $id_user = $_SESSION['user']->user_id;
         // memanggil model dan menjalankan reset
         $model = $this->loadModel("Tanggungan");
         // resetStatus($id_user) akan mengeksekusi query update seperti:
@@ -113,7 +113,7 @@ class TanggunganController extends Controller
     public function sinkronDariCatatan()
     {
         // mengambil id user agar sinkronisasi hanya terjadi pada data user tertentu
-        $id_user = $_SESSION['user']['user_id'];
+        $id_user = $_SESSION['user']->user_id;
         // memanggil model dan mengambil data pengeluaran
         $model = $this->loadModel("Tanggungan");
         // ambil daftar catatan pengeluaran (jenis_transaksi = 'pengeluaran') dari tabel catatan_keuangan milik user tersebut.
@@ -141,7 +141,7 @@ class TanggunganController extends Controller
     {
         $id = $_GET['id'] ?? null;
         // memastikan yang menghapus data adalah pemilik data
-        $id_user = $_SESSION['user']['user_id'];
+        $id_user = $_SESSION['user']->user_id;
 
         // menginisialisasi model agar bisa mengakses fungsi
         $model = $this->loadModel("Tanggungan");

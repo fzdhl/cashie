@@ -13,13 +13,13 @@
           <a class="nav-link text-white" href="?c=DashboardController&m=kategori">Kategori</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=DashboardController&m=catatanKeuangan">Tambah Catatan</a>
+          <a class="nav-link text-white" href="?c=TanggunganController&m=index">Tanggungan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=DashboardController&m=report">Laporan Keuangan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=DashboardController&m=calendar">Kalender</a>
+          <a class="nav-link text-white" href="?c=CalendarController&m=index">Kalender</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=DashboardController&m=goals">Goals</a>
