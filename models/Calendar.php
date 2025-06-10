@@ -25,9 +25,10 @@
       $stmt->bind_param("is", $userId, $date);
       $stmt->execute();
       $result = $stmt->get_result();
-      $transactions = $result->fetch_all(MYSQLI_ASSOC);
-      $stmt->close();
+      $transactions = $result->fetch_all(MYSQLI_ASSOC); // mengambil semua baris hasil query
+      // dan menyimpannya sebagai array asosiatif ke variabel $transactions= 0
 
+      $stmt->close();
       $income = 0;
       $expense = 0;
       

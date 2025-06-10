@@ -5,7 +5,7 @@
     
     // Mengambil semua kategori milik seorang pengguna
     public function getCategoriesByUser($userId) {
-        $query = "SELECT kategori_id, kategori, type FROM kategori WHERE user_id = ?";
+        $query = "SELECT kategori_id, kategori, tipe FROM kategori WHERE user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -40,16 +40,16 @@
         
         $datetime = $data['date'] . ' ' . date('H:i:s');
         
-        $bill_id = !empty($data['bill_id']) ? $data['bill_id'] : NULL;
-        $goal_id = !empty($data['goal_id']) ? $data['goal_id'] : NULL;
+        $bill_id = !empty($data['tagihan_id']) ? $data['tagihan_id'] : NULL;
+        $goal_id = !empty($data['target_id']) ? $data['target_id'] : NULL;
 
         // Tipe data disesuaikan dengan skema: user(i), category(i), amount(d), note(s), date(s), bill(i), goal(i)
         $stmt->bind_param(
             "idssii",
             $data['user_id'],
-            $data['category_id'],
-            $data['amount'],
-            $data['note'],
+            $data['kategori_id'],
+            $data['jumlah'],
+            $data['keterangan'],
             $datetime,
             $bill_id,
             $goal_id
@@ -60,7 +60,7 @@
     // ...
     public function getTransactionById($transactionId, $userId) {
         // [MODIFIKASI] Ambil juga bill_id dan goal_id
-        $query = "SELECT transaksi_id, kategori_id, jumlah, keterangan, DATE(date) as date, tanggungan_id, target_id FROM transaksi WHERE transaksi_id = ? AND user_id = ?";
+        $query = "SELECT transaksi_id, kategori_id, jumlah, keterangan, tanggal_transaksi, tanggungan_id, target_id FROM transaksi WHERE transaksi_id = ? AND user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("ii", $transactionId, $userId);
         $stmt->execute();
@@ -74,8 +74,8 @@
         $stmt = $this->dbconn->prepare($query);
         
         $datetime = $data['date'] . ' ' . date('H:i:s');
-        $bill_id = !empty($data['bill_id']) ? $data['bill_id'] : NULL;
-        $goal_id = !empty($data['goal_id']) ? $data['goal_id'] : NULL;
+        $bill_id = !empty($data['tagihan_id']) ? $data['tagihan_id'] : NULL;
+        $goal_id = !empty($data['target_id']) ? $data['target_id'] : NULL;
         
         $stmt->bind_param(
             "idssii", // Tipe data: amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
