@@ -12,13 +12,17 @@ class KategoriController extends Controller {
         }
     }
 
+    // Method untuk menampilkan halaman kategori dengan data yang sudah dirender server
     public function index() {
         $model = $this->loadModel('Kategori');
         $userId = $_SESSION['user']->user_id;
         $categories = $model->getAllCategoriesByUser($userId);
+
+        // Langsung tampilkan halaman HTML dengan data kategori
         $this->loadView('kategori', ['categories' => $categories]);
     }
 
+    // Method untuk menambah kategori baru (dipanggil via AJAX POST)
     public function addCategory() {
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -33,7 +37,6 @@ class KategoriController extends Controller {
                 $response['message'] = 'Ikon kategori tidak boleh kosong.';
             } else {
                 $model = $this->loadModel('Kategori');
-                // Cek apakah kategori sudah ada untuk user ini
                 if ($model->getCategoryByNameAndType($userId, $kategori, $tipe)) {
                     $response['message'] = 'Kategori dengan nama dan tipe yang sama sudah ada.';
                 } else {
@@ -51,6 +54,7 @@ class KategoriController extends Controller {
         exit;
     }
 
+    // Method untuk mendapatkan detail kategori tunggal (dipanggil via AJAX GET)
     public function getCategory() {
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
         if (isset($_GET['id'])) {
@@ -70,6 +74,7 @@ class KategoriController extends Controller {
         exit;
     }
 
+    // Method untuk memperbarui kategori (dipanggil via AJAX POST)
     public function updateCategory() {
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -85,7 +90,6 @@ class KategoriController extends Controller {
                 $response['message'] = 'Ikon kategori tidak boleh kosong.';
             } else {
                 $model = $this->loadModel('Kategori');
-                // Cek apakah ada kategori lain dengan nama dan tipe yang sama
                 $existingCategory = $model->getCategoryByNameAndType($userId, $kategori, $tipe);
                 if ($existingCategory && $existingCategory->kategori_id != $categoryId) {
                     $response['message'] = 'Kategori dengan nama dan tipe yang sama sudah ada.';
@@ -104,6 +108,7 @@ class KategoriController extends Controller {
         exit;
     }
 
+    // Method untuk menghapus kategori (dipanggil via AJAX POST)
     public function deleteCategory() {
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -123,4 +128,3 @@ class KategoriController extends Controller {
         exit;
     }
 }
-?>
