@@ -449,10 +449,10 @@ body {
 
 /* Pastikan warna tombol Simpan sesuai dengan Tambah Kategori */
 .modal .form-actions .btn-primary {
-  background-color: var(--success-color) !important;
+  background-color: #198754 !important;
 }
 .modal .form-actions .btn-primary:hover {
-  background-color: #218838 !important;
+  background-color: rgb(30, 112, 48) !important;
 }
 
 /* Footer Styles */
