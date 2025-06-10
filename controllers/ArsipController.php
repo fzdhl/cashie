@@ -1,78 +1,47 @@
-<?php
-class ArsipController {
-    private $model;
-    private $view;
-
-    public function __construct($model, $view) {
-        $this->model = $model;
-        $this->view = $view;
+<? php
+class ArsipController extends Controller {
+    public function __construct() {
+        session_start();
+        if (!isset($_SESSION['user'])) {
+            header("Location: ?c=UserController&m=loginView");
+            exit;
+        }
     }
 
     public function index() {
-        $filters = $_GET;
-        $arsip = $this->model->getFiltered($filters);
-        $this->view->renderIndex($arsip);
+        $model = $this->loadModel("Arsip");
+        $arsipList = $model->getByUser($_SESSION['user']->user_id);
+        $this->loadView("arsip", ['arsipList' => $arsipList]);
     }
 
-    public function create() {
-        $this->view->renderCreate();
-    }
-
-    public function store() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $targetDir = "public/uploads/";
-            $fileName = basename($_FILES["file"]["name"]);
-            $targetFile = $targetDir . $fileName;
-
-            if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
-                $data = [
-                    'transaksi_id' => $_POST['transaksi_id'],
-                    'nama_file' => $fileName,
-                    'path_file' => $targetFile
-                ];
-                $this->model->create($data);
-                header("Location: /arsip");
-            }
+    public function upload() {
+        if ($_FILES['struk']['error'] === 0) {
+            $fileName = uniqid('arsip_') . '_' . basename($_FILES['struk']['name']);
+            $targetPath = "uploads/arsip/" . $fileName;
+            move_uploaded_file($_FILES['struk']['tmp_name'], $targetPath);
+            $desc = $_POST['description'];
+            $model = $this->loadModel("Arsip");
+            $model->insert($_SESSION['user']->user_id, $targetPath, $desc);
         }
+        header("Location: ?c=ArsipController&m=index");
     }
 
-    public function edit($id) {
-        $arsip = $this->model->getById($id);
-        $this->view->renderEdit($arsip);
+    public function update() {
+        $id = $_POST['id'];
+        $desc = $_POST['description'];
+        $model = $this->loadModel("Arsip");
+        $model->updateDescription($id, $desc, $_SESSION['user']->user_id);
+        echo "success";
     }
 
-    public function update($id) {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'transaksi_id' => $_POST['transaksi_id'],
-                'nama_file' => $_POST['nama_file'],
-                'path_file' => $_POST['old_path']
-            ];
-
-            if (!empty($_FILES['file']['name'])) {
-                $targetDir = "public/uploads/";
-                $fileName = basename($_FILES["file"]["name"]);
-                $targetFile = $targetDir . $fileName;
-
-                if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
-                    if (file_exists($_POST['old_path'])) {
-                        unlink($_POST['old_path']);
-                    }
-                    $data['nama_file'] = $fileName;
-                    $data['path_file'] = $targetFile;
-                }
-            }
-
-            $this->model->update($id, $data);
-            header("Location: /arsip");
+    public function delete() {
+        $id = $_GET['id'];
+        $model = $this->loadModel("Arsip");
+        $arsip = $model->getById($id, $_SESSION['user']->user_id);
+        if ($arsip && file_exists($arsip->file_path)) {
+            unlink($arsip->file_path);
         }
-    }
-
-    public function delete($id) {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->model->delete($id);
-            header("Location: /arsip");
-        }
+        $model->delete($id, $_SESSION['user']->user_id);
+        header("Location: ?c=ArsipController&m=index");
     }
 }
-?>
