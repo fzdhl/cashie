@@ -22,7 +22,7 @@ class ArsipController extends Controller {
     public function upload() {
         if (isset($_FILES['struk']) && $_FILES['struk']['error'] === UPLOAD_ERR_OK) {
             $fileName = uniqid('arsip_') . '_' . basename($_FILES['struk']['name']);
-            $uploadDir = 'uploads/arsip/';
+            $uploadDir = 'resources/arsip/';
             $targetPath = $uploadDir . $fileName;
 
             if (!is_dir($uploadDir)) {

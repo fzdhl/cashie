@@ -25,7 +25,7 @@
           <a class="nav-link text-white" href="?c=DashboardController&m=goals">Goals</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=DashboardController&m=arsip">Arsip</a>
+          <a class="nav-link text-white" href="?c=ArsipController&m=index">Arsip</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
