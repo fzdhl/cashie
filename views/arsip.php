@@ -77,6 +77,7 @@
 
   <?php include_once "footer.php" ?> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Script untuk Update menggunakan AJAX (diperbaiki penanganan error)
     document.querySelectorAll('.deskripsi-form').forEach(form => {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -90,16 +91,22 @@
                 const response = await fetch('?c=ArsipController&m=update', { method: 'POST', body: formData });
                 if (response.ok) {
                     console.log('Deskripsi berhasil diperbarui.');
-                    // Anda bisa menambahkan feedback visual di sini, misal:
-                    // form.querySelector('button[type="submit"]').innerHTML = '<i class="fas fa-check"></i>';
-                    // setTimeout(() => form.querySelector('button[type="submit"]').innerHTML = '<i class="fas fa-save"></i>', 2000);
+                    // Tambahkan feedback visual jika diinginkan, misal:
+                    // const submitBtn = this.querySelector('button[type="submit"]');
+                    // submitBtn.classList.add('btn-success');
+                    // submitBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    // setTimeout(() => {
+                    //     submitBtn.classList.remove('btn-success');
+                    //     submitBtn.innerHTML = '<i class="fas fa-save"></i>';
+                    // }, 2000);
                 } else {
-                    console.error('Gagal memperbarui deskripsi.');
-                    alert('Gagal memperbarui deskripsi.');
+                    const errorText = await response.text();
+                    console.error('Gagal memperbarui deskripsi:', errorText);
+                    alert('Gagal memperbarui deskripsi: ' + errorText);
                 }
             } catch (error) {
                 console.error('Error saat fetch:', error);
-                alert('Terjadi kesalahan jaringan.');
+                alert('Terjadi kesalahan jaringan atau server tidak merespons.');
             }
         });
     });

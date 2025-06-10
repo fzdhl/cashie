@@ -8,46 +8,60 @@ class ArsipController extends Controller {
         }
     }
 
+    // Read: Melihat daftar struk
     public function index() {
         $model = $this->loadModel("Arsip");
-        // Pastikan $arsipList selalu didefinisikan di sini.
-        // getByUser akan mengembalikan objek mysqli_result, yang memiliki properti num_rows.
+        // Pastikan $arsipList selalu didefinisikan sebagai objek mysqli_result
+        // ini mencegah error "Undefined variable" dan "Attempt to read property num_rows on null"
         $arsipList = $model->getByUser($_SESSION['user']->user_id); 
         $this->loadView("arsip", ['arsipList' => $arsipList]);
     }
 
+    // Create: Mengunggah atau memasukkan data struk
     public function upload() {
-        // Cek apakah ada file yang diupload dan tidak ada error
+        // Memastikan file diupload dan tidak ada error
         if (isset($_FILES['struk']) && $_FILES['struk']['error'] === UPLOAD_ERR_OK) {
             $fileName = uniqid('arsip_') . '_' . basename($_FILES['struk']['name']);
             $uploadDir = 'uploads/arsip/';
             $targetPath = $uploadDir . $fileName;
 
-            // Buat direktori jika belum ada
+            // Buat direktori jika belum ada, dengan izin baca/tulis penuh
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
 
-            // Pindahkan file yang diupload
+            // Pindahkan file yang diupload dari lokasi sementara ke lokasi target
             if (move_uploaded_file($_FILES['struk']['tmp_name'], $targetPath)) {
-                $desc = $_POST['description'] ?? ''; // Ambil deskripsi, default kosong jika tidak ada
+                $desc = $_POST['description'] ?? ''; // Ambil deskripsi, default string kosong jika tidak ada
                 $model = $this->loadModel("Arsip");
-                $model->insert($_SESSION['user']->user_id, $targetPath, $desc);
+                $insertSuccess = $model->insert($_SESSION['user']->user_id, $targetPath, $desc);
+                
+                if (!$insertSuccess) {
+                    // Jika insert ke DB gagal, hapus file yang sudah diupload
+                    if (file_exists($targetPath)) {
+                        unlink($targetPath);
+                    }
+                    error_log("Failed to insert arsip data into DB for user ID: " . $_SESSION['user']->user_id);
+                    // Anda bisa menambahkan pesan error ke session untuk ditampilkan di view
+                    // $_SESSION['error_message'] = "Gagal menyimpan data arsip ke database.";
+                }
             } else {
-                // Penanganan error jika gagal memindahkan file
-                // Anda bisa log error ini atau menampilkan pesan ke user
-                error_log("Failed to move uploaded file to: " . $targetPath);
-                // header("Location: ?c=ArsipController&m=index&error=upload_failed");
+                error_log("Failed to move uploaded file to: " . $targetPath . " - Error: " . $_FILES['struk']['error']);
+                // $_SESSION['error_message'] = "Gagal mengunggah file. Pastikan folder 'uploads/arsip' dapat ditulis.";
             }
+        } else if (isset($_FILES['struk'])) {
+            // Tangani error upload file PHP (misal: ukuran terlalu besar)
+            error_log("File upload error code: " . $_FILES['struk']['error']);
+            // $_SESSION['error_message'] = "Terjadi masalah saat mengunggah file. Kode error: " . $_FILES['struk']['error'];
         } else {
-            // Penanganan error jika ada masalah dengan file upload
-            // error_log("File upload error: " . ($_FILES['struk']['error'] ?? 'No file uploaded'));
-            // header("Location: ?c=ArsipController&m=index&error=file_error");
+            // $_SESSION['error_message'] = "Tidak ada file yang diunggah.";
         }
+        
         header("Location: ?c=ArsipController&m=index");
-        exit(); // Penting untuk menghentikan eksekusi setelah header redirect
+        exit(); // Penting: Hentikan eksekusi setelah redirect
     }
 
+    // Update: Mengedit informasi struk yang sudah tersimpan
     public function update() {
         // Pastikan ini adalah request POST dan data yang diperlukan ada
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && isset($_POST['description'])) {
@@ -57,18 +71,19 @@ class ArsipController extends Controller {
             $success = $model->updateDescription($id, $desc, $_SESSION['user']->user_id);
             
             if ($success) {
-                echo "success"; // Beri respons success ke AJAX
+                echo "success"; // Beri respons "success" ke AJAX
             } else {
-                http_response_code(500); // Set status kode error
-                echo "error"; // Beri respons error ke AJAX
+                http_response_code(500); // Set status kode error HTTP 500
+                echo "error: Failed to update database"; // Beri pesan error ke AJAX
             }
         } else {
             http_response_code(400); // Bad Request
-            echo "Invalid request";
+            echo "error: Invalid request data";
         }
-        exit(); // Penting untuk menghentikan eksekusi
+        exit(); // Penting: Hentikan eksekusi
     }
 
+    // Delete: Menghapus arsip struk dengan konfirmasi terlebih dahulu
     public function delete() {
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
@@ -76,15 +91,17 @@ class ArsipController extends Controller {
             $arsip = $model->getById($id, $_SESSION['user']->user_id);
             
             if ($arsip) {
-                // Hapus file fisik jika ada
-                if (file_exists($arsip->file_path)) {
+                // Hapus file fisik dari server jika ada dan file_path valid
+                if (file_exists($arsip->file_path) && $arsip->file_path != '') {
                     unlink($arsip->file_path);
                 }
                 // Hapus entri dari database
                 $model->delete($id, $_SESSION['user']->user_id);
             }
+            // Jika arsip tidak ditemukan atau bukan milik user ini, tidak ada yang dilakukan.
+            // Bisa juga ditambahkan error logging atau pesan ke user.
         }
         header("Location: ?c=ArsipController&m=index");
-        exit(); // Penting untuk menghentikan eksekusi setelah header redirect
+        exit(); // Penting: Hentikan eksekusi setelah redirect
     }
 }
