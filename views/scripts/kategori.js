@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
-    const categoriesList = document.getElementById('categoriesList');
+    const categoriesList = document.getElementById('categoriesList'); // Tetap ada untuk event delegation
     const addCategoryBtn = document.getElementById('addCategoryBtn');
     const categoryModal = document.getElementById('categoryModal');
     const deleteModal = document.getElementById('deleteModal');
     const categoryForm = document.getElementById('categoryForm');
     const modalTitle = document.getElementById('modalTitle');
-    const categoryIdInput = document.getElementById('categoryId'); // Hidden input for category_id
+    const categoryIdInput = document.getElementById('categoryId');
     const categoryNameInput = document.getElementById('categoryName');
     const iconsGrid = document.getElementById('iconsGrid');
     const closeBtn = document.querySelector('#categoryModal .close-btn');
@@ -34,57 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the app
     init();
 
-    // Fetch and render categories from the server
-    async function fetchAndRenderCategories() {
-        try {
-            // Memanggil KategoriController::index() untuk mendapatkan data JSON
-            const response = await fetch('?c=KategoriController&m=index');
-            const data = await response.json(); // Mengurai respons sebagai JSON
-
-            if (data.status === 'success') {
-                categoriesList.innerHTML = ''; // Hapus kategori yang ada
-                if (data.categories.length === 0) {
-                    categoriesList.innerHTML = '<p class="no-categories">No categories found. Add your first category!</p>';
-                } else {
-                    data.categories.forEach(category => {
-                        const categoryItem = document.createElement('div');
-                        categoryItem.className = 'category-item';
-                        categoryItem.setAttribute('data-id', category.kategori_id); // Menggunakan kategori_id
-                        categoryItem.draggable = true; // Make items draggable
-
-                        categoryItem.innerHTML = `
-                            <div class="category-item-left">
-                                <div class="category-icon">
-                                    <i class="fas fa-${category.icon}"></i>
-                                </div>
-                                <div class="category-info">
-                                    <h3>${category.kategori}</h3>
-                                    <span>${category.tipe.charAt(0).toUpperCase() + category.tipe.slice(1)}</span>
-                                </div>
-                            </div>
-                            <div class="category-actions">
-                                <button class="action-btn edit" data-id="${category.kategori_id}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete" data-id="${category.kategori_id}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        `;
-                        categoriesList.appendChild(categoryItem);
-                    });
-                }
-                setupDragAndDrop(); // Re-apply drag and drop after rendering
-            } else {
-                categoriesList.innerHTML = `<p class="text-danger">Error: ${data.message || 'Gagal memuat kategori.'}</p>`;
-            }
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-            categoriesList.innerHTML = '<p class="text-danger">Network error or server unavailable.</p>';
-        }
-    }
-
-    // Render icons in the modal
+    // Renders available icons in the modal's icon grid
     function renderIcons() {
         iconsGrid.innerHTML = '';
         availableIcons.forEach(icon => {
@@ -104,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Setup event listeners
+    // Sets up all event listeners for buttons and form submissions
     function setupEventListeners() {
         addCategoryBtn.addEventListener('click', openAddCategoryModal);
         closeBtn.addEventListener('click', closeModal);
@@ -122,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Event delegation for edit and delete buttons
+        // Event delegation for edit and delete buttons (karena categoriesList di-render PHP)
         categoriesList.addEventListener('click', function(e) {
             const editBtn = e.target.closest('.edit');
             const deleteBtn = e.target.closest('.delete');
@@ -130,86 +80,67 @@ document.addEventListener('DOMContentLoaded', function() {
             if (editBtn) {
                 const categoryId = parseInt(editBtn.getAttribute('data-id'));
                 openEditCategoryModal(categoryId);
-            } else if (deleteBtn) {
+            }
+            if (deleteBtn) {
                 const categoryId = parseInt(deleteBtn.getAttribute('data-id'));
                 openDeleteModal(categoryId);
             }
         });
     }
 
-    // Setup drag and drop for categories
+    // Handles drag and drop functionality for category items (for potential reordering)
     function setupDragAndDrop() {
         const categoryItems = document.querySelectorAll('.category-item');
-
         categoryItems.forEach(item => {
-            item.addEventListener('dragstart', function() {
-                this.classList.add('dragging');
-            });
-
-            item.addEventListener('dragend', function() {
-                this.classList.remove('dragging');
-                // You would typically save the new order to your database here
-                // For this example, we're not implementing reordering persistence
-            });
+            item.addEventListener('dragstart', function() { this.classList.add('dragging'); });
+            item.addEventListener('dragend', function() { this.classList.remove('dragging'); });
         });
-
         categoriesList.addEventListener('dragover', function(e) {
             e.preventDefault();
             const draggingItem = document.querySelector('.dragging');
             const afterElement = getDragAfterElement(this, e.clientY);
-
-            if (afterElement) {
-                this.insertBefore(draggingItem, afterElement);
-            } else {
-                this.appendChild(draggingItem);
-            }
+            if (afterElement) { this.insertBefore(draggingItem, afterElement); }
+            else { this.appendChild(draggingItem); }
         });
     }
 
-    // Helper function for drag and drop
+    // Helper function for drag and drop to determine element position
     function getDragAfterElement(container, y) {
         const draggableElements = [...container.querySelectorAll('.category-item:not(.dragging)')];
-
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
             const offset = y - box.top - box.height / 2;
-
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
+            if (offset < 0 && offset > closest.offset) { return { offset: offset, element: child }; }
+            else { return closest; }
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
-    // Open add category modal
+    // Opens the modal for adding a new category
     function openAddCategoryModal() {
         currentAction = 'create';
-        modalTitle.textContent = 'Add New Category';
+        modalTitle.textContent = 'Tambah Kategori Baru';
         categoryForm.reset();
         selectedIcon = '';
-        document.querySelectorAll('.icon-option').forEach(icon => {
-            icon.classList.remove('selected');
-        });
-        document.querySelector('input[name="tipe"][value="pemasukan"]').checked = true; // Menggunakan 'tipe'
+        document.querySelectorAll('.icon-option').forEach(icon => { icon.classList.remove('selected'); });
+        document.querySelector('input[name="tipe"][value="pemasukan"]').checked = true;
         categoryModal.style.display = 'flex';
     }
 
-    // Open edit category modal
+    // Opens the modal for editing an existing category
     async function openEditCategoryModal(id) {
         currentAction = 'edit';
         currentCategoryId = id;
-        modalTitle.textContent = 'Edit Category';
-
+        modalTitle.textContent = 'Edit Kategori';
+        console.log('--- openEditCategoryModal: Membuka untuk ID:', id, '---');
         try {
             const response = await fetch(`?c=KategoriController&m=getCategory&id=${id}`);
             const data = await response.json();
 
             if (data.status === 'success') {
                 const category = data.data;
-                categoryIdInput.value = category.kategori_id; // Set hidden ID
+                categoryIdInput.value = category.kategori_id;
                 categoryNameInput.value = category.kategori;
-                document.querySelector(`input[name="tipe"][value="${category.tipe}"]`).checked = true; // Menggunakan 'tipe'
+                document.querySelector(`input[name="tipe"][value="${category.tipe}"]`).checked = true;
                 selectedIcon = category.icon;
 
                 document.querySelectorAll('.icon-option').forEach(iconEl => {
@@ -219,106 +150,120 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
                 categoryModal.style.display = 'flex';
+                console.log('openEditCategoryModal: Data kategori dimuat:', category);
             } else {
                 alert('Error: ' + data.message);
+                console.error('openEditCategoryModal Error:', data.message);
             }
         } catch (error) {
-            console.error('Error fetching category for edit:', error);
-            alert('Gagal memuat detail kategori.');
+            console.error('openEditCategoryModal Fatal Error:', error);
+            alert('Gagal memuat detail kategori. Periksa konsol browser.');
         }
     }
 
-    // Handle form submission (Add/Edit)
+    // Handles form submission for both adding and editing categories
     async function handleFormSubmit(e) {
         e.preventDefault();
+        console.log('--- handleFormSubmit: Form disubmit ---');
 
         const kategori = categoryNameInput.value.trim();
-        const tipe = document.querySelector('input[name="tipe"]:checked').value; // Menggunakan 'tipe'
+        const tipe = document.querySelector('input[name="tipe"]:checked').value;
 
-        if (!kategori) {
-            alert('Please enter a category name.');
-            return;
-        }
-
-        if (!selectedIcon) {
-            alert('Please select an icon.');
-            return;
-        }
+        if (!kategori) { alert('Silakan masukkan nama kategori.'); return; }
+        if (!selectedIcon) { alert('Silakan pilih ikon.'); return; }
 
         const formData = new FormData();
         formData.append('kategori', kategori);
-        formData.append('tipe', tipe); // Menggunakan 'tipe'
+        formData.append('tipe', tipe);
         formData.append('icon', selectedIcon);
+        if (currentAction === 'edit') { formData.append('kategori_id', currentCategoryId); }
 
-        let url = '';
-        let method = 'POST';
-
-        if (currentAction === 'create') {
-            url = '?c=KategoriController&m=addCategory';
-        } else {
-            url = '?c=KategoriController&m=updateCategory';
-            formData.append('kategori_id', currentCategoryId);
-        }
+        let url = currentAction === 'create' ? '?c=KategoriController&m=addCategory' : '?c=KategoriController&m=updateCategory';
 
         try {
-            const response = await fetch(url, { method: method, body: formData });
+            console.log('handleFormSubmit: Mengirim data ke:', url, 'Data:', Object.fromEntries(formData));
+            const response = await fetch(url, { method: 'POST', body: formData });
+            
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                const textResponse = await response.text();
+                console.error('handleFormSubmit Error: Server tidak mengembalikan JSON. Respons:', textResponse);
+                alert('Server tidak mengembalikan JSON. Periksa log server untuk error saat pengiriman form.');
+                return;
+            }
+
             const data = await response.json();
+            console.log('handleFormSubmit: Respons diterima:', data);
 
             if (data.status === 'success') {
                 alert(data.message);
                 closeModal();
-                fetchAndRenderCategories(); // Reload categories to show changes
+                location.reload(); // PENTING: Reload halaman untuk menampilkan data terbaru
             } else {
                 alert('Error: ' + data.message);
+                console.error('handleFormSubmit Error: Status server tidak sukses:', data.message);
             }
-        }
-        catch (error) {
-            console.error('Error submitting form:', error);
+        } catch (error) {
+            console.error('handleFormSubmit Fatal Error:', error);
             alert('Gagal menyimpan kategori. Terjadi kesalahan jaringan.');
         }
     }
 
-    // Open delete confirmation modal
+    // Opens the delete confirmation modal
     function openDeleteModal(id) {
         currentCategoryId = id;
         deleteModal.style.display = 'flex';
     }
 
-    // Close delete modal
+    // Closes the delete confirmation modal
     function closeDeleteModal() {
         deleteModal.style.display = 'none';
     }
 
-    // Confirm delete
+    // Confirms and executes category deletion
     async function confirmDelete() {
+        console.log('--- confirmDelete: Mengkonfirmasi penghapusan ID:', currentCategoryId, '---');
         const formData = new FormData();
         formData.append('kategori_id', currentCategoryId);
 
         try {
             const response = await fetch('?c=KategoriController&m=deleteCategory', { method: 'POST', body: formData });
+
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                const textResponse = await response.text();
+                console.error('confirmDelete Error: Server tidak mengembalikan JSON. Respons:', textResponse);
+                alert('Server tidak mengembalikan JSON. Periksa log server untuk error saat penghapusan.');
+                return;
+            }
+
             const data = await response.json();
+            console.log('confirmDelete: Respons diterima:', data);
 
             if (data.status === 'success') {
                 alert(data.message);
                 closeDeleteModal();
-                fetchAndRenderCategories(); // Reload categories
+                location.reload(); // PENTING: Reload halaman untuk menampilkan data terbaru
             } else {
                 alert('Error: ' + data.message);
+                console.error('confirmDelete Error: Status server tidak sukses:', data.message);
             }
         } catch (error) {
-            console.error('Error deleting category:', error);
+            console.error('confirmDelete Fatal Error:', error);
             alert('Gagal menghapus kategori. Terjadi kesalahan jaringan.');
         }
     }
 
-    // Close main category modal
+    // Closes the main category modal
     function closeModal() {
         categoryModal.style.display = 'none';
     }
 
+    // Initializes the application on page load
     function init() {
-        fetchAndRenderCategories(); // Memuat kategori saat DOM siap
+        // fetchAndRenderCategories() TIDAK DIPANGGIL DI SINI lagi
         renderIcons();
         setupEventListeners();
+        setupDragAndDrop(); // Pastikan drag and drop di-setup untuk elemen yang sudah ada
     }
 });
