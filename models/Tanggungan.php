@@ -6,7 +6,7 @@ class Tanggungan extends Model // class model untuk mengelola data
     {
         // menyiapkan query untuk mengambil semua data tanggungan milik user tertentu
         // hasil diurutkan berdasarkan jadwal pembayaran paling awal
-        $stmt = $this->dbconn->prepare("SELECT * FROM tanggungan WHERE user_id = ? ORDER BY jadwal_pembayaran ASC");
+        $stmt = $this->dbconn->prepare("SELECT t.*, k.kategori FROM tanggungan AS t JOIN kategori AS k ON t.kategori_id = k.kategori_id WHERE t.user_id = ? ORDER BY t.jadwal_pembayaran ASC");
 
         // mengikat parameter user_id (tipe i = integer)
         $stmt->bind_param("i", $id_user);
@@ -31,11 +31,11 @@ class Tanggungan extends Model // class model untuk mengelola data
         // binding parameter ke statement SQL
         // i = integer, s = string
         $stmt->bind_param(
-            "isssis",
+            "issiis",
             $data[0], // user_id (int)
             $data[1], // nama (string)
             $data[2], // jadwal_pembayaran (string/tanggal)
-            $data[3], // jenis (string)
+            $data[3], // kategori_id (int)
             $data[4], // jumlah (int)
             $data[5] // status (string)
         );

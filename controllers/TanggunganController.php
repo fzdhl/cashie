@@ -28,10 +28,15 @@ class TanggunganController extends Controller
         $model = $this->loadModel("Tanggungan");
         // mengambil semua data dari tabel tanggungan berdasarkan user_id 
         $tanggungan = $model->getByUser($id_user);
-        
+
+        // load model kategori dan ambil data kategori dari halaman kategori
+        $kategoriModel = $this->loadModel('Kategori');
+        $categories = $kategoriModel->getAllCategoriesByUser($id_user);
+
         // menampilkan data hasik query ke tampilan html (ditampilkan ke browser user)
         $this->loadView("tanggungan", [
-            'tanggungan' => $tanggungan
+            'tanggungan' => $tanggungan,
+            'categories' => $categories
         ]);
     }
 
