@@ -148,12 +148,19 @@
               <td>
                 <!-- input jenis tangggungan menggunakan dropdown -->
                 <!-- jika data sudah disimpan permanen maka dropdown akan dimatikan -->
-                <select class="form-select form-select-sm" <?= $isDisable ?>>
+                <select name="jenis[]" class="form-select form-select-sm" <?= $isDisable ?>>
                   <!-- buat munculin kategori di tabel given -->
-
-                  <option <?= $t['jenis'] === 'Tagihan bulanan' ? 'selected' : '' ?>>Tagihan bulanan</option>
-                  <option <?= $t['jenis'] === 'Kebutuhan' ? 'selected' : '' ?>>Kebutuhan</option>
-                  <option <?= $t['jenis'] === 'Lainnya' ? 'selected' : '' ?>>Lainnya</option>
+                  <?php
+                    // Memastikan $categories ada dan merupakan array sebelum looping
+                    if (isset($categories) && is_array($categories)) { // Memastikan variabel $categories ada dan bertipe array
+                        foreach ($categories as $category) { // Melakukan iterasi untuk setiap kategori
+                            // Menentukan apakah kategori saat ini harus dipilih berdasarkan kategori_id
+                            $selected = (isset($t['kategori_id']) && $t['kategori_id'] == $category['kategori_id']) ? 'selected' : '';
+                            // Mencetak opsi dropdown dengan nilai kategori_id dan teks kategori
+                            echo '<option value="' . htmlspecialchars($category['kategori_id']) . '" ' . $selected . '>' . htmlspecialchars($category['kategori']) . '</option>';
+                        }
+                    }
+                    ?>
                 </select>
               </td>
               <!-- input jumlah atau biaya tanggungan -->
@@ -180,12 +187,22 @@
     // diisi dengan total tagihan yang berstatus selesai
     document.getElementById('terbayar').innerText = 'Rp. <?= number_format($totalBayar, 0, ',', '.') ?>';
 
+    // mengambil kategori dan meneruskan ke javascript
+    const categories = <?= json_encode($categories ?? []) ?>;
+
     // fungsi untuk menambah baris baru ke dalam tabel input tanggungan
     function tambahBaris() {
       // mengambil elemen dengan id tabel tanggungan
       const tbody = document.getElementById('tabelTanggungan');
       // membuat elemen baris tabel baru
       const row = document.createElement('tr');
+
+      let categoryOptions = '<option value="">Pilih...</option>'; // Opsi default untuk dropdown
+      categories.forEach(category => { // Melakukan iterasi untuk setiap kategori dari array JavaScript `categories`
+          // Menambahkan opsi untuk setiap kategori dengan nilai kategori_id dan teks kategori
+          categoryOptions += `<option value="<span class="math-inline">\{category\.kategori\_id\}"\></span>{category.kategori}</option>`;
+      });
+
       // nilai dari input dikirim ke server sebagai array ketika form disubmit
       // styling menggunakan bootstrap (form-control) merupakan kelas bootstrap untuk input rapi dan konsisten
       row.innerHTML = `
@@ -196,10 +213,7 @@
         <td><input type="date" name="jadwal[]" class="form-control form-control-sm" required></td>
         <td>
           <select name="jenis[]" class="form-select form-select-sm" required>
-            <option value="">Pilih...</option>
-            <option>Tagihan bulanan</option>
-            <option>Kebutuhan</option>
-            <option>Lainnya</option>
+            ${categoryOptions}
           </select>
         </td>
         <td><input type="number" name="jumlah[]" class="form-control form-control-sm" required></td>
