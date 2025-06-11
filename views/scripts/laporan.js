@@ -39,6 +39,32 @@ const totalChart2 = new Chart(ctx2, {
     }
 });
 
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     document.getElementById("jenis_laporan").addEventListener("change", toggleTanggal);
+//     toggleTanggal();
+// });
+
+// function toggleTanggal() {
+//         const jenis = document.getElementById('jenis_laporan').value;
+//         const tanggalManual = document.getElementById('tanggal_manual');
+//         const tanggalRange = document.getElementById('tanggal_range');
+
+//         console.log("jenis laporan:", jenis);
+//         console.log("toggleTanggal dijalankan");
+
+//         if (jenis === "bulanan") { // Mingguan
+//             tanggalManual.classList.add('d-none');
+//             tanggalRange.classList.remove('d-none');
+//         } else if (jenis === "mingguan") { // Bulanan
+//             tanggalRange.classList.add('d-none');
+//             tanggalManual.classList.remove('d-none');
+//         } else {
+//             tanggalRange.classList.add('d-none');
+//             tanggalManual.classList.add('d-none');
+//         }
+//     }
+
 // const ctx1 = document.getElementById('saldo').getContext('2d');
 // const totalChart1 = new Chart(ctx1, {
 //     type: 'line',
