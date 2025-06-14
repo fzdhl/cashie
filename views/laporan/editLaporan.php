@@ -65,6 +65,14 @@
                         </button>
                     </div>
                 </form>
+                <?php
+                        if(isset($error['error'])){
+                            echo "<p class=\"m-3\">*{$error['error']}</p>";
+                        }
+                        if(isset($error['error_editlaporan'])){
+                            echo "<p class=\"m-3\">*{$error['error_editlaporan']}</p>";
+                        }
+                    ?>
             </div>
         </div>
     </div>

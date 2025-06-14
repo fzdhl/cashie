@@ -26,43 +26,63 @@
         //     header("Location: ?c=LaporanController&m=report");
         // }
 
-        public function addLaporan(){
-            $username = $_SESSION['user'];
-            $username = $username->username;
+        public function addLaporan() {
+            $userSession = $_SESSION['user'];
+            if (is_object($userSession)) {
+                $username = $userSession->username;
+            } else {
+                $this->report(['error_addlaporan' => 'Session user tidak valid.']);
+                return;
+            }
 
             $model = $this->loadModel("Laporan");
             $userTable = $model->getByUsername($username);
+
+            if (!$userTable) {
+                $this->report(['error_addlaporan' => 'User tidak ditemukan.']);
+                return;
+            }
+
             $user_id = $userTable->user_id;
 
-            $tanggal_awal = $_POST['tanggal_awal'];
-            $tanggal_akhir = $_POST['tanggal_akhir'];
-            $catatan = $_POST['catatan'];
+            $tanggal_awal = $_POST['tanggal_awal'] ?? null;
+            $tanggal_akhir = $_POST['tanggal_akhir'] ?? null;
+            $catatan = $_POST['catatan'] ?? '';
 
-            $date_awal = new DateTime($tanggal_awal);
-            $date_akhir = new DateTime($tanggal_akhir);
+            $error = [];
 
-            if ($date_awal > $date_akhir) {
-                    $error = ['error_addlaporan' => "Tanggal awal harus lebih kecil atau sama dengan tanggal akhir."];
+            $errorMsg = $this->cekTanggalLaporan($tanggal_awal, $tanggal_akhir);
+            if ($errorMsg) {
+                $error['error_addlaporan'] = $errorMsg;
             }
-            else if (date('n', strtotime($tanggal_awal)) != date('n', strtotime($tanggal_akhir))) {
-                $error = ['error_addlaporan' => "Laporan harus pada bulan yang sama."];
-            } 
-            else {
-                $selisih = $date_awal->diff($date_akhir)->days;
 
-                if ($selisih > 7) {
-                    $error = ['error_addlaporan' => "Rentang waktu laporan mingguan tidak boleh lebih dari 7 hari."];
-                }
-            }
-            if(isset($error['error_addlaporan'])){  
-                $this->report($error['error_addlaporan']);
-            }
-            else{
+            if (!empty($error)) {
+                $this->report($error);
+            } else {
                 $model->insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan);
                 header("Location: ?c=LaporanController&m=report");
+                exit;
             }
-            
         }
+        
+        public function cekTanggalLaporan($tanggal_awal, $tanggal_akhir){
+            try {
+                $date_awal = new DateTime($tanggal_awal);
+                $date_akhir = new DateTime($tanggal_akhir);
+
+                if ($date_awal > $date_akhir) {
+                    return "Tanggal awal harus lebih kecil atau sama dengan tanggal akhir.";
+                } else if ($date_awal->format('n') != $date_akhir->format('n')) {
+                    return "Laporan harus dalam bulan yang sama.";
+                } else if ($date_awal->diff($date_akhir)->days > 7) {
+                    return "Rentang waktu laporan mingguan tidak boleh lebih dari 7 hari.";
+                }
+            } catch (Exception $e) {
+                return "Format tanggal tidak valid.";
+            }
+            return false;
+        }
+
 
         public function report($error = []) {
             $username = $_SESSION['user'];
@@ -156,7 +176,7 @@
             $this->loadView("laporan/laporan", $data);
         }
         
-        public function editReport(){
+        public function editReport($error = []){
 
             $tanggal_awal = $_POST['tanggal_awal'];
             $tanggal_akhir = $_POST['tanggal_akhir'];
@@ -169,7 +189,11 @@
                 'laporan_id' => $laporan_id,
                 'catatan' => $catatan
             ];
-            
+
+            if (!empty($error)) {
+                $data['error'] = $error;
+            }
+
             $this->loadView("laporan/editLaporan", $data);
         }
 
@@ -325,8 +349,19 @@
             $tanggal_akhir = $_POST['tanggal_akhir'];
             $catatan = $_POST['catatan'];
 
+            $errorMsg = $this->cekTanggalLaporan($tanggal_awal, $tanggal_akhir);
+            if ($errorMsg) {
+                $error['error_editlaporan'] = $errorMsg;
+            }
+            if(!empty($error)){
+                $this->editReport($error);
+            }
+            else{
+                $model->updateLaporan($laporan_id, $tanggal_awal, $tanggal_akhir, $catatan);
+                header("Location: ?c=LaporanController&m=report");
+            }
+
             
-            $model->updateLaporan($laporan_id, $tanggal_awal, $tanggal_akhir, $catatan);
-            header("Location: ?c=LaporanController&m=report");
+            
         }
     }

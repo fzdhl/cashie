@@ -25,6 +25,32 @@ main {
     background:rgb(60, 216, 138);
     /* #eef8f3 */
 }
+.laporan-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.laporan-card {
+    flex: 1;
+    min-width: 300px;
+}
+
+.scrollable-table {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.scrollable-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scrollable-table th, .scrollable-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
 
 @media (max-width: 769px) {
     .summary-card p {
@@ -55,3 +81,4 @@ main {
     /* #eef8f3 */
     }
 }
+

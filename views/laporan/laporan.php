@@ -11,36 +11,7 @@
     <!-- <link rel="stylesheet" href="views/styles/styleReport.css" /> -->
 
     <style>
-        .header_input_div{
-            background:rgb(60, 216, 138);
-            /* #eef8f3 */
-        }
-        .laporan-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .laporan-card {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .scrollable-table {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .scrollable-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .scrollable-table th, .scrollable-table td {
-            padding: 8px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
+        
     </style>
 </head>
 <body>
@@ -108,10 +79,10 @@
                     </div>
                     <?php
                         if(isset($error['error'])){
-                            echo "<p class=\"m-3\">{$error['error']}</p>";
+                            echo "<p class=\"m-3\">*{$error['error']}</p>";
                         }
                         if(isset($error['error_addlaporan'])){
-                            echo "<p class=\"m-3\">{$error['error_addlaporan']}</p>";
+                            echo "<p class=\"m-3\">*{$error['error_addlaporan']}</p>";
                         }
                     ?>
             </div>
@@ -145,7 +116,7 @@
 
         <div class="filter_div col mt-4" id="laporan_bulanan_section">
             <div class="card shadow-sm">
-                <div class="header_input_div card-header text-white">
+                <div class="header_input_div card-header text-white bg-success">
                     Filter Laporan Bulanan
                 </div>
                 <div class="card-body">
@@ -205,7 +176,7 @@
 
         <div id="laporan_mingguan_section" class="mt-4">
             <div class="card shadow-sm">
-                <div class="header_input_div card-header text-white">
+                <div class="header_input_div card-header text-white bg-success">
                     Laporan Mingguan
                 </div>
                 <div class="card-body scrollable-table">
