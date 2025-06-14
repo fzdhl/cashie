@@ -151,18 +151,14 @@
                 <select name="jenis[]" class="form-select form-select-sm" <?= $isDisable ?>>
                   <!-- buat munculin kategori di tabel given -->
                   <?php
-                    // Memastikan $categories ada dan merupakan array sebelum looping
-                    if (isset($categories) && is_array($categories)) { // Memastikan variabel $categories ada dan bertipe array
-                        foreach ($categories as $category) { // Melakukan iterasi untuk setiap kategori
-                            // Menentukan apakah kategori saat ini harus dipilih berdasarkan kategori_id
-                            $selected = (isset($t['kategori_id']) && $t['kategori_id'] == $category['kategori_id']) ? 'selected' : '';
-                            die("tes");
-                            die(var_dump($selected));
-                            // Mencetak opsi dropdown dengan nilai kategori_id dan teks kategori
-                            echo '<option value="' . htmlspecialchars($category['kategori_id']) . '" ' . $selected . '>' . htmlspecialchars($category['kategori']) . '</option>';
-                        }
-                    }
-                    ?>
+                  // memastikan $categories ada dan merupakan array sebelum looping
+                  if (isset($categories) && is_array($categories)) {
+                      foreach ($categories as $category) {
+                          $selected = (isset($t['kategori_id']) && $t['kategori_id'] == $category['kategori_id']) ? 'selected' : '';
+                          echo '<option value="' . htmlspecialchars($category['kategori_id']) . '" ' . $selected . '>' . htmlspecialchars($category['kategori']) . '</option>';
+                      }
+                  }
+                  ?>
                 </select>
               </td>
               <!-- input jumlah atau biaya tanggungan -->
@@ -199,10 +195,10 @@
       // membuat elemen baris tabel baru
       const row = document.createElement('tr');
 
-      let categoryOptions = '<option value="">Pilih...</option>'; // Opsi default untuk dropdown
-      categories.forEach(category => { // Melakukan iterasi untuk setiap kategori dari array JavaScript `categories`
-          // Menambahkan opsi untuk setiap kategori dengan nilai kategori_id dan teks kategori
-          categoryOptions += `<option value="<span class="math-inline">\{category\.kategori\_id\}"\></span>{category.kategori}</option>`;
+      let categoryOptions = '<option value="">Pilih...</option>'; // opsi default untuk dropdown
+      categories.forEach(category => { // melakukan iterasi untuk setiap kategori dari array JavaScript `categories`
+          // menambahkan opsi untuk setiap kategori dengan nilai kategori_id dan teks kategori
+          categoryOptions += `<option value="${category.kategori_id}">${category.kategori}</option>`;
       });
 
       // nilai dari input dikirim ke server sebagai array ketika form disubmit

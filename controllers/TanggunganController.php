@@ -75,7 +75,6 @@ class TanggunganController extends Controller
                 // $periode
             ];
 
-            
             // menyimpan ke database 
             if (!$model->insert($data)) {
                 // jika salah satu gagal maka berhasil akan diubah menjadi false
