@@ -9,6 +9,15 @@
             return $result->fetch_object();
         }
 
+        public function getById($user_id) {
+            $stmt = $this->dbconn->prepare("SELECT * FROM user WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_object();
+        }
+
         public function createUser($username, $password, $email) {
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $this->dbconn->prepare("INSERT INTO user (email, password, username) VALUES (?, ?, ?)");

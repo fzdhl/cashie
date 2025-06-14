@@ -12,4 +12,14 @@
             $users = $model->getAll();
             $this->loadView('admin', ['users' => $users]);
         }
+
+        public function edit() {
+            $user_id = $_GET['user_id'];
+
+            $model = $this->loadModel('User');
+            $user = $model->getById($user_id);
+
+
+            $this->loadView('admin-edit', ['user' => $user]);
+        }
     }
