@@ -75,6 +75,7 @@ class TanggunganController extends Controller
                 // $periode
             ];
 
+            
             // menyimpan ke database 
             if (!$model->insert($data)) {
                 // jika salah satu gagal maka berhasil akan diubah menjadi false
@@ -82,13 +83,13 @@ class TanggunganController extends Controller
                 break;
             }
         }
-
+        
         // mengecek apakah menyimpan data berhasil?
-        // if ($berhasil) {
-        //     // jika berhasil maka tanggungan user akan di-update di kolom permanen
-        //     // permanen = 1, artinya tidak bisa diedit atau dihapus lagi
-        //     $model->setPermanen($id_user);
-        // }
+        if ($berhasil) {
+            // jika berhasil maka tanggungan user akan di-update di kolom permanen
+            // permanen = 1, artinya tidak bisa diedit atau dihapus lagi
+            $model->setPermanen($id_user);
+        }
 
         // setelah selesai akan diarahkan ke halaman utama untuk melihat hasil akhirnya
         header('Location: ?c=TanggunganController&m=index');

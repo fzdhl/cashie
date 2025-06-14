@@ -131,7 +131,7 @@
               <td class="text-center">
                 <!-- tombol hapus hanya muncul jika belum permanen -->
                 <?php if (!$t['permanen']): ?>
-                  <form method="post" action="?c=TanggunganController&m=hapus&id=<?= $t['id'] ?>"
+                  <form method="post" action="?c=TanggunganController&m=hapus&id=<?= $t['user_id'] ?>"
                     onsubmit="return confirm('Hapus?')">
                     <!-- tombol min sebagai hapus -->
                     <button class="btn btn-sm btn-danger">&minus;</button>
@@ -141,7 +141,7 @@
 
               <!-- input teks nama tanggungan -->
               <!-- class="form-control form-control-sm": menggunakan bootstrap untuk styling -->
-              <td><input type="text" class="form-control form-control-sm" value="<?= $t['nama'] ?>" <?= $isDisable ?>></td>
+              <td><input type="text" class="form-control form-control-sm" value="<?= $t['tanggungan'] ?>" <?= $isDisable ?>></td>
               <!-- input tanggal jadwal pembayarannya -->
               <td><input type="date" class="form-control form-control-sm" value="<?= $t['jadwal_pembayaran'] ?>"
                   <?= $isDisable ?>></td>
@@ -156,6 +156,8 @@
                         foreach ($categories as $category) { // Melakukan iterasi untuk setiap kategori
                             // Menentukan apakah kategori saat ini harus dipilih berdasarkan kategori_id
                             $selected = (isset($t['kategori_id']) && $t['kategori_id'] == $category['kategori_id']) ? 'selected' : '';
+                            die("tes");
+                            die(var_dump($selected));
                             // Mencetak opsi dropdown dengan nilai kategori_id dan teks kategori
                             echo '<option value="' . htmlspecialchars($category['kategori_id']) . '" ' . $selected . '>' . htmlspecialchars($category['kategori']) . '</option>';
                         }
