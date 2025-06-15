@@ -22,7 +22,7 @@
           <a class="nav-link text-white" href="?c=CalendarController&m=index">Kalender</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=DashboardController&m=goals">Goals</a>
+          <a class="nav-link text-white" href="?c=TargetController&m=index">Target</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=DashboardController&m=arsip">Arsip</a>
