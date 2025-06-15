@@ -9,6 +9,14 @@
             return $result->fetch_object();
         }
 
+        public function cekID($user_id){
+            $stmt = $this->dbconn->prepare("SELECT * FROM user WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->num_rows > 0;
+        }
+
         // public function insertTransaction($user_id, $transaction_type, $jumlah, $description){
         //     $stmt = $this->dbconn->prepare("INSERT INTO catatan_keuangan (user_id, jenis_transaksi, jumlah, keterangan) VALUES (?, ?, ?, ?)");
         //     $stmt->bind_param("isis", $user_id, $transaction_type, $jumlah, $description);
@@ -20,6 +28,14 @@
         //     $stmt->bind_param("is", $user_id, $tanggal_bulanan);
         //     $stmt->execute();
         // }
+
+        public function getAll(){
+            $stmt = $this->dbconn->prepare("SELECT * FROM laporan");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result;
+        }
 
         public function getLaporanByTanggalBulanan($user_id, $tanggal_bulanan){
             $stmt = $this->dbconn->prepare("SELECT * FROM laporan WHERE user_id = ? AND tanggal_bulanan = ? ");
@@ -37,8 +53,8 @@
         }
 
         public function deleteLaporan($user_id, $laporan_id){
-            $stmt = $this->dbconn->prepare("DELETE FROM laporan WHERE user_id = ? AND laporan_id = ?");
-            $stmt->bind_param("ii", $user_id, $laporan_id);
+            $stmt = $this->dbconn->prepare("DELETE FROM laporan WHERE laporan_id = ?");
+            $stmt->bind_param("i", $laporan_id);
             $stmt->execute();
         }
 

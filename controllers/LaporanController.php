@@ -27,37 +27,37 @@
         // }
 
         public function addLaporan() {
-            $userSession = $_SESSION['user'];
-            if (is_object($userSession)) {
-                $username = $userSession->username;
-            } else {
-                $this->report(['error_addlaporan' => 'Session user tidak valid.']);
-                return;
-            }
-
             $model = $this->loadModel("Laporan");
-            $userTable = $model->getByUsername($username);
+            $session = $_SESSION['user'];
 
-            if (!$userTable) {
-                $this->report(['error_addlaporan' => 'User tidak ditemukan.']);
-                return;
+            if(isset($_POST['user_id'])){
+                $user_id = $_POST['user_id'];
             }
-
-            $user_id = $userTable->user_id;
-
+            else{
+                $username = $session->username;
+                
+                $userTable = $model->getByUsername($username);
+                $user_id = $userTable->user_id;
+            }
+            
             $tanggal_awal = $_POST['tanggal_awal'] ?? null;
             $tanggal_akhir = $_POST['tanggal_akhir'] ?? null;
             $catatan = $_POST['catatan'] ?? '';
-
-            $error = [];
 
             $errorMsg = $this->cekTanggalLaporan($tanggal_awal, $tanggal_akhir);
             if ($errorMsg) {
                 $error['error_addlaporan'] = $errorMsg;
             }
 
-            if (!empty($error)) {
-                $this->report($error);
+            if(!($model->cekID($user_id))){
+                $error['error_userID'] = "User ID tidak ditemukan";
+            }
+
+            if (isset($error)) {
+                if($session->privilege == 'admin'){
+                    $this->adminReport($error);
+                }
+                else $this->report($error);
             } else {
                 $model->insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan);
                 header("Location: ?c=LaporanController&m=report");
@@ -84,8 +84,32 @@
         }
 
 
+        public function adminReport($error = []){
+            $username = $_SESSION['user'];
+            if($username->privilege != 'admin'){
+                header('Location: ?c=LaporanController&m=report');
+            }
+
+            $model = $this->loadModel("Laporan");
+            $tabelLaporan = $model->getAll();
+
+            $data = [
+                'tabelLaporan' => $tabelLaporan
+            ];
+            if (!empty($error)) {
+                $data['error'] = $error;
+            }
+
+            $this->loadView("laporan/laporanAdmin", $data);
+        }
+
         public function report($error = []) {
             $username = $_SESSION['user'];
+
+            if($username->privilege == 'admin'){
+                header('Location: ?c=LaporanController&m=adminReport');
+            }
+
             $username = $username->username;
 
             $selectedDate = $this->checkSessionDate();
@@ -172,8 +196,14 @@
             if (!empty($error)) {
                 $data['error'] = $error;
             }
+
+            if ($_SESSION['user']->privilege == 'admin') {
+                $this->loadView("laporan/laporanAdmin", $data);
+            }
+            else{
+                $this->loadView("laporan/laporan", $data);
+            }
             
-            $this->loadView("laporan/laporan", $data);
         }
         
         public function editReport($error = []){
@@ -324,13 +354,9 @@
         }
 
         public function deleteLaporan(){
-            $username = $_SESSION['user'];
-            $username = $username->username;
             $laporan_id = $_POST['laporan_id'];
 
             $model = $this->loadModel("Laporan");
-            $userTable = $model->getByUsername($username);
-            $user_id = $userTable->user_id;
 
             $model->deleteLaporan($user_id, $laporan_id);
             header("Location: ?c=LaporanController&m=report");
@@ -339,10 +365,10 @@
         public function editLaporan(){
             $model = $this->loadModel("Laporan");
 
-            $username = $_SESSION['user'];
-            $username = $username->username;
-            $userTable = $model->getByUsername($username);
-            $user_id = $userTable->user_id;
+            // $username = $_SESSION['user'];
+            // $username = $username->username;
+            // $userTable = $model->getByUsername($username);
+            // $user_id = $userTable->user_id;
 
             $laporan_id = $_POST['laporan_id'];
             $tanggal_awal = $_POST['tanggal_awal'];

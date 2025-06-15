@@ -9,6 +9,7 @@
     <!-- <link rel="stylesheet" href="views/styles/dashboard.css" /> -->
     <link rel="stylesheet" href="views/styles/dashboard.css">
     <!-- <link rel="stylesheet" href="views/styles/styleReport.css" /> -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         
@@ -19,6 +20,10 @@
 
     <div class="container my-4">
 
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 header-date-row">
+            <h2 class="fw-bold text-center text-md-start mb-3 mb-md-0">Laporan</h2>
+        </div>
+        
         <div class="laporan-wrapper my-3">
 
             <div class="laporan-card card shadow-sm border-0">
@@ -86,8 +91,6 @@
                         }
                     ?>
             </div>
-
-            
         </div>
         
         <div class="card mt-4 shadow-sm border-0 rounded-4">
@@ -374,5 +377,6 @@
         const totalPengeluaran = <?= json_encode($totalPengeluaran) ?>;
     </script>
     <script src="views/scripts/laporan.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
