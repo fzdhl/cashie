@@ -12,22 +12,19 @@
   <?php include_once "header.php" ?>
 
   <main class="container py-4">
-    <h1 class="mb-4">Target</h1>
+    <h1 class="mb-4 text-center text-start text-md-start">Target</h1>
 
-    <!-- Form Tambah Goal -->
+    <!-- Form Tambah Target -->
     <div class="card p-4 mb-4 shadow-sm">
-      <h5 class="mb-3">Tambah Target Baru</h5>
+      <h5 class="mb-3 text-center text-start text-md-start" >Tambah Target Baru</h5>
       <form id="targetForm" method="POST">
         <div class="row g-3">
           <div class="col-md-5">
             <input name="target" type="text" class="form-control" placeholder="Nama Target (misal: Tabungan Liburan)" required>
           </div>
           <div class="col-md-5">
-            <input name="amount" type="number" class="form-control" placeholder="Target Nominal (Rp)" required>
+            <input name="amount" id="nominalAdd" type="text" class="form-control" placeholder="Nominal Target dalam Rupiah (misal: 10.000.000)" required>
           </div>
-          <!-- <div class="col-md-3">
-            <input type="date" class="form-control" placeholder="Tenggat Waktu">
-          </div> -->
           <div class="col-md-2 d-grid">
             <button type="submit" class="btn btn-success">Tambah</button>
           </div>
@@ -35,30 +32,40 @@
       </form>
     </div>
 
-    <!-- Daftar Goals -->
+    <!-- Daftar Target -->
     <div class="row row-cols-1 row-cols-md-2 g-4">
-      <!-- Goal Card -->
-      <div class="col">
-        <div class="card shadow-sm p-3">
-          <div class="d-flex justify-content-between">
-            <h5 class="mb-2">Dana Darurat</h5>
-            <div>
-              <button class="btn btn-sm btn-outline-primary me-1">✏️</button>
-              <button class="btn btn-sm btn-outline-danger">🗑</button>
-            </div>
-          </div>
-          <p class="text-muted mb-2">Target: Rp 10.000.000</p>
-          <div class="progress mb-2" style="height: 15px;">
-            <div class="progress-bar bg-success" style="width: 60%;">60%</div>
-          </div>
-          <small class="text-muted">Rp 6.000.000 dari Rp 10.000.000</small>
-        </div>
-      </div>
-
-      <!-- Tambah lebih banyak card di sini -->
+      <?php include "views/targetCards.php"; ?>
+      <!-- Card tambahan akan muncul di sini, dengan DOM injection melalui ajax -->
     </div>
   </main>
-  <?php include_once "header.php" ?>
+  <?php include_once "footer.php" ?>
+
+  <!-- For Edit Modal -->
+  <div class="modal fade" id="editTargetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="editTargetForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Target</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="target_id" id="edit-target-id">
+          <div class="mb-3">
+            <label for="edit-target-name">Nama Target</label>
+            <input type="text" name="target" class="form-control" id="edit-target-name" required>
+          </div>
+          <div class="mb-3">
+            <label for="edit-target-amount">Nominal Target</label>
+            <input type="text" name="amount" class="form-control" id="edit-target-amount" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="views/scripts/target.js"></script>
 </body>

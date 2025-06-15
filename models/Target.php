@@ -16,7 +16,7 @@
                 
                 $stmt->execute();
 
-                $status = "Penambahan berhasil !";
+                $status = "Penambahan berhasil!";
             } catch(mysqli_sql_exception $e) {
                 if (str_contains($e->getMessage(), 'Duplicate entry')) {
                     $status = "Penambahan gagal: Target sudah ada.";
@@ -34,11 +34,14 @@
                 
                 $stmt->execute();
 
-                $status = "Update berhasil !";
+                $status = "Edit berhasil!";
             } catch(mysqli_sql_exception $e) {
-                $status = "Database error:" . $e->getMessage();
+                if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                    $status = "Edit gagal: Target sudah ada.";
+                } else {
+                    $status = "Edit gagal: database error:" . $e->getMessage();
+                }
             }
-
             return $status;
         }
 
@@ -49,7 +52,7 @@
     
                 $stmt->execute();
 
-                $status = "Delete berhasil !";
+                $status = "Hapus berhasil!";
             } catch(mysqli_sql_exception $e) {
                 $status = "Database error:" . $e->getMessage();
             }
