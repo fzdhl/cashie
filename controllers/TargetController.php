@@ -10,7 +10,7 @@
 
         public function index() {
             $model = $this->loadModel('Target');
-            $targets = $model->getByUserId($_SESSION['user']->user_id);
+            $targets = $model->getByUserId($_SESSION['user']->user_id, 50);
             $this->loadView('target', ['targets' => $targets]);
         }
 

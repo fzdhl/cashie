@@ -29,7 +29,7 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Hello, <?= htmlspecialchars($_SESSION['user']->username) ?>
+            Halo, <?= htmlspecialchars($_SESSION['user']->username) ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
             <li><a class="dropdown-item" href="?c=ProfileController&m=index">Profile</a></li>

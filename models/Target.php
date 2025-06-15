@@ -1,8 +1,8 @@
 <?php
     class Target extends Model {
-        public function getByUserId($user_id) {
-            $stmt = $this->dbconn->prepare("SELECT * FROM target WHERE user_id = ?");
-            $stmt->bind_param("i", $user_id);
+        public function getByUserId($user_id, $limit) {
+            $stmt = $this->dbconn->prepare("SELECT * FROM target WHERE user_id = ? ORDER BY created_at LIMIT ?");
+            $stmt->bind_param("ii", $user_id, $limit);
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -58,5 +58,14 @@
             }
 
             return $status;           
+        }
+
+        public function getTotalByUserId($user_id) {
+            $stmt = $this->dbconn->prepare("SELECT SUM(jumlah) AS total FROM target WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            return $result->fetch_assoc();
         }
     }

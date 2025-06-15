@@ -2,7 +2,7 @@
     <div class="col">
         <div class="card shadow-sm p-3">
             <div class="d-flex justify-content-between">
-                <h5 class="mb-2"><?= htmlspecialchars($target['target']) ?></h5>
+                <h5 class="mb-2 fw-semibold"><?= htmlspecialchars($target['target']) ?></h5>
                 <div>
                     <button
                         class="btn btn-sm btn-outline-success me-1 edit-btn"
