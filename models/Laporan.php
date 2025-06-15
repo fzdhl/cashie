@@ -58,28 +58,36 @@
             $stmt->execute();
         }
 
-        public function getDaftarLaporan($user_id, $jenis_transaksi){
-            $stmt = $this->dbconn->prepare
-            ("SELECT 
-                l.laporan_id, 
-                l.user_id, 
-                l.tanggal_awal, 
-                l.tanggal_akhir, 
-                COALESCE(SUM(ck.jumlah), 0) AS jumlah,
-                l.catatan
-            FROM 
-                laporan l
-            LEFT JOIN 
-                catatan_keuangan ck 
-                ON ck.user_id = l.user_id
-                AND ck.jenis_transaksi = ?
-                AND ck.tanggal_transaksi >= l.tanggal_awal 
-                AND ck.tanggal_transaksi < DATE_ADD(l.tanggal_akhir, INTERVAL 1 DAY)
-            WHERE 
-                l.user_id = ? 
-            GROUP BY 
-                l.laporan_id, l.tanggal_awal, l.tanggal_akhir
+        public function getDaftarLaporan($user_id, $jenis_transaksi) {
+            $stmt = $this->dbconn->prepare("
+                SELECT 
+                    l.laporan_id, 
+                    l.user_id, 
+                    l.tanggal_awal, 
+                    l.tanggal_akhir, 
+                    COALESCE(SUM(
+                        CASE 
+                            WHEN k.tipe = ? THEN ck.jumlah
+                            ELSE 0
+                        END
+                    ), 0) AS jumlah,
+                    l.catatan
+                FROM 
+                    laporan l
+                LEFT JOIN 
+                    catatan_keuangan ck 
+                    ON ck.user_id = l.user_id
+                    AND ck.tanggal_transaksi >= l.tanggal_awal 
+                    AND ck.tanggal_transaksi < DATE_ADD(l.tanggal_akhir, INTERVAL 1 DAY)
+                LEFT JOIN 
+                    kategori k 
+                    ON ck.kategori_id = k.kategori_id
+                WHERE
+                    l.user_id = ?
+                GROUP BY 
+                    l.laporan_id, l.tanggal_awal, l.tanggal_akhir
             ");
+
             $stmt->bind_param("si", $jenis_transaksi, $user_id);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -90,13 +98,14 @@
         public function getLaporanMingguan($laporan_id, $reportType, $username) {
             $query = "SELECT DAY(ck.tanggal_transaksi) AS hari, 
                     CASE 
-                        WHEN ck.jenis_transaksi = 'pengeluaran' THEN -1 * SUM(ck.jumlah)
+                        WHEN k.tipe = 'pengeluaran' THEN -1 * SUM(ck.jumlah)
                         ELSE SUM(ck.jumlah)
                     END AS total_harian
                     FROM catatan_keuangan ck
                     JOIN user u ON ck.user_id = u.user_id
                     JOIN laporan l ON l.user_id = u.user_id AND l.laporan_id = ?
-                    WHERE ck.jenis_transaksi = ?
+                    JOIN kategori k ON k.kategori_id = ck.kategori_id
+                    WHERE k.tipe = ?
                         AND u.username = ?
                         AND ck.tanggal_transaksi >= l.tanggal_awal
                         AND ck.tanggal_transaksi < DATE_ADD(l.tanggal_akhir, INTERVAL 1 DAY)
@@ -115,8 +124,9 @@
             $stmt = $this->dbconn->prepare("SELECT * 
                     FROM catatan_keuangan ck 
                     JOIN user u ON ck.user_id = u.user_id 
-                    JOIN laporan l on l.laporan_id = ? AND l.user_id = u.user_id
-                    WHERE ck.jenis_transaksi = ? 
+                    JOIN laporan l ON l.laporan_id = ? AND l.user_id = u.user_id
+                    JOIN kategori k ON k.kategori_id = ck.kategori_id
+                    WHERE k.tipe = ? 
                         AND username = ? 
                         AND ck.tanggal_transaksi >= l.tanggal_awal
                         AND ck.tanggal_transaksi < DATE_ADD(l.tanggal_akhir, INTERVAL 1 DAY)
@@ -137,15 +147,16 @@
             return $result->fetch_object();
         }
 
-        public function getPemasukanPengeluaran($username, $selectedMonth, $selectedYear, $reportType){
+        public function getLaporanBulanan($username, $selectedMonth, $selectedYear, $reportType){
             $stmt = $this->dbconn->prepare("SELECT DAY(tanggal_transaksi) AS hari, 
                     CASE 
-                        WHEN jenis_transaksi = 'pengeluaran' THEN -1 * SUM(jumlah)
+                        WHEN k.tipe = 'pengeluaran' THEN -1 * SUM(jumlah)
                         ELSE SUM(jumlah)
                         END AS total_harian
-                    FROM catatan_keuangan t 
-                    JOIN user u ON t.user_id = u.user_id 
-                    WHERE jenis_transaksi = ? AND username = ? AND MONTH(tanggal_transaksi) = ? AND YEAR(tanggal_transaksi) = ?
+                    FROM catatan_keuangan ck 
+                    JOIN user u ON ck.user_id = u.user_id
+                    JOIN kategori k ON ck.kategori_id = k.kategori_id 
+                    WHERE k.tipe = ? AND username = ? AND MONTH(tanggal_transaksi) = ? AND YEAR(tanggal_transaksi) = ?
                     GROUP BY hari 
                     ORDER BY hari ASC");
             $stmt->bind_param("ssii", $reportType, $username, $selectedMonth, $selectedYear);
@@ -155,12 +166,13 @@
             return $result;
         }
 
-        public function getTableByTransactionType($reportType, $username, $selectedMonth, $selectedYear){
+        public function getTableByMonth($reportType, $username, $selectedMonth, $selectedYear){
             $stmt = $this->dbconn->prepare("SELECT * 
-                    FROM catatan_keuangan t 
-                    JOIN user u ON t.user_id = u.user_id 
-                    WHERE jenis_transaksi = ? AND username = ? AND MONTH(tanggal_transaksi) = ? AND YEAR(tanggal_transaksi) = ?
-                    ORDER BY jenis_transaksi DESC");
+                    FROM catatan_keuangan ck 
+                    JOIN user u ON ck.user_id = u.user_id
+                    JOIN kategori k ON ck.kategori_id = k.kategori_id 
+                    WHERE k.tipe = ? AND username = ? AND MONTH(tanggal_transaksi) = ? AND YEAR(tanggal_transaksi) = ?
+                    ORDER BY k.tipe DESC");
             $stmt->bind_param("ssii", $reportType, $username, $selectedMonth, $selectedYear);
             $stmt->execute();
             $result = $stmt->get_result();

@@ -259,7 +259,7 @@
                     <div class="card p-3 shadow-sm">
                         <h5 class="text-info">Pemasukan</h5>
                         <canvas id="pemasukan"></canvas>
-                        <h6>Rata-rata pemasukan bulanan: <?php echo isset($avrPemasukan) ? $avrPemasukan : 0;?></h6>
+                        <!-- <h6>Rata-rata pemasukan bulanan: <?php echo isset($avrPemasukan) ? $avrPemasukan : 0;?></h6> -->
                         <table>
                             <tr>
                                 <th>Tanggal</th>
@@ -285,7 +285,7 @@
                     <div class="card p-3 shadow-sm">
                         <h5 class="text-danger">Pengeluaran</h5>
                         <canvas id="pengeluaran"></canvas>
-                        <h6>Rata-rata pengeluaran bulanan: <?php echo isset($avrPengeluaran) ? $avrPengeluaran : 0;?></h6>
+                        <!-- <h6>Rata-rata pengeluaran bulanan: <?php echo isset($avrPengeluaran) ? $avrPengeluaran : 0;?></h6> -->
                         <table>
                             <tr>
                                 <th>Tanggal</th>

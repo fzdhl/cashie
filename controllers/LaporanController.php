@@ -122,10 +122,10 @@
                 $this->setLaporanType($laporan_Type, $laporan_id);
 
                 $transactionData = $this->getTransactionMingguan($laporan_id, $username, 'Pemasukan');
-                if($averagePemasukan = $this->calcAverageData($transactionData)){
-                    $averagePemasukan = $this->calcAverageData($transactionData);
-                }
-                else $averagePemasukan = 0;
+                // if($averagePemasukan = $this->calcAverageData($transactionData)){
+                //     $averagePemasukan = $this->calcAverageData($transactionData);
+                // }
+                // else $averagePemasukan = 0;
 
                 $dateAndTotal = $this->setDateAndTotalMingguan($transactionData, $laporan_id);
                 $datePemasukan = $dateAndTotal['date'];
@@ -133,10 +133,10 @@
                 $listPemasukan = $this->getFullTableMingguan($laporan_id, $username, 'Pemasukan');
 
                 $transactionData = $this->getTransactionMingguan($laporan_id, $username, 'Pengeluaran');
-                if($averagePengeluaran = $this->calcAverageData($transactionData)){
-                    $averagePengeluaran = $this->calcAverageData($transactionData);
-                }
-                else $averagePengeluaran = 0;
+                // if($averagePengeluaran = $this->calcAverageData($transactionData)){
+                //     $averagePengeluaran = $this->calcAverageData($transactionData);
+                // }
+                // else $averagePengeluaran = 0;
 
                 $dateAndTotal = $this->setDateAndTotalMingguan($transactionData, $laporan_id);
                 $datePengeluaran = $dateAndTotal['date'];
@@ -145,11 +145,11 @@
             }
             else{
                 $transactionData = $this->getTransactionData($username, $selectedMonth, $selectedYear, "Pemasukan");
-                $averagePemasukan = $this->calcAverageData($transactionData);
-                if($averagePemasukan = $this->calcAverageData($transactionData)){
-                    $averagePemasukan = $this->calcAverageData($transactionData);
-                }
-                else $averagePemasukan = 0;
+                // $averagePemasukan = $this->calcAverageData($transactionData);
+                // if($averagePemasukan = $this->calcAverageData($transactionData)){
+                //     $averagePemasukan = $this->calcAverageData($transactionData);
+                // }
+                // else $averagePemasukan = 0;
                 
                 $dateAndTotal = $this->setDateAndTotal($transactionData, $selectedMonth, $selectedYear);
                 $datePemasukan = $dateAndTotal['date'];
@@ -157,10 +157,10 @@
                 $listPemasukan = $this->getFullTableBy($username, $selectedMonth, $selectedYear, "Pemasukan");
 
                 $transactionData = $this->getTransactionData($username, $selectedMonth, $selectedYear, "Pengeluaran");
-                if($averagePengeluaran = $this->calcAverageData($transactionData)){
-                    $averagePengeluaran = $this->calcAverageData($transactionData);
-                }
-                else $averagePengeluaran = 0;
+                // if($averagePengeluaran = $this->calcAverageData($transactionData)){
+                //     $averagePengeluaran = $this->calcAverageData($transactionData);
+                // }
+                // else $averagePengeluaran = 0;
                 $dateAndTotal = $this->setDateAndTotal($transactionData, $selectedMonth, $selectedYear);
                 $datePengeluaran = $dateAndTotal['date'];
                 $totalPengeluaran = $dateAndTotal['total'];
@@ -185,8 +185,6 @@
                 'totalPemasukan' => $totalPemasukan,
                 'datePengeluaran' => $datePengeluaran,
                 'totalPengeluaran' => $totalPengeluaran,
-                'avrPemasukan' => $averagePemasukan,
-                'avrPengeluaran' => $averagePengeluaran,
                 'listPemasukan' => $listPemasukan,
                 'listPengeluaran' => $listPengeluaran,
                 'bulanList' => $bulanList,
@@ -266,18 +264,26 @@
             }
         }
 
-        public function calcAverageData($Data){
-            $length = date("d");
-            $sum = $this->getSumData($Data);
-            $average = $sum/$length;
-            $average = round($average, 2);
-            return $average;
-        }
+        // public function calcAverageData($Data){
+        //     $length = date("d");
+        //     $sum = $this->getSumData($Data);
+        //     $average = $sum/$length;
+        //     $average = round($average, 2);
+        //     return $average;
+        // }
+
+        // public function getSumData($Data){
+        //     $sum = 0;
+        //     foreach($Data as $num){
+        //         $sum += $num;
+        //     }
+        //     return $sum;
+        // }
 
         public function getFullTableBy($username, $selectedMonth, $selectedYear, $reportType){
             $model = $this->loadModel("Laporan");
 
-            $transactionTable = $model->getTableByTransactionType($reportType, $username, $selectedMonth, $selectedYear);
+            $transactionTable = $model->getTableByMonth($reportType, $username, $selectedMonth, $selectedYear);
             return $transactionTable;
         }
 
@@ -288,19 +294,10 @@
             return $transactionTable;
         }
 
-        public function getSumData($Data){
-            $sum = 0;
-            foreach($Data as $num){
-                $sum += $num;
-            }
-            return $sum;
-        }
-
         public function getTransactionData($username, $selectedMonth, $selectedYear, $reportType) {
             $model = $this->loadModel("Laporan");
 
-
-            $transactionTable = $model->getPemasukanPengeluaran($username, $selectedMonth, $selectedYear, $reportType);
+            $transactionTable = $model->getLaporanBulanan($username, $selectedMonth, $selectedYear, $reportType);
             $transactionData = [];
             while ($row = $transactionTable->fetch_assoc()) {
                 $transactionData[(int)$row['hari']] = $row['total_harian'];
