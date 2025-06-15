@@ -21,7 +21,9 @@
             $amount = $_POST['amount'];
 
             $model = $this->loadModel('Target');
-            $model->insert($user_id, $target, $amount);
+            $status = $model->insert($user_id, $target, $amount);
+            
+            echo $status;
         }
 
 

@@ -1,19 +1,18 @@
 document.getElementById("targetForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const formData = new FormData(e.target);
+  const formElement = e.target;
 
-  fetch("submit.php", {
+  const formData = new FormData(formElement);
+
+  fetch("?c=TargetController&m=createProcess", {
     method: "POST",
     body: formData
   })
-  .then(res => res.json())
+  .then(res => res.text())
   .then(data => {
-    if (data.success) {
-      alert("User saved with ID: " + data.id);
-    } else {
-      alert("Error: " + data.error);
-    }
+    alert(data);
+    formElement.reset();
   })
   .catch(err => console.error("Fetch error:", err));
 });

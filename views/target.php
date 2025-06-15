@@ -6,7 +6,7 @@
   <title>Rencana Keuangan</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/cashie/views/styles/target.css">
+  <link rel="stylesheet" href="views/styles/target.css">
 </head>
 <body>
   <?php include_once "header.php" ?>
@@ -17,13 +17,13 @@
     <!-- Form Tambah Goal -->
     <div class="card p-4 mb-4 shadow-sm">
       <h5 class="mb-3">Tambah Target Baru</h5>
-      <form id="targetForm">
+      <form id="targetForm" method="POST">
         <div class="row g-3">
           <div class="col-md-5">
-            <input name="target" type="text" class="form-control" placeholder="Nama Target (misal: Tabungan Liburan)">
+            <input name="target" type="text" class="form-control" placeholder="Nama Target (misal: Tabungan Liburan)" required>
           </div>
           <div class="col-md-5">
-            <input name="amount" type="number" class="form-control" placeholder="Target Nominal (Rp)">
+            <input name="amount" type="number" class="form-control" placeholder="Target Nominal (Rp)" required>
           </div>
           <!-- <div class="col-md-3">
             <input type="date" class="form-control" placeholder="Tenggat Waktu">
@@ -60,6 +60,6 @@
   </main>
   <?php include_once "header.php" ?>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/views/scripts/target.js"></script>
+  <script src="views/scripts/target.js"></script>
 </body>
 </html>

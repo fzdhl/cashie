@@ -10,41 +10,50 @@
         }
 
         public function insert($user_id, $target, $amount) {
-            $stmt = $this->dbconn->prepare("INSERT INTO target (user_id, target, jumlah) VALUES (?, ?, ?)");
-            $stmt->bind_param("isi", $user_id, $target, $amount);
-            
-            $result = $stmt->execute();
+            try {
+                $stmt = $this->dbconn->prepare("INSERT INTO target (user_id, target, jumlah) VALUES (?, ?, ?)");
+                $stmt->bind_param("isi", $user_id, $target, $amount);
+                
+                $stmt->execute();
 
-            if (!$result) {
-                die("SQL error: " . $this->dbconn->error);
+                $status = "Penambahan berhasil !";
+            } catch(mysqli_sql_exception $e) {
+                if (str_contains($e->getMessage(), 'Duplicate entry')) {
+                    $status = "Penambahan gagal: Target sudah ada.";
+                } else {
+                    $status = "Penambahan gagal: database error:" . $e->getMessage();
+                }
             }
-
-            return $result;          
+            return $status;
         }
 
         public function update($target_id, $target, $amount) {
-            $stmt = $this->dbconn->prepare("UPDATE target SET target = ?, jumlah = ? WHERE target_id = ?");
-            $stmt->bind_param("sii", $target, $amount, $target_id);
-            
-            $result = $stmt->execute();
+            try {
+                $stmt = $this->dbconn->prepare("UPDATE target SET target = ?, jumlah = ? WHERE target_id = ?");
+                $stmt->bind_param("sii", $target, $amount, $target_id);
+                
+                $stmt->execute();
 
-            if (!$result) {
-                die("SQL error: " . $this->dbconn->error);
+                $status = "Update berhasil !";
+            } catch(mysqli_sql_exception $e) {
+                $status = "Database error:" . $e->getMessage();
             }
 
-            return $result;
+            return $status;
         }
 
         public function delete($target_id) {
-            $stmt = $this->dbconn->prepare("DELETE FROM target WHERE target_id = ?");
-            $stmt->bind_param("i", $target_id);
+            try {
+                $stmt = $this->dbconn->prepare("DELETE FROM target WHERE target_id = ?");
+                $stmt->bind_param("i", $target_id);
+    
+                $stmt->execute();
 
-            $result = $stmt->execute();
-
-            if (!$result) {
-                die("SQL error: " . $this->dbconn->error);
+                $status = "Delete berhasil !";
+            } catch(mysqli_sql_exception $e) {
+                $status = "Database error:" . $e->getMessage();
             }
 
-            return $result;            
+            return $status;           
         }
     }
