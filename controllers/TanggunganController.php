@@ -28,10 +28,15 @@ class TanggunganController extends Controller
         $model = $this->loadModel("Tanggungan");
         // mengambil semua data dari tabel tanggungan berdasarkan user_id 
         $tanggungan = $model->getByUser($id_user);
-        
+
+        // load model kategori dan ambil data kategori dari halaman kategori
+        $kategoriModel = $this->loadModel('Kategori');
+        $categories = $kategoriModel->getAllCategoriesByUser($id_user);
+
         // menampilkan data hasik query ke tampilan html (ditampilkan ke browser user)
         $this->loadView("tanggungan", [
-            'tanggungan' => $tanggungan
+            'tanggungan' => $tanggungan,
+            'categories' => $categories
         ]);
     }
 
@@ -77,13 +82,13 @@ class TanggunganController extends Controller
                 break;
             }
         }
-
+        
         // mengecek apakah menyimpan data berhasil?
-        // if ($berhasil) {
-        //     // jika berhasil maka tanggungan user akan di-update di kolom permanen
-        //     // permanen = 1, artinya tidak bisa diedit atau dihapus lagi
-        //     $model->setPermanen($id_user);
-        // }
+        if ($berhasil) {
+            // jika berhasil maka tanggungan user akan di-update di kolom permanen
+            // permanen = 1, artinya tidak bisa diedit atau dihapus lagi
+            $model->setPermanen($id_user);
+        }
 
         // setelah selesai akan diarahkan ke halaman utama untuk melihat hasil akhirnya
         header('Location: ?c=TanggunganController&m=index');

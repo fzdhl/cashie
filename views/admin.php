@@ -22,8 +22,8 @@
                 <small>E-mail: <?=htmlspecialchars($user['email'])?></small>
             </div>
             <div class="account-actions">
-                <a href="edit-user.php?id=<?=$user['user_id']?>" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                <a href="delete-user.php?id=1" title="Delete" onclick="return confirm('Are you sure you want to delete this account?')">
+                <a href="?c=AdminController&m=edit&user_id=<?=$user['user_id']?>" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                <a href="delete-user.php?user_id=1" title="Delete" onclick="return confirm('Are you sure you want to delete this account?')">
                 <i class="bi bi-trash"></i>
             </a>
             </div>

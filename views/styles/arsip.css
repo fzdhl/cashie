@@ -1,0 +1,104 @@
+/* views/styles/arsip.css */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #eef8f3; /* Consistent with dashboard/goals background */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    padding-top: 20px; /* Added for consistent top padding */
+    padding-bottom: 20px; /* Added for consistent bottom padding */
+}
+
+h2 {
+    font-weight: 600; /* Consistent with other page titles */
+    color: #2e4d3d; /* Darker green, similar to profile/tanggungan titles */
+}
+
+.card {
+    border-radius: 10px; /* Consistent card border-radius */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* Consistent subtle shadow */
+    background-color: #ffffff;
+    border: 1px solid #aad2c7; /* Lighter green border, similar to profile inputs */
+}
+
+.card-header {
+    background-color: #6a9c89; /* A slightly darker green for card headers if needed, otherwise use Bootstrap defaults */
+    color: white;
+    font-weight: 500;
+    border-bottom: 1px solid #aad2c7;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #3f634b; /* Slightly darker label color */
+}
+
+.form-control {
+    border: 1.5px solid #aad2c7; /* Consistent input border */
+    border-radius: 8px; /* Consistent input border-radius */
+}
+
+.form-control:focus {
+    border-color: #408558; /* Focus color on input */
+    box-shadow: 0 0 0 0.25rem rgba(64, 133, 88, 0.25);
+}
+
+.btn-success {
+    background-color: #408558; /* Main success button color */
+    border-color: #408558;
+    font-weight: 600; /* Consistent button font-weight */
+}
+
+.btn-success:hover {
+    background-color: #2e6346; /* Darker green on hover */
+    border-color: #2e6346;
+}
+
+.btn-primary {
+    background-color: #6a9c89; /* A softer primary button color */
+    border-color: #6a9c89;
+}
+
+.btn-primary:hover {
+    background-color: #5a8c79;
+    border-color: #5a8c79;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+}
+
+/* Table specific styles for better consistency */
+.table {
+    --bs-table-bg: #ffffff; /* Ensure table background is white */
+    --bs-table-hover-bg: #f9f9f9; /* Light hover background */
+    --bs-table-striped-bg: #f4fcf7; /* Light striped background */
+}
+
+.table thead th {
+    background-color: #e1f2e8; /* Light green header for tables */
+    color: #408558;
+    font-weight: 600;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+/* Font Awesome icon styling */
+.fa-save, .fa-trash-alt {
+    margin-right: 0; /* Remove default margin from some fa icons if present */
+}

@@ -11,7 +11,12 @@
         }
 
         public function index() {
-            $this->loadView("dashboard");
+            $this->loadView("dashboard", [
+                "target" => [
+                    "total" => $this->loadModel('Target')->getTotalByUserId($_SESSION['user']->user_id),
+                    "data" => $this->loadModel('Target')->getByUserId($_SESSION['user']->user_id, 3)
+                ]
+            ]);
         }
 
         public function calendar() {

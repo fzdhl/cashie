@@ -4,7 +4,7 @@ class Arsip extends Model {
         $stmt = $this->dbconn->prepare("SELECT * FROM arsip WHERE user_id = ? ORDER BY created_at DESC");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        return $stmt->get_result();
+        return $stmt->get_result(); // Mengembalikan objek mysqli_result
     }
 
     public function insert($user_id, $path, $desc) {
