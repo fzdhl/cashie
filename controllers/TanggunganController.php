@@ -1,20 +1,18 @@
 <?php
+
 class TanggunganController extends Controller
 {
     private $model;
 
-    // konstruktor dipanggil otomatis setiap kali class dibuat
     public function __construct()
     {
         session_start();
-        // mengecek apakah user sudah login
         if (!isset($_SESSION['user'])) {
             header("Location: ?c=UserController&m=loginView");
             exit();
         }
     }
 
-    // menampilkan seluruh daftar tanggungan milik user aktif ke halaman view
     public function index()
     {
         $id_user = $_SESSION['user']->user_id;
@@ -30,45 +28,91 @@ class TanggunganController extends Controller
         ]);
     }
 
-    // menyimpan entri tagihan yang dikirim dari form ke database dan mengunci
-    public function simpanPermanen()
+    public function insert()
     {
-        $id_user = $_SESSION['user']->user_id;
-        $namaList = $_POST['nama'] ?? [];
-        $jadwalList = $_POST['jadwal'] ?? [];
-        $jenisList = $_POST['jenis'] ?? [];
-        $jumlahList = $_POST['jumlah'] ?? [];
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Content-Type: application/json');
+            echo json_encode(["isSuccess" => false, "info" => "Metode request tidak diizinkan."]);
+            exit();
+        }
 
-        $berhasil = true;
+        $id_user = $_SESSION['user']->user_id;
         $model = $this->loadModel("Tanggungan");
 
-        // menyimpan banyak data tanggungan sekaligus ke database
-        for ($i = 0; $i < count($namaList); $i++) {
-            $data = [
-                $id_user,
-                $namaList[$i],
-                $jadwalList[$i],
-                $jenisList[$i],
-                (int) $jumlahList[$i],
-                'Belum dibayar',
-            ];
+        $tanggungan = $_POST['tanggungan'] ?? '';
+        $jadwal_pembayaran = $_POST['jadwal_pembayaran'] ?? '';
+        $kategori_id = $_POST['kategori_id'] ?? null;
+        $jumlah = $_POST['jumlah'] ?? 0;
+        $status = "Belum dibayar";
 
-            // menyimpan ke database 
-            if (!$model->insert($data)) {
-                $berhasil = false;
-                break;
-            }
+        if (empty($tanggungan) || empty($jadwal_pembayaran) || empty($kategori_id) || !is_numeric($jumlah) || $jumlah <= 0) {
+            header('Content-Type: application/json');
+            echo json_encode(["isSuccess" => false, "info" => "Data yang dikirim tidak lengkap atau tidak valid."]);
+            exit();
         }
-        
-        // mengecek apakah menyimpan data berhasil?
-        if ($berhasil) {
-            $model->setPermanen($id_user);
-        }
-        header('Location: ?c=TanggunganController&m=index');
+
+        $kategori_id = (int) $kategori_id;
+        $jumlah = (int) $jumlah;
+
+        $data = [
+            $id_user,
+            $tanggungan,
+            $jadwal_pembayaran,
+            $kategori_id,
+            $jumlah,
+            $status
+        ];
+
+        $result = $model->insert($data);
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
         exit();
     }
 
-    // mengatur ulang semua data tagihan tanggungan milik user setiap awal bulan
+    public function update()
+    {
+
+        header('Content-Type: application/json'); 
+
+        $id_user = $_SESSION['user']->user_id;
+        $model = $this->loadModel("Tanggungan");
+
+        $tanggungan_id = $_POST['tanggungan_id'] ?? null;
+        $tanggungan = $_POST['tanggungan'] ?? '';
+        $jadwal_pembayaran = $_POST['jadwal_pembayaran'] ?? '';
+        $kategori_id = $_POST['kategori_id'] ?? null;
+        $jumlah = $_POST['jumlah'] ?? 0;
+
+        // validasi input
+        if (empty($tanggungan_id) || empty($tanggungan) || empty($jadwal_pembayaran) || empty($kategori_id) || !is_numeric($jumlah) || $jumlah <= 0) {
+            echo json_encode(["isSuccess" => false, "info" => "Data update tidak lengkap atau tidak valid."]);
+            exit();
+        }
+
+        $kategori_id = (int) $kategori_id;
+        $jumlah = (int) $jumlah;
+
+        if ($tanggungan_id) {
+            $data = [
+                'user_id' => $id_user,
+                'tanggungan' => $tanggungan,
+                'jadwal_pembayaran' => $jadwal_pembayaran,
+                'kategori_id' => $kategori_id,
+                'jumlah' => $jumlah,
+            ];
+
+            if ($model->update($tanggungan_id, $data)) {
+                echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil diperbarui."]);
+            } else {
+                echo json_encode(["isSuccess" => false, "info" => "Gagal memperbarui tanggungan di database."]);
+            }
+        } else {
+            echo json_encode(["isSuccess" => false, "info" => "ID Tanggungan tidak ditemukan."]);
+        }
+        exit(); 
+    }
+
     public function resetAwalBulan()
     {
         $id_user = $_SESSION['user']->user_id;
@@ -79,7 +123,6 @@ class TanggunganController extends Controller
         exit();
     }
 
-    // menyamakan data pengeluaran dengan status tagihan di tabel tanggungan
     public function sinkronDariCatatan()
     {
         $id_user = $_SESSION['user']->user_id;
@@ -98,18 +141,26 @@ class TanggunganController extends Controller
         exit();
     }
 
-    // menghapus data tanggungan tertentu asal belum disimpan permanen di database
     public function hapus()
     {
-        $id = $_GET['id'] ?? null;
+        header('Content-Type: application/json'); 
+
+        $id_tanggungan = $_POST['id'] ?? null; 
         $id_user = $_SESSION['user']->user_id;
         $model = $this->loadModel("Tanggungan");
-        if ($id) {
-            $model->deleteById($id, $id_user);
-        }
 
-        header('Location: ?c=TanggunganController&m=index');
+        if ($id_tanggungan) {
+            if ($model->deleteById($id_tanggungan, $id_user)) {
+                echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus."]);
+            } else {
+                echo json_encode(["isSuccess" => false, "info" => "Gagal menghapus tanggungan. Mungkin tanggungan sudah selesai atau permanen."]);
+            }
+        } else {
+            echo json_encode(["isSuccess" => false, "info" => "ID Tanggungan tidak ditemukan untuk dihapus."]);
+        }
         exit();
     }
+
 }
+
 ?>
