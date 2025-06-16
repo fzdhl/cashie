@@ -27,7 +27,7 @@
 
         public function getTargetCards() {
             $model = $this->loadModel('Target');
-            $targets = $model->getByUserId($_SESSION['user']->user_id);
+            $targets = $model->getByUserId($_SESSION['user']->user_id, 50);
             include "views/targetCards.php"; // untuk di inject dengan AJAX pada target.js
         }
 
