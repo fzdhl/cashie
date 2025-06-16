@@ -166,7 +166,7 @@
             <td class="text-center">
                 <div class="d-flex flex-column gap-1">
                     <button type="button" class="btn btn-sm btn-success w-100 btn-simpan-baru">Simpan</button>
-                    <button type="button" class="btn btn-sm btn-secondary w-100" onclick="hapusBarisDariDOM(this)">&times; Batal</button>
+                    <button type="button" class="btn btn-sm btn-secondary w-100" onclick="hapusBarisDariDOM(this)">Batal</button>
                 </div>
             </td>
             <td><input type="text" name="tanggungan" class="form-control form-control-sm" required></td>
