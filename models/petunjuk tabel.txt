@@ -22,7 +22,22 @@ CREATE TABLE kategori (
 );
 
 3. tanggungan
-
+CREATE TABLE tanggungan (
+  tanggungan_id int NOT NULL,
+  user_id int DEFAULT NULL,
+  tanggungan varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  jadwal_pembayaran date DEFAULT NULL,
+  kategori_id int DEFAULT NULL,
+  jumlah bigint DEFAULT NULL,
+  status tinyint(1) DEFAULT NULL,
+  created_at date DEFAULT (curdate()),
+  permanen tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (tanggungan_id),
+  KEY user_id (user_id),
+  KEY kategori_id (kategori_id),
+  CONSTRAINT tanggungan_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id),
+  CONSTRAINT tanggungan_ibfk_2 FOREIGN KEY (kategori_id) REFERENCES kategori (kategori_id)
+)
 
 
 4. laporan keuangan
@@ -72,3 +87,14 @@ CREATE TABLE arsip (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
+
+8. profile
+CREATE TABLE profile (
+  profile_id int NOT NULL AUTO_INCREMENT,
+  user_id int NOT NULL,
+  photo_dir varchar(60) COLLATE utf8mb4_general_ci DEFAULT 'resources/default-avatar.jpg',
+  phone_no varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (profile_id),
+  KEY user_id (user_id),
+  CONSTRAINT profile_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id)
+)
