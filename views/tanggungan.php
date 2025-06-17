@@ -84,17 +84,14 @@
 
             <?php if (!empty($tanggungan)): ?>
               <?php foreach ($tanggungan as $t):
-                // Pastikan Anda menggunakan 'tanggungan_id' sebagai ID unik dari database
                 $tanggunganId = isset($t['tanggungan_id']) ? htmlspecialchars($t['tanggungan_id']) : '';
                 $tanggunganNama = isset($t['tanggungan']) ? htmlspecialchars($t['tanggungan']) : '';
                 $jadwalPembayaran = isset($t['jadwal_pembayaran']) ? htmlspecialchars($t['jadwal_pembayaran']) : '';
                 $kategoriId = isset($t['kategori_id']) ? $t['kategori_id'] : '';
                 $jumlah = isset($t['jumlah']) ? htmlspecialchars($t['jumlah']) : 0;
-                $status = isset($t['status']) ? htmlspecialchars($t['status']) : 'Unknown';
-                // Asumsi properti 'permanen' tidak lagi relevan atau tidak ada
-                // $permanen = isset($t['permanen']) ? $t['permanen'] : 0;
-                $username = isset($t['username']) ? htmlspecialchars($t['username']) : ''; // Untuk admin view
-                $user_id_val = isset($t['user_id']) ? htmlspecialchars($t['user_id']) : ''; // Tambahkan user_id
+                $status = isset($t['status']) ? htmlspecialchars($t['status']) : 'Unknown'; 
+                $username = isset($t['username']) ? htmlspecialchars($t['username']) : ''; 
+                $user_id_val = isset($t['user_id']) ? htmlspecialchars($t['user_id']) : ''; 
 
                 $isSelesai = ($status === 'Selesai');
                 $inputDisabled = (!$isAdmin && $isSelesai) ? 'disabled' : '';
@@ -159,7 +156,7 @@
         </table>
       </div>
       <div class="d-flex justify-content-end mt-3">
-        <button type="submit" class="btn btn-success" id="simpanSemuaBtn">Simpan Data</button>
+        <button type="submit" class="btn btn-success" id="simpanSemuaBtn">Simpan Perubahan Data</button>
       </div>
     </form>
   </div>
@@ -192,7 +189,6 @@
               <select name="kategori_id" id="addKategoriId" class="form-select" required>
                 <option value="">Pilih Kategori...</option>
                 <?php
-                // Pastikan $categories sudah didefinisikan dari controller
                 if (isset($categories) && is_array($categories)) {
                   foreach ($categories as $category) {
                     $catId = isset($category['kategori_id']) ? htmlspecialchars($category['kategori_id']) : '';
@@ -207,7 +203,7 @@
               <label for="addJumlah" class="form-label">Jumlah (Rp)</label>
               <input type="number" name="jumlah" id="addJumlah" class="form-control" placeholder="Contoh: 50000" required min="0">
             </div>
-          </div>
+            </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
             <button type="submit" class="btn btn-success">Simpan</button>
@@ -222,7 +218,6 @@
     document.getElementById('aktif').innerText = 'Rp. <?= number_format($totalAktif, 0, ',', '.') ?>';
     document.getElementById('terbayar').innerText = 'Rp. <?= number_format($totalBayar, 0, ',', '.') ?>';
 
-    // Fungsi untuk menghapus tanggungan yang sudah ada
     async function hapusTanggungan(buttonElement) {
       if (!confirm('Hapus tanggungan ini?')) {
         return;
@@ -291,11 +286,10 @@
     }
     <?php endif; ?>
 
-    // Handle submit form "Simpan Data" (untuk update data yang sudah ada)
     document.getElementById('tanggunganForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const rows = document.querySelectorAll('#tabelDaftarTanggungan tr[data-row-type="existing"]'); // Hanya ambil baris yang sudah ada
+        const rows = document.querySelectorAll('#tabelDaftarTanggungan tr[data-row-type="existing"]');
         const updates = [];
 
         for (const row of rows) {
@@ -310,7 +304,10 @@
                 if (statusSelect) {
                     status = statusSelect.value;
                 }
+            } else {
+                status = row.querySelector(`input[name="status_${tanggunganId}"]`).value;
             }
+
 
             let user_id_val = null;
             if (isAdmin) {
@@ -326,7 +323,7 @@
                 jadwal_pembayaran: jadwal_pembayaran,
                 kategori_id: kategori_id,
                 jumlah: jumlah,
-                status: status,
+                status: status, 
                 user_id: user_id_val
             });
         }
@@ -342,7 +339,7 @@
             formData.append('jadwal_pembayaran', data.jadwal_pembayaran);
             formData.append('kategori_id', data.kategori_id);
             formData.append('jumlah', data.jumlah);
-            if (isAdmin && data.status !== null) {
+            if (data.status !== null) {
                 formData.append('status', data.status);
             }
             if (isAdmin && data.user_id !== null) {
@@ -382,14 +379,12 @@
         window.location.reload();
     });
 
-    // Handle submit form di dalam Modal (untuk menambah data baru)
     document.getElementById('addTanggunganForm').addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const form = event.target;
-        const formData = new URLSearchParams(new FormData(form)); // Langsung dari form modal
+        const formData = new URLSearchParams(new FormData(form));
 
-        // Lakukan validasi dasar di sini juga jika diperlukan
         const tanggungan = form.querySelector('[name="tanggungan"]').value;
         const jadwal_pembayaran = form.querySelector('[name="jadwal_pembayaran"]').value;
         const kategori_id = form.querySelector('[name="kategori_id"]').value;
@@ -403,7 +398,7 @@
             alert('Harap lengkapi semua kolom.');
             return;
         }
-
+        
         try {
             const response = await fetch('?c=TanggunganController&m=insert', {
                 method: 'POST',
@@ -414,9 +409,9 @@
             if (response.ok && result.isSuccess) {
                 alert('Tanggungan baru berhasil ditambahkan!');
                 const addTanggunganModal = bootstrap.Modal.getInstance(document.getElementById('addTanggunganModal'));
-                addTanggunganModal.hide(); // Sembunyikan modal
-                form.reset(); // Reset form
-                window.location.reload(); // Reload halaman untuk menampilkan data baru
+                addTanggunganModal.hide();
+                form.reset();
+                window.location.reload();
             } else {
                 alert('Gagal menambahkan tanggungan baru: ' + (result.info || 'Terjadi kesalahan tidak dikenal.'));
             }

@@ -2,24 +2,19 @@
 
 class TanggunganController extends Controller
 {
-    private $model; // Properti model tidak digunakan di constructor atau isAdmin, jadi bisa dihapus atau diinisialisasi di method
+    private $model;
 
     public function __construct()
     {
         session_start();
-        // Memastikan sesi 'user' ada untuk kedua peran (user biasa dan admin)
         if (!isset($_SESSION['user'])) {
             header("Location: ?c=UserController&m=loginView");
             exit();
         }
     }
 
-    // Metode bantuan untuk memeriksa apakah pengguna adalah admin
     private function isAdmin()
     {
-        // Asumsi: Ada properti 'privilege' di objek $_SESSION['user']
-        // Berdasarkan petunjuk tabel, ada kolom 'privilege' di tabel user.
-        // Jika $_SESSION['user']->privilege ada dan nilainya 'admin', maka adalah admin.
         return isset($_SESSION['user']->privilege) && $_SESSION['user']->privilege === 'admin';
     }
 
@@ -29,21 +24,9 @@ class TanggunganController extends Controller
         $kategoriModel = $this->loadModel('Kategori');
 
         if ($this->isAdmin()) {
-            // Admin bisa melihat semua tanggungan
             $tanggungan = $model->getAll();
-            // Asumsi admin bisa melihat semua kategori, bukan hanya kategori milik user tertentu.
-            // Metode getAllCategories() di model Kategori tidak ada dalam file yang diberikan,
-            // jadi kita asumsikan ada atau gunakan getAllCategoriesByUser() dengan ID admin jika itu logikanya.
-            // Untuk amannya, jika getAllCategories() tidak ada, Anda perlu membuatnya.
-            // Jika KategoriController sudah memiliki getAllCategoriesByUser(null), itu bisa dipakai.
-            // Untuk saat ini, asumsikan ini akan mengambil semua kategori dari tabel 'kategori'.
-            // Kalau tidak, mungkin perlu ditambahkan di model Kategori.
-            $categories = $kategoriModel->getAllCategoriesByUser(null); // Atau buat metode getAllCategories() jika admin bisa melihat semua.
-            // JikagetAllCategoriesByUser(null) tidak bekerja, maka harus ada metode getAllCategories di model Kategori.
-            // Contoh implementasi di Kategori.php:
-            // public function getAllCategories() { return $this->dbconn->query("SELECT * FROM kategori")->fetch_all(MYSQLI_ASSOC); }
+            $categories = $kategoriModel->getAllCategoriesByUser(null);
         } else {
-            // User biasa hanya bisa melihat tanggungan miliknya
             $id_user = $_SESSION['user']->user_id;
             $tanggungan = $model->getByUser($id_user);
             $categories = $kategoriModel->getAllCategoriesByUser($id_user);
@@ -52,7 +35,7 @@ class TanggunganController extends Controller
         $this->loadView("tanggungan", [
             'tanggungan' => $tanggungan,
             'categories' => $categories,
-            'isAdmin' => $this->isAdmin() // Kirim status admin ke view
+            'isAdmin' => $this->isAdmin()
         ]);
     }
 
@@ -66,7 +49,6 @@ class TanggunganController extends Controller
 
         $model = $this->loadModel("Tanggungan");
 
-        // Dapatkan user_id. Jika admin dan ada user_id di POST, gunakan itu. Jika bukan, gunakan user_id dari sesi.
         $id_user_input = $_POST['user_id'] ?? null;
         $id_user = $this->isAdmin() ? $id_user_input : $_SESSION['user']->user_id;
 
@@ -74,25 +56,23 @@ class TanggunganController extends Controller
         $jadwal_pembayaran = $_POST['jadwal_pembayaran'] ?? '';
         $kategori_id = $_POST['kategori_id'] ?? null;
         $jumlah = $_POST['jumlah'] ?? 0;
-        $status = "Belum dibayar"; // Status default saat insert
+        $status = "Belum dibayar";
 
-        // Validasi input umum
         if (empty($tanggungan) || empty($jadwal_pembayaran) || empty($kategori_id) || !is_numeric($jumlah) || $jumlah <= 0) {
             header('Content-Type: application/json');
             echo json_encode(["isSuccess" => false, "info" => "Data yang dikirim tidak lengkap atau tidak valid."]);
             exit();
         }
 
-        // Validasi khusus admin untuk user_id
         if ($this->isAdmin() && (empty($id_user) || !is_numeric($id_user))) {
-             header('Content-Type: application/json');
+            header('Content-Type: application/json');
             echo json_encode(["isSuccess" => false, "info" => "ID Pengguna harus ditentukan dan berupa angka oleh admin."]);
             exit();
         }
-        
+
         $kategori_id = (int) $kategori_id;
         $jumlah = (int) $jumlah;
-        $id_user = (int) $id_user; // Pastikan id_user juga di-cast ke int
+        $id_user = (int) $id_user;
 
         $data = [
             $id_user,
@@ -121,10 +101,9 @@ class TanggunganController extends Controller
         $jadwal_pembayaran = $_POST['jadwal_pembayaran'] ?? '';
         $kategori_id = $_POST['kategori_id'] ?? null;
         $jumlah = $_POST['jumlah'] ?? 0;
-        $status = $_POST['status'] ?? null; // Dapatkan status jika ada (admin yang mengirim)
-        $user_id_from_post = $_POST['user_id'] ?? null; // Dapatkan user_id jika dikirim oleh admin
+        $status = $_POST['status'] ?? null;
+        $user_id_from_post = $_POST['user_id'] ?? null;
 
-        // Validasi input
         if (empty($tanggungan_id) || empty($tanggungan) || empty($jadwal_pembayaran) || empty($kategori_id) || !is_numeric($jumlah) || $jumlah <= 0) {
             echo json_encode(["isSuccess" => false, "info" => "Data update tidak lengkap atau tidak valid."]);
             exit();
@@ -145,20 +124,17 @@ class TanggunganController extends Controller
             if ($status !== null) {
                 $data['status'] = $status;
             }
-            // Jika admin mengirim user_id untuk update (misal mengalihkan tanggungan ke user lain)
             if ($user_id_from_post !== null) {
-                $data['user_id'] = (int)$user_id_from_post;
+                $data['user_id'] = (int) $user_id_from_post;
             }
         } else {
-            // Jika bukan admin, pastikan tanggungan ini milik user yang sedang login
-            // dan tambahkan user_id sesi ke data untuk filter di model update()
             $id_user_sesi = $_SESSION['user']->user_id;
             $existingTanggungan = $model->getByIdAndUser($tanggungan_id, $id_user_sesi);
             if (!$existingTanggungan) {
                 echo json_encode(["isSuccess" => false, "info" => "Anda tidak memiliki izin untuk memperbarui tanggungan ini."]);
                 exit();
             }
-            $data['user_id'] = $id_user_sesi; // Penting: Tambahkan user_id sesi ke data
+            $data['user_id'] = $id_user_sesi;
         }
 
         if ($tanggungan_id) {
@@ -167,7 +143,7 @@ class TanggunganController extends Controller
             } else {
                 $result = $model->update($tanggungan_id, $data);
             }
-            
+
             if ($result) {
                 echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil diperbarui."]);
             } else {
@@ -181,13 +157,11 @@ class TanggunganController extends Controller
 
     public function resetAwalBulan()
     {
-        // Hanya admin atau user yang memiliki tanggungan yang dapat mereset
         if (!$this->isAdmin()) {
             $id_user = $_SESSION['user']->user_id;
             $model = $this->loadModel("Tanggungan");
             $model->resetStatus($id_user);
         } else {
-            // Admin bisa mereset semua status tanggungan di sistem
             $model = $this->loadModel("Tanggungan");
             $model->resetAllStatuses();
         }
@@ -200,7 +174,7 @@ class TanggunganController extends Controller
     {
         $id_user = $_SESSION['user']->user_id;
         $model = $this->loadModel("Tanggungan");
-        $pengeluaran = $model->getPengeluaranUser($id_user); 
+        $pengeluaran = $model->getPengeluaranUser($id_user);
 
         foreach ($pengeluaran as $item) {
             $model->updateStatusSelesai(
@@ -219,19 +193,17 @@ class TanggunganController extends Controller
         header('Content-Type: application/json');
 
         $id_tanggungan = $_POST['id'] ?? null;
-        $id_user_sesi = $_SESSION['user']->user_id; // User yang sedang login
+        $id_user_sesi = $_SESSION['user']->user_id;
         $model = $this->loadModel("Tanggungan");
 
         if ($id_tanggungan) {
             if ($this->isAdmin()) {
-                // Admin bisa menghapus tanggungan apa pun tanpa peduli user_id
                 if ($model->deleteAnyById($id_tanggungan)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus oleh admin."]);
                 } else {
                     echo json_encode(["isSuccess" => false, "info" => "Gagal menghapus tanggungan oleh admin."]);
                 }
             } else {
-                // User biasa hanya bisa menghapus tanggungannya sendiri
                 if ($model->deleteById($id_tanggungan, $id_user_sesi)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus."]);
                 } else {
@@ -244,10 +216,10 @@ class TanggunganController extends Controller
         exit();
     }
 
-    // Contoh: Melihat tanggungan untuk user tertentu (opsional, bisa dihandle di index jika ada parameter)
-    public function viewUserTanggungan($userId) {
+    public function viewUserTanggungan($userId)
+    {
         if (!$this->isAdmin()) {
-            header("Location: ?c=UserController&m=loginView"); // Atau halaman error/access denied
+            header("Location: ?c=UserController&m=loginView");
             exit();
         }
 
@@ -255,9 +227,9 @@ class TanggunganController extends Controller
         $kategoriModel = $this->loadModel('Kategori');
 
         $tanggungan = $model->getByUser($userId);
-        $categories = $kategoriModel->getAllCategoriesByUser($userId); // Atau semua kategori
+        $categories = $kategoriModel->getAllCategoriesByUser($userId);
 
-        $this->loadView("tanggungan_admin_view", [ // Mungkin perlu view khusus admin
+        $this->loadView("tanggungan_admin_view", [
             'tanggungan' => $tanggungan,
             'categories' => $categories,
             'viewingUserId' => $userId,
