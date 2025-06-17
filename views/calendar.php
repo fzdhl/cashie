@@ -133,10 +133,10 @@
             <label for="transactionCategory">Kategori Transaksi:</label>
             <select id="transactionCategory" name="category_id" required>
               <option value="" disabled selected>Pilih Kategori</option>
-              <?php foreach ($categories as $category): ?>
+              <?php foreach ($data['kategori'] as $category): ?>
               <option
                 value="<?= $category['category_id'] ?>"
-                data-type="<?= htmlspecialchars(strtolower(trim($category['type']))) ?>"
+                data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"
               >
                 <?= htmlspecialchars($category['category']) ?>
               </option>
