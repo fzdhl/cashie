@@ -283,4 +283,3 @@ class Tanggungan extends Model
         return $stmt->execute();
     }
 }
-?>

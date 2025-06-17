@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tagihan dan Komitmen</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="views/styles/tanggungan.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="views/styles/tanggungan.css">
 </head>
 
-<body class="d-flex flex-column min-vh-100" style="background-color: #F0F8F3">
+<body class="d-flex flex-column">
   <?php include_once "header.php"; ?>
   <div class="container-fluid py-5 flex-grow-1 px-5">
     <h2 class="fw-bold mb-4">Tagihan dan Komitmen
@@ -108,7 +109,7 @@
 
                   <td><input type="text" name="tanggungan_<?= $tanggunganId ?>" class="form-control form-control-sm" value="<?= $tanggunganNama ?>" <?= $inputDisabled ?>></td>
                   <td><input type="date" name="jadwal_pembayaran_<?= $tanggunganId ?>" class="form-control form-control-sm" value="<?= $jadwalPembayaran ?>" <?= $inputDisabled ?>></td>
-                                    
+                                            
                   <td>
                       <?php if (isset($isAdmin) && $isAdmin): // Jika admin, tampilkan sebagai teks statis?>
                           <span class="form-control form-control-sm border-0 bg-transparent">
@@ -308,7 +309,10 @@
             const tanggunganId = row.dataset.tanggunganId;
             const tanggungan = row.querySelector(`input[name="tanggungan_${tanggunganId}"]`).value;
             const jadwal_pembayaran = row.querySelector(`input[name="jadwal_pembayaran_${tanggunganId}"]`).value;
-            const kategori_id = row.querySelector(`select[name="kategori_id_${tanggunganId}"]`).value;
+            // Kategori ID diambil dari input hidden jika admin, atau select jika user
+            const kategori_id_element = row.querySelector(`[name="kategori_id_${tanggunganId}"]`);
+            const kategori_id = kategori_id_element ? kategori_id_element.value : '';
+
             const jumlah = row.querySelector(`input[name="jumlah_${tanggunganId}"]`).value;
             let status = null;
             if (isAdmin) {
@@ -317,6 +321,7 @@
                     status = statusSelect.value;
                 }
             } else {
+                // Untuk non-admin, status adalah input type text yang disabled
                 status = row.querySelector(`input[name="status_${tanggunganId}"]`).value;
             }
 

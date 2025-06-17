@@ -13,7 +13,7 @@
           <a class="nav-link text-white" href="?c=adminKategoriController&m=index">Kategori</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=adminTanggunganController&m=index">Tanggungan</a>
+          <a class="nav-link text-white" href="?c=TanggunganController&m=index">Tanggungan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=adminDashboardController&m=report">Laporan Keuangan</a>
