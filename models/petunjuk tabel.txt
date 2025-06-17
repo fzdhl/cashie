@@ -87,3 +87,14 @@ CREATE TABLE arsip (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
 );
+
+8. profile
+CREATE TABLE profile (
+  profile_id int NOT NULL AUTO_INCREMENT,
+  user_id int NOT NULL,
+  photo_dir varchar(60) COLLATE utf8mb4_general_ci DEFAULT 'resources/default-avatar.jpg',
+  phone_no varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (profile_id),
+  KEY user_id (user_id),
+  CONSTRAINT profile_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id)
+)
