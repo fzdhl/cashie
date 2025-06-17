@@ -1,0 +1,73 @@
+1. user
+CREATE TABLE user (
+  user_id int NOT NULL AUTO_INCREMENT,
+  email varchar(255) DEFAULT NULL,
+  password varchar(60) DEFAULT NULL,
+  username varchar(60) DEFAULT NULL,
+  created_at date DEFAULT (curdate()),
+  privilege varchar(10) NOT NULL DEFAULT 'user',
+  PRIMARY KEY (user_id),
+  UNIQUE KEY username (username)
+)
+
+2. kategori
+CREATE TABLE kategori (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    user_id INT NOT NULL,
+    kategori VARCHAR(100) NOT NULL UNIQUE, 
+    tipe ENUM('Income', 'Expense') NOT NULL,
+    ikon_dir VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+3. tanggungan
+
+
+4. laporan keuangan
+
+
+5. transaksi
+CREATE TABLE transaksi (
+  transaksi_id int NOT NULL,
+  user_id int DEFAULT NULL,
+  kategori_id int DEFAULT NULL,
+  jumlah bigint DEFAULT NULL,
+  keterangan varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  tanggal_transaksi date DEFAULT NULL,
+  tanggungan_id int DEFAULT NULL,
+  target_id int DEFAULT NULL,
+  created_at date DEFAULT (curdate()),
+  PRIMARY KEY (transaksi_id),
+  KEY user_id (user_id),
+  KEY kategori_id (kategori_id),
+  KEY tanggungan_id (tanggungan_id),
+  KEY target_id (target_id),
+  CONSTRAINT transaksi_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id),
+  CONSTRAINT transaksi_ibfk_2 FOREIGN KEY (kategori_id) REFERENCES kategori (kategori_id),
+  CONSTRAINT transaksi_ibfk_3 FOREIGN KEY (tanggungan_id) REFERENCES tanggungan (tanggungan_id),
+  CONSTRAINT transaksi_ibfk_4 FOREIGN KEY (target_id) REFERENCES target (target_id)
+);
+
+6. target 
+CREATE TABLE target (
+  target_id int NOT NULL AUTO_INCREMENT,
+  user_id int DEFAULT NULL,
+  target varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  jumlah bigint DEFAULT NULL,
+  created_at date DEFAULT (curdate()),
+  PRIMARY KEY (target_id),
+  UNIQUE KEY user_id_2 (user_id,target),
+  KEY user_id (user_id),
+  CONSTRAINT target_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id)
+)
+
+7. arsip
+CREATE TABLE arsip (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11) NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE
+);
