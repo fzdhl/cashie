@@ -18,7 +18,7 @@
         }
 
         // public function insertTransaction($user_id, $transaction_type, $jumlah, $description){
-        //     $stmt = $this->dbconn->prepare("INSERT INTO catatan_keuangan (user_id, jenis_transaksi, jumlah, keterangan) VALUES (?, ?, ?, ?)");
+        //     $stmt = $this->dbconn->prepare("INSERT INTO transaksi (user_id, jenis_transaksi, jumlah, keterangan) VALUES (?, ?, ?, ?)");
         //     $stmt->bind_param("isis", $user_id, $transaction_type, $jumlah, $description);
         //     $stmt->execute();
         // }
@@ -91,7 +91,7 @@
                 FROM 
                     laporan l
                 LEFT JOIN 
-                    catatan_keuangan ck 
+                    transaksi ck 
                     ON ck.user_id = l.user_id
                     AND ck.tanggal_transaksi >= l.tanggal_awal 
                     AND ck.tanggal_transaksi < DATE_ADD(l.tanggal_akhir, INTERVAL 1 DAY)
@@ -117,7 +117,7 @@
                         WHEN k.tipe = 'pengeluaran' THEN -1 * SUM(ck.jumlah)
                         ELSE SUM(ck.jumlah)
                     END AS total_harian
-                    FROM catatan_keuangan ck
+                    FROM transaksi ck
                     JOIN user u ON ck.user_id = u.user_id
                     JOIN laporan l ON l.user_id = u.user_id AND l.laporan_id = ?
                     JOIN kategori k ON k.kategori_id = ck.kategori_id
@@ -138,7 +138,7 @@
         
         public function getTableByDate($laporan_id, $reportType, $username){
             $stmt = $this->dbconn->prepare("SELECT * 
-                    FROM catatan_keuangan ck 
+                    FROM transaksi ck 
                     JOIN user u ON ck.user_id = u.user_id 
                     JOIN laporan l ON l.laporan_id = ? AND l.user_id = u.user_id
                     JOIN kategori k ON k.kategori_id = ck.kategori_id
@@ -169,7 +169,7 @@
                         WHEN k.tipe = 'pengeluaran' THEN -1 * SUM(jumlah)
                         ELSE SUM(jumlah)
                         END AS total_harian
-                    FROM catatan_keuangan ck 
+                    FROM transaksi ck 
                     JOIN user u ON ck.user_id = u.user_id
                     JOIN kategori k ON ck.kategori_id = k.kategori_id 
                     WHERE k.tipe = ? AND username = ? AND MONTH(tanggal_transaksi) = ? AND YEAR(tanggal_transaksi) = ?
@@ -184,7 +184,7 @@
 
         public function getTableByMonth($reportType, $username, $selectedMonth, $selectedYear){
             $stmt = $this->dbconn->prepare("SELECT * 
-                    FROM catatan_keuangan ck 
+                    FROM transaksi ck 
                     JOIN user u ON ck.user_id = u.user_id
                     JOIN kategori k ON ck.kategori_id = k.kategori_id 
                     WHERE k.tipe = ? AND username = ? AND MONTH(tanggal_transaksi) = ? AND YEAR(tanggal_transaksi) = ?

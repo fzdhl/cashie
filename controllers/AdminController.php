@@ -22,4 +22,25 @@
 
             $this->loadView('admin-edit', ['user' => $user]);
         }
+
+        public function update() {
+            $user_id = $_GET['user_id'];
+            $password = $_POST['password'];
+            $email = $_POST['email'];
+            $username = $_POST['username'];
+
+            $model = $this->loadModel('User');
+            $user = $model->updateUser($user_id, $username, $password, $email);
+
+            echo json_encode(['status' => 'success']);
+            header('Location: ?c=AdminController&m=index');
+        }
+
+        public function delete(){
+            $user_id = $_GET['user_id'];
+
+            $model = $this->loadModel('User');
+            $user = $model->deleteUser($user_id);
+            header('Location: ?c=AdminController&m=index');
+        }
     }
