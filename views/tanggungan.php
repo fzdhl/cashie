@@ -20,35 +20,24 @@
       <?php endif; ?>
     </h2>
 
-    <div class="row g-3 mb-4">
-      <div class="col-md-6 col-lg-3">
-        <div class="card p-3 shadow-sm h-100">
+    <div class="row g-3 mb-4 justify-content-center"> <div class="col-12 col-sm-6 col-md-4 col-lg-4"> <div class="card p-3 shadow-sm h-100">
           <h6 class="text-muted">Periode</h6>
           <h5><?= date('Y | F') ?></h5>
         </div>
       </div>
 
-      <div class="col-md-6 col-lg-3">
-        <div class="card p-3 shadow-sm h-100">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-4"> <div class="card p-3 shadow-sm h-100">
           <h6 class="text-muted">Tanggungan Aktif</h6>
           <h5 id="aktif">Rp. 0</h5>
         </div>
       </div>
 
-      <div class="col-md-6 col-lg-3">
-        <div class="card p-3 shadow-sm h-100">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-4"> <div class="card p-3 shadow-sm h-100">
           <h6 class="text-muted">Jumlah Terbayar</h6>
           <h5 id="terbayar">Rp. 0</h5>
         </div>
       </div>
-
-      <div class="col-md-6 col-lg-3">
-        <div class="card p-3 shadow-sm h-100">
-          <h6 class="text-muted">Saldo</h6>
-          <h5>Rp. 0</h5>
-        </div>
       </div>
-    </div>
 
     <div class="d-flex justify-content-start mb-3">
       <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTanggunganModal">
