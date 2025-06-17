@@ -138,7 +138,7 @@
                 value="<?= $category['kategori_id'] ?>"
                 data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"
               >
-                <?= htmlspecialchars($category['category']) ?>
+                <?= htmlspecialchars($category['kategori']) ?>
               </option>
               <?php endforeach; ?>
             </select>
