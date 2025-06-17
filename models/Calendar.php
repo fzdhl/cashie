@@ -8,11 +8,13 @@
 
     public function getTransactionsByDate($date, $userId) {
       // [MODIFIKASI] Tambahkan t.transaction_id pada query SELECT
-      $query = "  SELECT * FROM transaksi AS t
-                  JOIN
-                      kategori AS k ON t.kategori_id = k.kategori_id
-                  WHERE
-                      t.user_id = ? AND DATE(t.tanggal_transaksi) = ?
+      $query = " SELECT *
+          FROM
+              transaksi AS t
+          JOIN
+              kategori AS k ON t.kategori_id = k.kategori_id
+          WHERE
+              t.user_id = ? AND DATE(t.tanggal_transaksi) = ?
       ";
       
       $stmt = $this->dbconn->prepare($query);
@@ -31,10 +33,10 @@
       $expense = 0;
       
       foreach ($transactions as $transaction) {
-        if (stripos($transaction['tipe'], 'pemasukan') !== false || stripos($transaction['tipe'], 'income') !== false) {
-          $income += $transaction['amount'];
+        if (stripos($transaction['tipe'], 'pemasukan') !== false || stripos($transaction['type'], 'income') !== false) {
+          $income += $transaction['jumlah'];
         } else {
-          $expense += $transaction['amount'];
+          $expense += $transaction['jumlah'];
         }
       }
 

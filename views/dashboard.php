@@ -55,25 +55,17 @@
         </div>
       </div>
       <div class="col-lg-4">
-        <div class="profile-card">
+        <div class="card border-0 p-3">
           <div class="d-flex justify-content-between">
-            <span>Total</span><strong>Rp100.000.000</strong>
+            <strong>Target</strong><strong>Total: Rp<?=number_format($target['total']['total'], 2, ',', '.')?></strong>
           </div>
-        </div>
-        <div class="profile-card">
-          <div class="d-flex justify-content-between">
-            <span>🚘 Mobil</span><strong>Rp271.000.000</strong>
-          </div>
-        </div>
-        <div class="profile-card">
-          <div class="d-flex justify-content-between">
-            <span>🏢 Rumah</span><strong>Rp800.000.000</strong>
-          </div>
-        </div>
-        <div class="profile-card">
-          <div class="d-flex justify-content-between">
-            <span>🎹 Piano</span><strong>Rp2.000.000</strong>
-          </div>
+          <ul>
+            <?php foreach ($target['data'] as $target1): ?>
+            <li class="d-flex justify-content-between">
+              <p><?=$target1['target']?></p><p>Rp<?=number_format($target1['jumlah'], 2, ',', '.')?></p>
+            </li>
+            <?php endforeach;?>
+          </ul>
         </div>
       </div>
     </div>

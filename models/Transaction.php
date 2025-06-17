@@ -5,7 +5,7 @@
     
     // Mengambil semua kategori milik seorang pengguna
     public function getCategoriesByUser($userId) {
-        $query = "SELECT kategori, k, tipe FROM kategori WHERE user_id = ?";
+        $query = "SELECT kategori_id, kategori, tipe FROM kategori WHERE user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -15,7 +15,7 @@
 
     // [BARU] Mengambil semua tagihan (bills) yang belum lunas milik pengguna
     public function getBillsByUser($userId) {
-        $query = "SELECT tagihan_id, tagihan FROM tagihan WHERE user_id = ? AND status = 0";
+        $query = "SELECT tanggungan_id, tanggungan FROM tanggungan WHERE user_id = ? AND status = 0";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -35,7 +35,7 @@
 
     // [MODIFIKASI] Menyimpan data transaksi baru ke database termasuk bill_id dan goal_id
     public function insertTransaction($data) {
-        $query = "INSERT INTO transaksi (user_id, kategori_id, jumlah, keterangan, tanggal_transaksi, tagihan_id, target_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO transaksi (user_id, kategori_id, jumlah, keterangan, tanggal_transaksi, tanggungan_id, target_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->dbconn->prepare($query);
         
         $datetime = $data['date'] . ' ' . date('H:i:s');
@@ -60,7 +60,7 @@
     // ...
     public function getTransactionById($transactionId, $userId) {
         // [MODIFIKASI] Ambil juga bill_id dan goal_id
-        $query = "SELECT transaksi_id, kategori_id, jumlah, keterangan, DATE(date) as date, tagihan_id, target_id FROM transaksi WHERE transaksi_id = ? AND user_id = ?";
+        $query = "SELECT transaksi_id, kategori_id, jumlah, keterangan, tanggal_transaksi, tanggungan_id, target_id FROM transaksi WHERE transaksi_id = ? AND user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("ii", $transactionId, $userId);
         $stmt->execute();
@@ -70,7 +70,7 @@
 
     public function updateTransaction($data) {
         // [MODIFIKASI] Query UPDATE sekarang menyertakan bill_id dan goal_id
-        $query = "UPDATE transaksi SET kategori_id = ?, jumlah = ?, keterangan = ?, date = ?, tagihan_id = ?, target_id = ? WHERE transaksi_id = ? AND user_id = ?";
+        $query = "UPDATE transaksi SET kategori_id = ?, jumlah = ?, keterangan = ?, tanggal_transaksi = ?, tanggungan_id = ?, target_id = ? WHERE transaksi_id = ? AND user_id = ?";
         $stmt = $this->dbconn->prepare($query);
         
         $datetime = $data['date'] . ' ' . date('H:i:s');
@@ -81,7 +81,7 @@
             "idssii", // Tipe data: amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
             // Saya ralat urutan dan tipe bind_param agar sesuai query
             // category(i), amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
-            $data['kategory_id'],
+            $data['kategori_id'],
             $data['jumlah'],
             $data['keterangan'],
             $datetime,

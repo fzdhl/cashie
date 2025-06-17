@@ -7,25 +7,25 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=DashboardController&m=index">Dashboard</a>
+          <a class="nav-link text-white" href="?c=adminDashboardController&m=index">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=KategoriController&m=index">Kategori</a>
+          <a class="nav-link text-white" href="?c=adminKategoriController&m=index">Kategori</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=TanggunganController&m=index">Tanggungan</a>
+          <a class="nav-link text-white" href="?c=adminTanggunganController&m=index">Tanggungan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=DashboardController&m=report">Laporan Keuangan</a>
+          <a class="nav-link text-white" href="?c=adminDashboardController&m=report">Laporan Keuangan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=CalendarController&m=index">Kalender</a>
+          <a class="nav-link text-white" href="?c=adminCalendarController&m=index">Kalender</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=TargetController&m=index">Target</a>
+          <a class="nav-link text-white" href="?c=adminTargetController&m=index">Target</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=ArsipController&m=index">Arsip</a>
+          <a class="nav-link text-white" href="?c=amdinArsipController&m=index">Arsip</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
