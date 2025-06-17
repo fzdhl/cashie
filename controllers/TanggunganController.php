@@ -2,7 +2,7 @@
 
 class TanggunganController extends Controller
 {
-    private $model;
+    private $model; // Properti model tidak digunakan di constructor atau isAdmin, jadi bisa dihapus atau diinisialisasi di method
 
     public function __construct()
     {
@@ -17,10 +17,10 @@ class TanggunganController extends Controller
     // Metode bantuan untuk memeriksa apakah pengguna adalah admin
     private function isAdmin()
     {
-        // Asumsi: Ada properti 'role' di objek $_SESSION['user']
-        // Anda perlu memastikan bahwa objek user yang disimpan di sesi memiliki properti 'role'
-        // Misalnya, 'admin' atau 'user'. Sesuaikan dengan struktur data user Anda.
-        return isset($_SESSION['user']->role) && $_SESSION['user']->role === 'admin';
+        // Asumsi: Ada properti 'privilege' di objek $_SESSION['user']
+        // Berdasarkan petunjuk tabel, ada kolom 'privilege' di tabel user.
+        // Jika $_SESSION['user']->privilege ada dan nilainya 'admin', maka adalah admin.
+        return isset($_SESSION['user']->privilege) && $_SESSION['user']->privilege === 'admin';
     }
 
     public function index()
@@ -30,8 +30,18 @@ class TanggunganController extends Controller
 
         if ($this->isAdmin()) {
             // Admin bisa melihat semua tanggungan
-            $tanggungan = $model->getAll(); // Asumsi ada metode getAll() di model Tanggungan
-            $categories = $kategoriModel->getAllCategories(); // Admin bisa melihat semua kategori
+            $tanggungan = $model->getAll();
+            // Asumsi admin bisa melihat semua kategori, bukan hanya kategori milik user tertentu.
+            // Metode getAllCategories() di model Kategori tidak ada dalam file yang diberikan,
+            // jadi kita asumsikan ada atau gunakan getAllCategoriesByUser() dengan ID admin jika itu logikanya.
+            // Untuk amannya, jika getAllCategories() tidak ada, Anda perlu membuatnya.
+            // Jika KategoriController sudah memiliki getAllCategoriesByUser(null), itu bisa dipakai.
+            // Untuk saat ini, asumsikan ini akan mengambil semua kategori dari tabel 'kategori'.
+            // Kalau tidak, mungkin perlu ditambahkan di model Kategori.
+            $categories = $kategoriModel->getAllCategoriesByUser(null); // Atau buat metode getAllCategories() jika admin bisa melihat semua.
+            // JikagetAllCategoriesByUser(null) tidak bekerja, maka harus ada metode getAllCategories di model Kategori.
+            // Contoh implementasi di Kategori.php:
+            // public function getAllCategories() { return $this->dbconn->query("SELECT * FROM kategori")->fetch_all(MYSQLI_ASSOC); }
         } else {
             // User biasa hanya bisa melihat tanggungan miliknya
             $id_user = $_SESSION['user']->user_id;
@@ -56,29 +66,30 @@ class TanggunganController extends Controller
 
         $model = $this->loadModel("Tanggungan");
 
-        $id_user_input = $_POST['user_id'] ?? null; // Admin bisa menentukan user_id
+        // Dapatkan user_id. Jika admin dan ada user_id di POST, gunakan itu. Jika bukan, gunakan user_id dari sesi.
+        $id_user_input = $_POST['user_id'] ?? null;
+        $id_user = $this->isAdmin() ? $id_user_input : $_SESSION['user']->user_id;
+
         $tanggungan = $_POST['tanggungan'] ?? '';
         $jadwal_pembayaran = $_POST['jadwal_pembayaran'] ?? '';
         $kategori_id = $_POST['kategori_id'] ?? null;
         $jumlah = $_POST['jumlah'] ?? 0;
         $status = "Belum dibayar"; // Status default saat insert
 
-        // Jika admin, gunakan user_id dari input form. Jika bukan, gunakan user_id dari sesi.
-        $id_user = $this->isAdmin() ? $id_user_input : $_SESSION['user']->user_id;
-
-        // Validasi tambahan untuk admin: Pastikan user_id_input tidak kosong jika admin
-        if ($this->isAdmin() && empty($id_user)) {
-             header('Content-Type: application/json');
-            echo json_encode(["isSuccess" => false, "info" => "ID Pengguna harus ditentukan oleh admin."]);
-            exit();
-        }
-
+        // Validasi input umum
         if (empty($tanggungan) || empty($jadwal_pembayaran) || empty($kategori_id) || !is_numeric($jumlah) || $jumlah <= 0) {
             header('Content-Type: application/json');
             echo json_encode(["isSuccess" => false, "info" => "Data yang dikirim tidak lengkap atau tidak valid."]);
             exit();
         }
 
+        // Validasi khusus admin untuk user_id
+        if ($this->isAdmin() && (empty($id_user) || !is_numeric($id_user))) {
+             header('Content-Type: application/json');
+            echo json_encode(["isSuccess" => false, "info" => "ID Pengguna harus ditentukan dan berupa angka oleh admin."]);
+            exit();
+        }
+        
         $kategori_id = (int) $kategori_id;
         $jumlah = (int) $jumlah;
         $id_user = (int) $id_user; // Pastikan id_user juga di-cast ke int
@@ -110,7 +121,8 @@ class TanggunganController extends Controller
         $jadwal_pembayaran = $_POST['jadwal_pembayaran'] ?? '';
         $kategori_id = $_POST['kategori_id'] ?? null;
         $jumlah = $_POST['jumlah'] ?? 0;
-        $status = $_POST['status'] ?? null; // Tambahan: Admin bisa mengubah status
+        $status = $_POST['status'] ?? null; // Dapatkan status jika ada (admin yang mengirim)
+        $user_id_from_post = $_POST['user_id'] ?? null; // Dapatkan user_id jika dikirim oleh admin
 
         // Validasi input
         if (empty($tanggungan_id) || empty($tanggungan) || empty($jadwal_pembayaran) || empty($kategori_id) || !is_numeric($jumlah) || $jumlah <= 0) {
@@ -120,7 +132,7 @@ class TanggunganController extends Controller
 
         $kategori_id = (int) $kategori_id;
         $jumlah = (int) $jumlah;
-        $tanggungan_id = (int) $tanggungan_id; // Pastikan tanggungan_id juga di-cast ke int
+        $tanggungan_id = (int) $tanggungan_id;
 
         $data = [
             'tanggungan' => $tanggungan,
@@ -129,36 +141,37 @@ class TanggunganController extends Controller
             'jumlah' => $jumlah,
         ];
 
-        // Jika admin, tambahkan status ke data update
-        if ($this->isAdmin() && $status !== null) {
-            $data['status'] = $status;
-        }
-
-        // Untuk update, user_id tidak perlu ada di data update,
-        // tapi perlu diverifikasi kepemilikan jika bukan admin.
-        if (!$this->isAdmin()) {
+        if ($this->isAdmin()) {
+            if ($status !== null) {
+                $data['status'] = $status;
+            }
+            // Jika admin mengirim user_id untuk update (misal mengalihkan tanggungan ke user lain)
+            if ($user_id_from_post !== null) {
+                $data['user_id'] = (int)$user_id_from_post;
+            }
+        } else {
             // Jika bukan admin, pastikan tanggungan ini milik user yang sedang login
-            $id_user = $_SESSION['user']->user_id;
-            $existingTanggungan = $model->getByIdAndUser($tanggungan_id, $id_user); // Asumsi ada metode ini
+            // dan tambahkan user_id sesi ke data untuk filter di model update()
+            $id_user_sesi = $_SESSION['user']->user_id;
+            $existingTanggungan = $model->getByIdAndUser($tanggungan_id, $id_user_sesi);
             if (!$existingTanggungan) {
                 echo json_encode(["isSuccess" => false, "info" => "Anda tidak memiliki izin untuk memperbarui tanggungan ini."]);
                 exit();
             }
+            $data['user_id'] = $id_user_sesi; // Penting: Tambahkan user_id sesi ke data
         }
 
         if ($tanggungan_id) {
-            // Admin bisa update tanpa filter user_id, user biasa update dengan filter user_id
             if ($this->isAdmin()) {
-                $result = $model->updateById($tanggungan_id, $data); // Asumsi ada metode updateById di model
+                $result = $model->updateById($tanggungan_id, $data);
             } else {
-                $result = $model->update($tanggungan_id, $data); // Ini adalah metode update yang ada, asumsikan sudah memfilter user_id
+                $result = $model->update($tanggungan_id, $data);
             }
             
-
             if ($result) {
                 echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil diperbarui."]);
             } else {
-                echo json_encode(["isSuccess" => false, "info" => "Gagal memperbarui tanggungan di database."]);
+                echo json_encode(["isSuccess" => false, "info" => "Gagal memperbarui tanggungan di database. Pastikan semua input valid."]);
             }
         } else {
             echo json_encode(["isSuccess" => false, "info" => "ID Tanggungan tidak ditemukan."]);
@@ -169,19 +182,14 @@ class TanggunganController extends Controller
     public function resetAwalBulan()
     {
         // Hanya admin atau user yang memiliki tanggungan yang dapat mereset
-        // Jika hanya user yang boleh mereset tanggungan miliknya, tidak perlu ada perubahan.
-        // Jika admin juga bisa mereset semua tanggungan, perlu penyesuaian di model.
         if (!$this->isAdmin()) {
             $id_user = $_SESSION['user']->user_id;
             $model = $this->loadModel("Tanggungan");
             $model->resetStatus($id_user);
         } else {
-            // Admin bisa mereset semua status tanggungan atau tanggungan user tertentu
-            // Ini membutuhkan penyesuaian di model Tanggungan.
-            // Contoh: $model->resetAllStatuses();
-            // Atau Anda bisa menambahkan input user_id di form jika admin ingin mereset spesifik user.
+            // Admin bisa mereset semua status tanggungan di sistem
             $model = $this->loadModel("Tanggungan");
-            $model->resetAllStatuses(); // Contoh metode baru untuk admin
+            $model->resetAllStatuses();
         }
 
         header('Location: ?c=TanggunganController&m=index');
@@ -190,14 +198,9 @@ class TanggunganController extends Controller
 
     public function sinkronDariCatatan()
     {
-        // Fungsionalitas ini tampaknya lebih spesifik untuk user individu
-        // Karena menyinkronkan pengeluaran user dengan tanggungan mereka.
-        // Jika admin juga perlu fungsionalitas serupa untuk semua user,
-        // maka logika di dalam loop foreach perlu disesuaikan agar bisa bekerja lintas user.
-        // Untuk saat ini, asumsikan ini tetap fungsionalitas khusus user.
         $id_user = $_SESSION['user']->user_id;
         $model = $this->loadModel("Tanggungan");
-        $pengeluaran = $model->getPengeluaranUser($id_user); // Ini harusnya mengambil pengeluaran hanya untuk user ini
+        $pengeluaran = $model->getPengeluaranUser($id_user); 
 
         foreach ($pengeluaran as $item) {
             $model->updateStatusSelesai(
@@ -222,7 +225,7 @@ class TanggunganController extends Controller
         if ($id_tanggungan) {
             if ($this->isAdmin()) {
                 // Admin bisa menghapus tanggungan apa pun tanpa peduli user_id
-                if ($model->deleteAnyById($id_tanggungan)) { // Asumsi ada metode deleteAnyById di model
+                if ($model->deleteAnyById($id_tanggungan)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus oleh admin."]);
                 } else {
                     echo json_encode(["isSuccess" => false, "info" => "Gagal menghapus tanggungan oleh admin."]);
@@ -232,7 +235,7 @@ class TanggunganController extends Controller
                 if ($model->deleteById($id_tanggungan, $id_user_sesi)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus."]);
                 } else {
-                    echo json_encode(["isSuccess" => false, "info" => "Gagal menghapus tanggungan. Mungkin tanggungan sudah selesai atau permanen."]);
+                    echo json_encode(["isSuccess" => false, "info" => "Gagal menghapus tanggungan."]);
                 }
             }
         } else {
@@ -240,10 +243,6 @@ class TanggunganController extends Controller
         }
         exit();
     }
-
-    // --- Metode Tambahan Khusus Admin ---
-    // Anda bisa menambahkan metode khusus admin, atau mengintegrasikan ke metode yang sudah ada.
-    // Untuk saat ini, saya integrasikan. Jika ingin metode terpisah, bisa ditambahkan di sini.
 
     // Contoh: Melihat tanggungan untuk user tertentu (opsional, bisa dihandle di index jika ada parameter)
     public function viewUserTanggungan($userId) {
@@ -269,4 +268,3 @@ class TanggunganController extends Controller
 }
 
 ?>
-

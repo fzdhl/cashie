@@ -4,7 +4,8 @@ class Tanggungan extends Model // class model untuk mengelola data
     // Metode untuk mengambil tanggungan berdasarkan user_id (untuk user biasa)
     public function getByUser($id_user)
     {
-        $stmt = $this->dbconn->prepare("SELECT t.*, k.kategori FROM tanggungan AS t JOIN kategori AS k ON t.kategori_id = k.kategori_id WHERE t.user_id = ? ORDER BY t.jadwal_pembayaran ASC");
+        // Memilih tanggungan_id secara eksplisit
+        $stmt = $this->dbconn->prepare("SELECT t.tanggungan_id, t.user_id, t.tanggungan, t.jadwal_pembayaran, t.kategori_id, t.jumlah, t.status, k.kategori FROM tanggungan AS t JOIN kategori AS k ON t.kategori_id = k.kategori_id WHERE t.user_id = ? ORDER BY t.jadwal_pembayaran ASC");
         $stmt->bind_param("i", $id_user);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -14,7 +15,8 @@ class Tanggungan extends Model // class model untuk mengelola data
     // *** FUNGSI BARU UNTUK ADMIN: Mengambil semua tanggungan (tanpa filter user_id) ***
     public function getAll()
     {
-        $stmt = $this->dbconn->prepare("SELECT t.*, k.kategori, u.username FROM tanggungan AS t JOIN kategori AS k ON t.kategori_id = k.kategori_id JOIN users AS u ON t.user_id = u.user_id ORDER BY t.jadwal_pembayaran ASC");
+        // Memilih tanggungan_id secara eksplisit dan mengganti 'users' dengan 'user'
+        $stmt = $this->dbconn->prepare("SELECT t.tanggungan_id, t.user_id, t.tanggungan, t.jadwal_pembayaran, t.kategori_id, t.jumlah, t.status, k.kategori, u.username FROM tanggungan AS t JOIN kategori AS k ON t.kategori_id = k.kategori_id JOIN user AS u ON t.user_id = u.user_id ORDER BY t.jadwal_pembayaran ASC");
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
@@ -23,7 +25,8 @@ class Tanggungan extends Model // class model untuk mengelola data
     // Metode untuk mengambil satu tanggungan berdasarkan ID dan USER_ID (untuk validasi user biasa)
     public function getByIdAndUser($id_tanggungan, $id_user)
     {
-        $stmt = $this->dbconn->prepare("SELECT * FROM tanggungan WHERE id = ? AND user_id = ?");
+        // Menggunakan tanggungan_id sebagai filter
+        $stmt = $this->dbconn->prepare("SELECT * FROM tanggungan WHERE tanggungan_id = ? AND user_id = ?");
         $stmt->bind_param("ii", $id_tanggungan, $id_user);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -34,7 +37,6 @@ class Tanggungan extends Model // class model untuk mengelola data
     // menyimpan satu baris data baru ke tabel tanggungan (untuk user biasa dan admin)
     public function insert($data)
     {
-        // Hapus kolom 'permanen' dari VALUES karena kita tidak ingin mengaturnya secara default
         $stmt = $this->dbconn->prepare("INSERT INTO tanggungan (user_id, tanggungan, jadwal_pembayaran, kategori_id, jumlah, status) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param(
             "issiis",
@@ -53,8 +55,8 @@ class Tanggungan extends Model // class model untuk mengelola data
             $code = $e->getCode();
             if ($code == 1062) {
                 $result = array("isSuccess" => false, "info" => "Terjadi duplikasi data.");
-            } elseif ($code == 1064) {
-                $result = array("isSuccess" => false, "info" => "Kesalahan sintaks SQL.");
+            } elseif ($code == 1452) { // Foreign key constraint fails
+                $result = array("isSuccess" => false, "info" => "Kategori ID atau User ID tidak ditemukan. Pastikan ID valid.");
             } else {
                 $result = array("isSuccess" => false, "info" => "Error lainnya: " . $e->getMessage());
             }
@@ -71,28 +73,33 @@ class Tanggungan extends Model // class model untuk mengelola data
             return false;
         }
 
-        $query = "UPDATE tanggungan SET tanggungan = ?, jadwal_pembayaran = ?, kategori_id = ?, jumlah = ?";
-        $types = "ssii";
-        $params = [
-            $data['tanggungan'],
-            $data['jadwal_pembayaran'],
-            $data['kategori_id'],
-            $data['jumlah']
-        ];
+        $setClauses = [];
+        $types = "";
+        $params = [];
 
-        // Jika ada status di data, tambahkan ke query dan parameter
-        if (isset($data['status'])) {
-            $query .= ", status = ?";
-            $types .= "s";
-            $params[] = $data['status'];
+        // Bangun klausa SET secara dinamis berdasarkan data yang tersedia
+        if (isset($data['tanggungan'])) { $setClauses[] = "tanggungan = ?"; $types .= "s"; $params[] = $data['tanggungan']; }
+        if (isset($data['jadwal_pembayaran'])) { $setClauses[] = "jadwal_pembayaran = ?"; $types .= "s"; $params[] = $data['jadwal_pembayaran']; }
+        if (isset($data['kategori_id'])) { $setClauses[] = "kategori_id = ?"; $types .= "i"; $params[] = $data['kategori_id']; }
+        if (isset($data['jumlah'])) { $setClauses[] = "jumlah = ?"; $types .= "i"; $params[] = $data['jumlah']; }
+        if (isset($data['status'])) { $setClauses[] = "status = ?"; $types .= "s"; $params[] = $data['status']; }
+
+        if (empty($setClauses)) {
+            error_log("No update fields provided for tanggungan ID: " . $id_tanggungan);
+            return false; // Tidak ada yang perlu diupdate
         }
 
-        $query .= " WHERE id = ? AND user_id = ?";
+        // Menggunakan tanggungan_id sebagai PRIMARY KEY dan user_id sebagai filter keamanan
+        $query = "UPDATE tanggungan SET " . implode(", ", $setClauses) . " WHERE tanggungan_id = ? AND user_id = ?";
         $types .= "ii";
         $params[] = $id_tanggungan;
         $params[] = $data['user_id']; // Filter berdasarkan user_id
 
         $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            error_log("Failed to prepare update statement for user: " . $this->dbconn->error);
+            return false;
+        }
         $stmt->bind_param($types, ...$params);
 
         try {
@@ -106,27 +113,34 @@ class Tanggungan extends Model // class model untuk mengelola data
     // *** FUNGSI BARU UNTUK ADMIN: Update tanggungan berdasarkan ID saja (tanpa filter user_id) ***
     public function updateById($id_tanggungan, $data)
     {
-        $query = "UPDATE tanggungan SET tanggungan = ?, jadwal_pembayaran = ?, kategori_id = ?, jumlah = ?";
-        $types = "ssii";
-        $params = [
-            $data['tanggungan'],
-            $data['jadwal_pembayaran'],
-            $data['kategori_id'],
-            $data['jumlah']
-        ];
+        $setClauses = [];
+        $types = "";
+        $params = [];
 
-        // Admin bisa mengubah status
-        if (isset($data['status'])) {
-            $query .= ", status = ?";
-            $types .= "s";
-            $params[] = $data['status'];
+        // Bangun klausa SET secara dinamis berdasarkan data yang tersedia
+        if (isset($data['tanggungan'])) { $setClauses[] = "tanggungan = ?"; $types .= "s"; $params[] = $data['tanggungan']; }
+        if (isset($data['jadwal_pembayaran'])) { $setClauses[] = "jadwal_pembayaran = ?"; $types .= "s"; $params[] = $data['jadwal_pembayaran']; }
+        if (isset($data['kategori_id'])) { $setClauses[] = "kategori_id = ?"; $types .= "i"; $params[] = $data['kategori_id']; }
+        if (isset($data['jumlah'])) { $setClauses[] = "jumlah = ?"; $types .= "i"; $params[] = $data['jumlah']; }
+        if (isset($data['status'])) { $setClauses[] = "status = ?"; $types .= "s"; $params[] = $data['status']; }
+        // Admin dapat mengubah user_id dari suatu tanggungan
+        if (isset($data['user_id'])) { $setClauses[] = "user_id = ?"; $types .= "i"; $params[] = $data['user_id']; }
+
+        if (empty($setClauses)) {
+            error_log("No update fields provided for tanggungan ID: " . $id_tanggungan);
+            return false; // Tidak ada yang perlu diupdate
         }
 
-        $query .= " WHERE id = ?";
+        // Menggunakan tanggungan_id sebagai PRIMARY KEY
+        $query = "UPDATE tanggungan SET " . implode(", ", $setClauses) . " WHERE tanggungan_id = ?";
         $types .= "i";
         $params[] = $id_tanggungan;
 
         $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            error_log("Failed to prepare updateById statement: " . $this->dbconn->error);
+            return false;
+        }
         $stmt->bind_param($types, ...$params);
 
         try {
@@ -136,7 +150,6 @@ class Tanggungan extends Model // class model untuk mengelola data
             return false;
         }
     }
-
 
     // mengubah status semua tanggungan milik user menjadi permanen (tidak bisa diubah)
     // Metode ini mungkin tidak lagi digunakan, tetapi tetap biarkan jika ada kebutuhan lain
@@ -193,10 +206,10 @@ class Tanggungan extends Model // class model untuk mengelola data
     // menghapus satu data tanggungan berdasarkan id dan user_id yang sesuai (untuk user biasa)
     public function deleteById($id, $id_user)
     {
-        // Menghapus kondisi 'permanen = 0' karena kita tidak lagi mengunci data
+        // Menggunakan tanggungan_id sebagai PRIMARY KEY
         $stmt = $this->dbconn->prepare("
             DELETE FROM tanggungan 
-            WHERE id = ? AND user_id = ?
+            WHERE tanggungan_id = ? AND user_id = ?
         ");
 
         $stmt->bind_param("ii", $id, $id_user);
@@ -206,13 +219,13 @@ class Tanggungan extends Model // class model untuk mengelola data
     // *** FUNGSI BARU UNTUK ADMIN: Menghapus tanggungan berdasarkan ID saja (tanpa filter user_id) ***
     public function deleteAnyById($id)
     {
+        // Menggunakan tanggungan_id sebagai PRIMARY KEY
         $stmt = $this->dbconn->prepare("
             DELETE FROM tanggungan 
-            WHERE id = ?
+            WHERE tanggungan_id = ?
         ");
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
 }
 ?>
-
