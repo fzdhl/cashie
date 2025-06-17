@@ -40,11 +40,13 @@
       </div>
 
     <div class="d-flex justify-content-start mb-3">
-      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTanggunganModal">
-        + Tambah Tanggungan Baru
-      </button>
+      <?php if (!isset($isAdmin) || !$isAdmin): ?>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTanggunganModal">
+          + Tambah Tanggungan Baru
+        </button>
+      <?php endif; ?> 
       <?php if (isset($isAdmin) && $isAdmin): ?>
-      <button type="button" class="btn btn-info ms-2" onclick="resetAllTanggunan()">Reset Semua Tanggungan</button>
+      <button type="button" class="btn btn-warning ms-2" onclick="resetAllTanggunan()">Reset Semua Tanggungan</button>
       <?php endif; ?>
     </div>
 
@@ -106,20 +108,41 @@
 
                   <td><input type="text" name="tanggungan_<?= $tanggunganId ?>" class="form-control form-control-sm" value="<?= $tanggunganNama ?>" <?= $inputDisabled ?>></td>
                   <td><input type="date" name="jadwal_pembayaran_<?= $tanggunganId ?>" class="form-control form-control-sm" value="<?= $jadwalPembayaran ?>" <?= $inputDisabled ?>></td>
+                                    
                   <td>
-                    <select name="kategori_id_<?= $tanggunganId ?>" class="form-select form-select-sm" <?= $inputDisabled ?>>
-                      <?php
-                      if (isset($categories) && is_array($categories)) {
-                        foreach ($categories as $category) {
-                          $catId = isset($category['kategori_id']) ? htmlspecialchars($category['kategori_id']) : '';
-                          $catNama = isset($category['kategori']) ? htmlspecialchars($category['kategori']) : '';
-                          $selected = ($kategoriId == $catId) ? 'selected' : '';
-                          echo '<option value="' . $catId . '" ' . $selected . '>' . $catNama . '</option>';
-                        }
-                      }
-                      ?>
-                    </select>
+                      <?php if (isset($isAdmin) && $isAdmin): // Jika admin, tampilkan sebagai teks statis?>
+                          <span class="form-control form-control-sm border-0 bg-transparent">
+                              <?php
+                              // Cari nama kategori berdasarkan $kategoriId
+                              $namaKategori = 'Tidak Diketahui';
+                              if (isset($categories) && is_array($categories)) {
+                                  foreach ($categories as $category) {
+                                      if ($category['kategori_id'] == $kategoriId) {
+                                          $namaKategori = htmlspecialchars($category['kategori']);
+                                          break;
+                                      }
+                                  }
+                              }
+                              echo $namaKategori;
+                              ?>
+                          </span>
+                          <input type="hidden" name="kategori_id_<?= $tanggunganId ?>" value="<?= htmlspecialchars($kategoriId) ?>">
+                      <?php else: // Jika bukan admin, tampilkan dropdown seperti biasa?>
+                          <select name="kategori_id_<?= $tanggunganId ?>" class="form-select form-select-sm" <?= $inputDisabled ?>>
+                              <?php
+                              if (isset($categories) && is_array($categories)) {
+                                  foreach ($categories as $category) {
+                                      $catId = isset($category['kategori_id']) ? htmlspecialchars($category['kategori_id']) : '';
+                                      $catNama = isset($category['kategori']) ? htmlspecialchars($category['kategori']) : '';
+                                      $selected = ($kategoriId == $catId) ? 'selected' : '';
+                                      echo '<option value="' . $catId . '" ' . $selected . '>' . $catNama . '</option>';
+                                  }
+                              }
+                              ?>
+                          </select>
+                      <?php endif; ?>
                   </td>
+
                   <td><input type="number" name="jumlah_<?= $tanggunganId ?>" class="form-control form-control-sm" value="<?= $jumlah ?>" <?= $inputDisabled ?>></td>
                   <td>
                     <?php if (isset($isAdmin) && $isAdmin): ?>
