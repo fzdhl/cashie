@@ -7,81 +7,46 @@
             }
         }
 
-        // public function addTransaction(){
-        //     $username = $_SESSION['user'];
-        //     $username = $username->username;
-        //     $transaction_type = $_POST['transaction_type'];
-        //     $IDR = $_POST['IDR'];
-        //     $description = $_POST['description'];
-
+        // public function addLaporan() {
         //     $model = $this->loadModel("Laporan");
-        //     $userTable = $model->getByUsername($username);
+        //     $session = $_SESSION['user'];
 
-        //     if($transaction_type == "Pengeluaran") $IDR *= -1;
-
-        //     $user_id = $userTable->user_id;
-
-        //     $model->insertTransaction($user_id, $transaction_type, $IDR, $description);
-
-        //     header("Location: ?c=LaporanController&m=report");
-        // }
-
-        public function addLaporan() {
-            $model = $this->loadModel("Laporan");
-            $session = $_SESSION['user'];
-
-            if(isset($_POST['user_id'])){
-                $user_id = $_POST['user_id'];
-            }
-            else{
-                $username = $session->username;
+        //     if(isset($_POST['user_id'])){
+        //         $user_id = $_POST['user_id'];
+        //     }
+        //     else{
+        //         $username = $session->username;
                 
-                $userTable = $model->getByUsername($username);
-                $user_id = $userTable->user_id;
-            }
+        //         $userTable = $model->getByUsername($username);
+        //         $user_id = $userTable->user_id;
+        //     }
             
-            $tanggal_awal = $_POST['tanggal_awal'] ?? null;
-            $tanggal_akhir = $_POST['tanggal_akhir'] ?? null;
-            $catatan = $_POST['catatan'] ?? '';
+        //     $tanggal_awal = $_POST['tanggal_awal'] ?? null;
+        //     $tanggal_akhir = $_POST['tanggal_akhir'] ?? null;
+        //     $catatan = $_POST['catatan'] ?? '';
 
-            $errorMsg = $this->cekTanggalLaporan($tanggal_awal, $tanggal_akhir);
-            if ($errorMsg) {
-                $error['error_addlaporan'] = $errorMsg;
-            }
+        //     $errorMsg = $this->cekTanggalLaporan($tanggal_awal, $tanggal_akhir);
+        //     if ($errorMsg) {
+        //         $error['error_addlaporan'] = $errorMsg;
+        //     }
 
-            if(!($model->cekID($user_id))){
-                $error['error_userID'] = "User ID tidak ditemukan";
-            }
+        //     if(!($model->cekID($user_id))){
+        //         $error['error_userID'] = "User ID tidak ditemukan";
+        //     }
 
-            if (isset($error)) {
-                if($session->privilege == 'admin'){
-                    $this->adminReport($error);
-                }
-                else $this->report($error);
-            } else {
-                $model->insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan);
-                header("Location: ?c=LaporanController&m=report");
-                exit;
-            }
-        }
+        //     if (isset($error)) {
+        //         if($session->privilege == 'admin'){
+        //             $this->adminReport($error);
+        //         }
+        //         else $this->report($error);
+        //     } else {
+        //         $model->insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan);
+        //         header("Location: ?c=LaporanController&m=report");
+        //         exit;
+        //     }
+        // }
         
-        public function cekTanggalLaporan($tanggal_awal, $tanggal_akhir){
-            try {
-                $date_awal = new DateTime($tanggal_awal);
-                $date_akhir = new DateTime($tanggal_akhir);
-
-                if ($date_awal > $date_akhir) {
-                    return "Tanggal awal harus lebih kecil atau sama dengan tanggal akhir.";
-                } else if ($date_awal->format('n') != $date_akhir->format('n')) {
-                    return "Laporan harus dalam bulan yang sama.";
-                } else if ($date_awal->diff($date_akhir)->days > 7) {
-                    return "Rentang waktu laporan mingguan tidak boleh lebih dari 7 hari.";
-                }
-            } catch (Exception $e) {
-                return "Format tanggal tidak valid.";
-            }
-            return false;
-        }
+        
 
 
         public function adminReport($error = []){
@@ -90,17 +55,11 @@
                 header('Location: ?c=LaporanController&m=report');
             }
 
-            $model = $this->loadModel("Laporan");
-            $tabelLaporan = $model->getAll();
-
-            $data = [
-                'tabelLaporan' => $tabelLaporan
-            ];
             if (!empty($error)) {
                 $data['error'] = $error;
             }
 
-            $this->loadView("laporan/laporanAdmin", $data);
+            $this->loadView("laporan/laporanAdmin");
         }
 
         public function report($error = []) {
@@ -187,9 +146,7 @@
                 'totalPengeluaran' => $totalPengeluaran,
                 'listPemasukan' => $listPemasukan,
                 'listPengeluaran' => $listPengeluaran,
-                'bulanList' => $bulanList,
-                'listLaporanMingguanPemasukan' => $listLaporanMingguan['pemasukan'],
-                'listLaporanMingguanPengeluaran' => $listLaporanMingguan['pengeluaran']
+                'bulanList' => $bulanList
             ];
             if (!empty($error)) {
                 $data['error'] = $error;
@@ -203,6 +160,7 @@
             }
             
         }
+        
         
         public function editReport($error = []){
 
@@ -224,19 +182,25 @@
 
             $this->loadView("laporan/editLaporan", $data);
         }
+        
+        public function cekTanggalLaporan($tanggal_awal, $tanggal_akhir){
+            try {
+                $date_awal = new DateTime($tanggal_awal);
+                $date_akhir = new DateTime($tanggal_akhir);
 
-        public function getTableLaporanMingguan($username){
-            $model = $this->loadModel("Laporan");
-            $user = $model->getByUsername($username);
-            $user_id = $user->user_id;
-            $listLaporanMingguanPengeluaran = $model->getDaftarLaporan($user_id, 'pengeluaran');
-            $listLaporanMingguanPemasukan = $model->getDaftarLaporan($user_id, 'pemasukan');
-            return [
-                'pemasukan' => $listLaporanMingguanPemasukan,
-                'pengeluaran' => $listLaporanMingguanPengeluaran
-            ];
+                if ($date_awal > $date_akhir) {
+                    return "*Tanggal awal harus lebih kecil atau sama dengan tanggal akhir.";
+                } else if ($date_awal->format('n') != $date_akhir->format('n')) {
+                    return "*Laporan harus dalam bulan yang sama.";
+                } else if ($date_awal->diff($date_akhir)->days > 7) {
+                    return "*Rentang waktu laporan mingguan tidak boleh lebih dari 7 hari.";
+                }
+            } catch (Exception $e) {
+                return "*Format tanggal tidak valid.";
+            }
+            return false;
         }
-
+        
         public function selectDate(){
             $_SESSION['laporan_type'] = 'bulanan';
             $_SESSION['month'] = $_POST['month'];
@@ -263,22 +227,31 @@
                 ];
             }
         }
+        
+        public function getListLaporan(){
+            $session = $_SESSION['user'];
+            $model = $this->loadModel("Laporan");
+            if($session->privilege == 'admin'){
+                $tabelLaporan = $model->getAll();
+                include "views/laporan/listLaporanAdmin.php";
+            }
+            else{
+                $username = $session->username;
+                $model = $this->loadModel("Laporan");
+                $user = $model->getByUsername($username);
+                $user_id = $user->user_id;
+                $listLaporanMingguan = $model->getDaftarLaporan($user_id);
+                include "views/laporan/listLaporan.php";
+            }  
+        }
 
-        // public function calcAverageData($Data){
-        //     $length = date("d");
-        //     $sum = $this->getSumData($Data);
-        //     $average = $sum/$length;
-        //     $average = round($average, 2);
-        //     return $average;
-        // }
-
-        // public function getSumData($Data){
-        //     $sum = 0;
-        //     foreach($Data as $num){
-        //         $sum += $num;
-        //     }
-        //     return $sum;
-        // }
+        public function getTableLaporanMingguan($username){
+            $model = $this->loadModel("Laporan");
+            $user = $model->getByUsername($username);
+            $user_id = $user->user_id;
+            $listLaporanMingguan = $model->getDaftarLaporan($user_id);
+            return $listLaporanMingguan;
+        }
 
         public function getFullTableBy($username, $selectedMonth, $selectedYear, $reportType){
             $model = $this->loadModel("Laporan");
@@ -350,22 +323,76 @@
             ];
         }
 
-        public function deleteLaporan(){
+        public function addLaporan() {
+            $model = $this->loadModel("Laporan");
+            $session = $_SESSION['user'];
+
+            header('Content-Type: application/json');
+
+            if (isset($_POST['user_id'])) {
+                $user_id = $_POST['user_id'];
+            } else {
+                $username = $session->username;
+                $userTable = $model->getByUsername($username);
+                $user_id = $userTable->user_id;
+            }
+
+            $tanggal_awal = $_POST['tanggal_awal'] ?? null;
+            $tanggal_akhir = $_POST['tanggal_akhir'] ?? null;
+            $catatan = $_POST['catatan'] ?? '';
+
+            $errorMsg = $this->cekTanggalLaporan($tanggal_awal, $tanggal_akhir);
+            if ($errorMsg) {
+                $error['error_addlaporan'] = $errorMsg;
+            }
+
+            if (!($model->cekID($user_id))) {
+                $error['error_userID'] = "* User ID tidak ditemukan";
+            }
+
+            if (isset($error)) {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => implode(', ', $error) // bisa lebih detail jika perlu
+                ]);
+            } else {
+                $model->insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan);
+                echo json_encode(['status' => 'success']);
+            }
+
+            exit;
+        }
+
+
+        // public function deleteLaporan(){
+        //     $laporan_id = $_POST['laporan_id'];
+
+        //     $model = $this->loadModel("Laporan");
+
+        //     $model->deleteLaporan($user_id, $laporan_id);
+        //     header("Location: ?c=LaporanController&m=report");
+        // }
+
+        public function deleteLaporan() {
+            header('Content-Type: application/json');
+
+            if (!isset($_POST['laporan_id'])) {
+                echo json_encode(['status' => 'error', 'message' => 'ID laporan tidak ditemukan']);
+                exit;
+            }
+
             $laporan_id = $_POST['laporan_id'];
 
             $model = $this->loadModel("Laporan");
+            $model->deleteLaporan($laporan_id);
 
-            $model->deleteLaporan($user_id, $laporan_id);
-            header("Location: ?c=LaporanController&m=report");
+            echo json_encode(['status' => 'success']);
+            exit;
         }
+
 
         public function editLaporan(){
             $model = $this->loadModel("Laporan");
-
-            // $username = $_SESSION['user'];
-            // $username = $username->username;
-            // $userTable = $model->getByUsername($username);
-            // $user_id = $userTable->user_id;
 
             $laporan_id = $_POST['laporan_id'];
             $tanggal_awal = $_POST['tanggal_awal'];
@@ -383,8 +410,5 @@
                 $model->updateLaporan($laporan_id, $tanggal_awal, $tanggal_akhir, $catatan);
                 header("Location: ?c=LaporanController&m=report");
             }
-
-            
-            
         }
     }

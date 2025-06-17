@@ -31,33 +31,8 @@
                         Tambah Laporan Mingguan
                     </div>
                     <div class="card-body my-3">
-                        <form action="?c=LaporanController&m=addLaporan" method="post" class="row g-3">
-                            <!-- <div class="col-12">
-                                <label for="jenis_laporan" class="form-label">Jenis Laporan</label>
-                                <select class="form-select" name="jenis_laporan" id="jenis_laporan" required>
-                                    <option disabled selected value="">Pilih jenis laporan</option>
-                                    <option value="bulanan">Bulanan</option>
-                                    <option value="mingguan">Mingguan</option>
-                                </select>
-                            </div> -->
+                        <form method="post" class="row g-3" id="addReport">
                             <input type="hidden" value="mingguan" name="jenis_laporan">
-
-                            <!-- <div id="tanggal_range" class="col-12 d-none row">
-                                <div class="col-md-6">
-                                    <label for="bulan" class="form-label">Bulan</label>
-                                    <select name="bulan" id="month" class="form-select">
-                                        <?php foreach ($bulanList as $num => $name): ?>
-                                            <option value="<?= $num ?>" <?= $selectedMonth == $num ? 'selected' : '' ?>>
-                                                <?= $name ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="tahun" class="form-label">Tahun</label>
-                                    <input type="number" name="tahun" id="year" min="1970" class="form-control" value="<?= $selectedYear ?>">
-                                </div>
-                            </div> -->
 
                             <div id="tanggal_manual" class="row">
                                 <div class="col-md-6">
@@ -82,14 +57,12 @@
 
                         
                     </div>
-                    <?php
-                        if(isset($error['error'])){
-                            echo "<p class=\"m-3\">*{$error['error']}</p>";
-                        }
-                        if(isset($error['error_addlaporan'])){
-                            echo "<p class=\"m-3\">*{$error['error_addlaporan']}</p>";
-                        }
-                    ?>
+                        <?php
+                            if(isset($error['error_addlaporan'])){
+                                echo "<p class=\"m-3\">*{$error['error_addlaporan']}</p>";
+                            }
+                        ?>
+                    <p id="errorReport" class="m-3"></p>
             </div>
         </div>
         
@@ -145,112 +118,10 @@
                 </div>
             </div>
         </div>
-
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                document.getElementById("jenis_laporan").addEventListener("change", toggleTanggal);
-                toggleTanggal();
-            });
-
-            function toggleTanggal() {
-                const jenis = document.getElementById('jenis_laporan').value;
-                const tanggalManual = document.getElementById('tanggal_manual');
-                const tanggalRange = document.getElementById('tanggal_range');
-
-                console.log("jenis laporan:", jenis);
-                console.log("toggleTanggal dijalankan");
-
-                if (jenis === "bulanan") { // Mingguan
-                    tanggalManual.classList.add('d-none');
-                    tanggalRange.classList.remove('d-none');
-                } else if (jenis === "mingguan") { // Bulanan
-                    tanggalRange.classList.add('d-none');
-                    tanggalManual.classList.remove('d-none');
-                } else {
-                    tanggalRange.classList.add('d-none');
-                    tanggalManual.classList.add('d-none');
-                }
-            }
-        </script>
-
-
-        
-
-        <div id="laporan_mingguan_section" class="mt-4">
-            <div class="card shadow-sm">
-                <div class="header_input_div card-header text-white bg-success">
-                    Laporan Mingguan
-                </div>
-                <div class="card-body scrollable-table">
-                    <table>
-                        <tr>
-                            <th>Tanggal Awal</th>
-                            <th>Tanggal Akhir</th>
-                            <th>Total Pemasukan</th>
-                            <th>Total Pengeluaran</th>
-                            <th>Catatan</th>
-                            <th colspan="3">aksi</th>
-                        </tr>
-                        <?php
-                            // $tabel;
-                            if(isset($listLaporanMingguanPengeluaran) && isset($listLaporanMingguanPemasukan)){
-                                while (true) {
-                                    $tabelPengeluaran = $listLaporanMingguanPengeluaran->fetch_object();
-                                    $tabelPemasukan = $listLaporanMingguanPemasukan->fetch_object();
-
-                                    if (!$tabelPengeluaran || !$tabelPemasukan) {
-                                        break;
-                                    }
-
-                                    printf("<tr>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>
-                                            <form action=\"?c=LaporanController&m=deleteLaporan\" method=\"post\">
-                                                <input type=\"hidden\" name=\"laporan_id\" value=\"%s\">
-                                                <button type=\"submit\" class=\"btn btn-sm btn-outline-danger\">Hapus</button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action=\"?c=LaporanController&m=editReport\" method=\"post\">
-                                                <input type=\"hidden\" name=\"laporan_id\" value=\"%s\">
-                                                <input type=\"hidden\" name=\"tanggal_awal\" value=\"%s\">
-                                                <input type=\"hidden\" name=\"tanggal_akhir\" value=\"%s\">
-                                                <input type=\"hidden\" name=\"catatan\" value=\"%s\">
-                                                <button type=\"submit\" class=\"btn btn-sm btn-outline-primary\">Edit</button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action=\"?c=LaporanController&m=report\" method=\"post\">
-                                                <input type=\"hidden\" name=\"laporan_id\" value=\"%s\">
-                                                <input type=\"hidden\" name=\"laporan_type\" value=\"mingguan\">
-                                                <button type=\"submit\" class=\"btn btn-sm btn-outline-success\">Grafik</button>
-                                            </form>
-                                        </td>
-                                    </tr>", 
-                                        $tabelPengeluaran->tanggal_awal, 
-                                        $tabelPengeluaran->tanggal_akhir, 
-                                        $tabelPemasukan->jumlah, 
-                                        $tabelPengeluaran->jumlah,
-                                        $tabelPengeluaran->catatan,
-                                        $tabelPemasukan->laporan_id,
-                                        $tabelPemasukan->laporan_id,
-                                        $tabelPengeluaran->tanggal_awal, 
-                                        $tabelPengeluaran->tanggal_akhir,
-                                        $tabelPengeluaran->catatan,
-                                        $tabelPemasukan->laporan_id
-                                    );
-                                }
-                            }                 
-                        ?>
-                    </table>
-                </div>
-            </div>
+        <div id="listReport">
+            <?php include_once __DIR__ . '/./listLaporan.php'; ?>
         </div>
+        
         
         <div class="my-5">
             <h3 class="mb-4">Grafik Keuangan: <span class="text-success"><?= $_SESSION['user']->username ?></span></h3>
@@ -259,7 +130,6 @@
                     <div class="card p-3 shadow-sm">
                         <h5 class="text-info">Pemasukan</h5>
                         <canvas id="pemasukan"></canvas>
-                        <!-- <h6>Rata-rata pemasukan bulanan: <?php echo isset($avrPemasukan) ? $avrPemasukan : 0;?></h6> -->
                         <table>
                             <tr>
                                 <th>Tanggal</th>
@@ -285,7 +155,6 @@
                     <div class="card p-3 shadow-sm">
                         <h5 class="text-danger">Pengeluaran</h5>
                         <canvas id="pengeluaran"></canvas>
-                        <!-- <h6>Rata-rata pengeluaran bulanan: <?php echo isset($avrPengeluaran) ? $avrPengeluaran : 0;?></h6> -->
                         <table>
                             <tr>
                                 <th>Tanggal</th>
@@ -310,63 +179,97 @@
             </div>
         </div>
     </div>
-
-
-    <!-- <div class="row row-cols-1 row-cols-lg-2 g-4">
-
-            <div class="input_transaksi_div col">
-                <div class="card shadow-sm">
-                    <div class="header_input_div card-header text-white">
-                        Tambah Transaksi
-                    </div>
-                    <div class="card-body">
-                        <form action="?c=LaporanController&m=addTransaction" method="post" class="row g-3">
-                            <div class="col-12">
-                                <label for="transaction_type" class="form-label">Jenis Transaksi</label>
-                                <select class="form-select" name="transaction_type" id="transaction_type">
-                                    <option value="Pengeluaran">Pengeluaran</option>
-                                    <option value="Pemasukan">Pemasukan</option>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label for="IDR" class="form-label">Jumlah (IDR)</label>
-                                <input type="number" name="IDR" id="IDR" class="form-control" required>
-                            </div>
-                            <div class="col-12">
-                                <label for="description" class="form-label">Deskripsi</label>
-                                <input type="text" name="description" id="description" class="form-control" required>
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn-success btn w-100">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-        </div> -->
-
-        
+ 
     <?php include_once __DIR__ . '/../footer.php'; ?>
-
+    
     <script>
-        function toggleLaporan(jenis) {
-            const mingguan = document.getElementById('laporan_mingguan_section');
-            const bulanan = document.getElementById('laporan_bulanan_section');
+        // function toggleLaporan(jenis) {
+        //     const mingguan = document.getElementById('laporan_mingguan_section');
+        //     const bulanan = document.getElementById('laporan_bulanan_section');
 
-            if (jenis === 'mingguan') {
-                mingguan.classList.remove('d-none');
-                bulanan.classList.add('d-none');
-            } else {
-                bulanan.classList.remove('d-none');
-                mingguan.classList.add('d-none');
-            }
-        }
+        //     if (jenis === 'mingguan') {
+        //         mingguan.classList.remove('d-none');
+        //         bulanan.classList.add('d-none');
+        //     } else {
+        //         bulanan.classList.remove('d-none');
+        //         mingguan.classList.add('d-none');
+        //     }
+        // }
 
-        // Opsional: munculkan default ke mingguan/bulanan
-        document.addEventListener("DOMContentLoaded", () => {
-            toggleLaporan('mingguan'); // atau 'bulanan'
-        });
+        // // Opsional: munculkan default ke mingguan/bulanan
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     toggleLaporan('mingguan'); // atau 'bulanan'
+        //     fetch("?c=LaporanController&m=getListLaporan")
+        //         .then((res) => res.text())
+        //         .then((html) => {
+        //             document.getElementById("listReport").innerHTML = html;
+        //         })
+        //         .catch((err) => console.error("Gagal reload list:", err));
+        // });
+
+        // //Ajax
+        // document.getElementById("addReport").addEventListener("submit", function (e) {
+        //     e.preventDefault();
+
+        //     const formElement = this;
+        //     const formData = new FormData(formElement);
+
+        //     fetch("?c=LaporanController&m=addLaporan", {
+        //         method: "POST",
+        //         body: formData,
+        //     })
+        //     .then((res) => res.json())
+        //     .then((data) => {
+        //         const errorElement = document.getElementById("errorReport");
+
+        //         if (data.status === "error") {
+        //             errorElement.textContent = data.message;
+        //         } else if (data.status === "success") {
+        //             errorElement.textContent = "";
+        //             formElement.reset();
+
+        //             // Reload list laporan setelah berhasil menambahkan
+        //             fetch("?c=LaporanController&m=getListLaporan")
+        //                 .then((res) => res.text())
+        //                 .then((html) => {
+        //                     document.getElementById("listReport").innerHTML = html;
+        //                 })
+        //                 .catch((err) => console.error("Fetch list error:", err));
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.error("Fetch error:", err);
+        //         document.getElementById("errorReport").textContent = "Terjadi kesalahan saat mengirim data.";
+        //     });
+        // });
+
+        // // untuk delete data Laporan
+        // document.addEventListener("submit", function (e) {
+        //     if (e.target && e.target.name === "deleteReport") {
+        //         e.preventDefault();
+
+        //         const formElement = e.target;
+        //         const formData = new FormData(formElement);
+
+        //         fetch("?c=LaporanController&m=deleteLaporan", {
+        //             method: "POST",
+        //             body: formData,
+        //         })
+        //         .then((res) => res.json())
+        //         .then((data) => {
+
+        //             // Reload daftar laporan
+        //             fetch("?c=LaporanController&m=getListLaporan")
+        //                 .then((res) => res.text())
+        //                 .then((html) => {
+        //                     document.getElementById("listReport").innerHTML = html;
+        //                 })
+        //                 .catch((err) => console.error("Gagal reload list:", err));
+
+        //         })
+        //         .catch((err) => console.error("Fetch error:", err));
+        //     }
+        // });
     </script>
 
     <script>
@@ -376,6 +279,7 @@
         const datePengeluaran = <?= json_encode($datePengeluaran) ?>;
         const totalPengeluaran = <?= json_encode($totalPengeluaran) ?>;
     </script>
+    <!-- <script src="views/scripts/laporan.js"></script> -->
     <script src="views/scripts/laporan.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

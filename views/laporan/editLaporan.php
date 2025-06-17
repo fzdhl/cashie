@@ -72,16 +72,9 @@
                         </form>
 
                         <!-- Pesan Error -->
-                        <?php if(isset($error['error'])): ?>
-                            <div class="alert alert-danger mt-3" role="alert">
-                                <?= htmlspecialchars($error['error']) ?>
-                            </div>
-                        <?php endif; ?>
 
                         <?php if(isset($error['error_editlaporan'])): ?>
-                            <div class="alert alert-danger mt-3" role="alert">
-                                <?= htmlspecialchars($error['error_editlaporan']) ?>
-                            </div>
+                            <?= htmlspecialchars($error['error_editlaporan']) ?>
                         <?php endif; ?>
                     </div>
                 </div>

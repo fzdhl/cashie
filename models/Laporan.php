@@ -29,6 +29,37 @@
         //     $stmt->execute();
         // }
 
+        
+
+        // public function getLaporanByTanggalBulanan($user_id, $tanggal_bulanan){
+        //     $stmt = $this->dbconn->prepare("SELECT * FROM laporan WHERE user_id = ? AND tanggal_bulanan = ? ");
+        //     $stmt->bind_param("is", $user_id, $tanggal_bulanan);
+        //     $stmt->execute();
+        //     $result = $stmt->get_result();
+
+        //     return $result;
+        // }
+
+        public function insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan){
+            $stmt = $this->dbconn->prepare("INSERT INTO laporan (user_id, tanggal_awal, tanggal_akhir, catatan) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("isss", $user_id, $tanggal_awal, $tanggal_akhir, $catatan);
+            $stmt->execute();
+        }
+
+        public function deleteLaporan($laporan_id){
+            $stmt = $this->dbconn->prepare("DELETE FROM laporan WHERE laporan_id = ?");
+            $stmt->bind_param("i", $laporan_id);
+            $stmt->execute();
+        }
+        
+        public function updateLaporan($laporan_id, $tanggal_awal, $tanggal_akhir, $catatan){
+            $stmt = $this->dbconn->prepare("UPDATE laporan 
+                    SET tanggal_awal = ?, tanggal_akhir = ?, catatan = ?
+                    WHERE laporan_id = ?");
+            $stmt->bind_param("sssi", $tanggal_awal, $tanggal_akhir, $catatan, $laporan_id);
+            $stmt->execute();
+        }
+        
         public function getAll(){
             $stmt = $this->dbconn->prepare("SELECT * FROM laporan");
             $stmt->execute();
@@ -37,28 +68,7 @@
             return $result;
         }
 
-        public function getLaporanByTanggalBulanan($user_id, $tanggal_bulanan){
-            $stmt = $this->dbconn->prepare("SELECT * FROM laporan WHERE user_id = ? AND tanggal_bulanan = ? ");
-            $stmt->bind_param("is", $user_id, $tanggal_bulanan);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            return $result;
-        }
-
-        public function insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan){
-            $stmt = $this->dbconn->prepare("INSERT INTO laporan (user_id, tanggal_awal, tanggal_akhir, catatan) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("isss", $user_id, $tanggal_awal, $tanggal_akhir, $catatan);
-            $stmt->execute();
-        }
-
-        public function deleteLaporan($user_id, $laporan_id){
-            $stmt = $this->dbconn->prepare("DELETE FROM laporan WHERE laporan_id = ?");
-            $stmt->bind_param("i", $laporan_id);
-            $stmt->execute();
-        }
-
-        public function getDaftarLaporan($user_id, $jenis_transaksi) {
+        public function getDaftarLaporan($user_id) {
             $stmt = $this->dbconn->prepare("
                 SELECT 
                     l.laporan_id, 
@@ -67,10 +77,16 @@
                     l.tanggal_akhir, 
                     COALESCE(SUM(
                         CASE 
-                            WHEN k.tipe = ? THEN ck.jumlah
+                            WHEN k.tipe = 'pemasukan' THEN ck.jumlah
                             ELSE 0
                         END
-                    ), 0) AS jumlah,
+                    ), 0) AS jumlah_pemasukan,
+                    COALESCE(SUM(
+                        CASE 
+                            WHEN k.tipe = 'pengeluaran' THEN ck.jumlah
+                            ELSE 0
+                        END
+                    ), 0) AS jumlah_pengeluaran,
                     l.catatan
                 FROM 
                     laporan l
@@ -88,7 +104,7 @@
                     l.laporan_id, l.tanggal_awal, l.tanggal_akhir
             ");
 
-            $stmt->bind_param("si", $jenis_transaksi, $user_id);
+            $stmt->bind_param("i", $user_id);
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -180,12 +196,6 @@
             return $result;
         }
 
-        public function updateLaporan($laporan_id, $tanggal_awal, $tanggal_akhir, $catatan){
-            $stmt = $this->dbconn->prepare("UPDATE laporan 
-                    SET tanggal_awal = ?, tanggal_akhir = ?, catatan = ?
-                    WHERE laporan_id = ?");
-            $stmt->bind_param("sssi", $tanggal_awal, $tanggal_akhir, $catatan, $laporan_id);
-            $stmt->execute();
-        }
+        
         
     }
