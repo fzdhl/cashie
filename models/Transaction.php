@@ -15,7 +15,7 @@
 
     // [BARU] Mengambil semua tagihan (bills) yang belum lunas milik pengguna
     public function getBillsByUser($userId) {
-        $query = "SELECT tanggungan_id, nama FROM tanggungan WHERE user_id = ? AND status = 0";
+        $query = "SELECT tanggungan_id, tanggungan FROM tanggungan WHERE user_id = ? AND status = 0";
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
