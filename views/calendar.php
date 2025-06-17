@@ -135,7 +135,7 @@
               <option value="" disabled selected>Pilih Kategori</option>
               <?php foreach ($data['kategori'] as $category): ?>
               <option
-                value="<?= $category['category_id'] ?>"
+                value="<?= $category['kategori_id'] ?>"
                 data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"
               >
                 <?= htmlspecialchars($category['category']) ?>
