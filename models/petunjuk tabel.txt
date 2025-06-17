@@ -24,6 +24,7 @@ CREATE TABLE kategori (
 3. tanggungan
 
 
+
 4. laporan keuangan
 
 
