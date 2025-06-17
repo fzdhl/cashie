@@ -5,7 +5,9 @@
     
     // Mengambil semua kategori milik seorang pengguna
     public function getCategoriesByUser($userId) {
-        $query = "SELECT kategori_id, kategori, tipe FROM kategori WHERE user_id = ?";
+        // $query = "SELECT kategori_id, kategori, tipe FROM kategori WHERE user_id = ?";
+        $query = "SELECT * FROM kategori WHERE user_id= ?";
+
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();

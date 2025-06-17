@@ -16,8 +16,10 @@
     }
 
     public function addProcess() {
-        $this->checkLogin();
+        // $this->checkLogin();
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
+        
+        die(var_dump($_SERVER['REQUEST_METHOD']));
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // [MODIFIKASI] Tangkap bill_id dan goal_id dari POST
@@ -40,6 +42,7 @@
         }
         
         header('Content-Type: application/json');
+        die(var_dump($response));
         echo json_encode($response);
         exit();
     }
