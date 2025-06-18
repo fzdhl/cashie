@@ -10,19 +10,19 @@
           <a class="nav-link text-white" href="?c=DashboardController&m=index">Dashboard</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link text-white" href="?c=CalendarController&m=index">Transaksi</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-white" href="?c=KategoriController&m=index">Kategori</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=TanggunganController&m=index">Tanggungan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=LaporanController&m=report">Laporan Keuangan</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" href="?c=CalendarController&m=index">Kalender</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link text-white" href="?c=TargetController&m=index">Target</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="?c=LaporanController&m=report">Laporan Keuangan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=ArsipController&m=index">Arsip</a>
