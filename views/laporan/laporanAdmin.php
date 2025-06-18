@@ -25,7 +25,6 @@
         </div>
         
         <div class="laporan-wrapper my-3">
-
             <div class="laporan-card card shadow-sm border-0">
                     <div class="card-header bg-success text-white fw-semibold">
                         Tambah Laporan Mingguan
@@ -76,154 +75,13 @@
         <div id="listReport">
             <?php include_once __DIR__ . '/./listLaporanAdmin.php'; ?>
         </div>
-        
-        <!-- <div id="laporan_mingguan_section" class="mt-4">
-            <div class="card shadow-sm">
-                <div class="header_input_div card-header text-white bg-success">
-                    Laporan Mingguan
-                </div>
-                <div class="card-body scrollable-table">
-                    <table>
-                        <tr>
-                            <th>ID User</th>
-                            <th>ID Laporan</th>
-                            <th>Tanggal Awal</th>
-                            <th>Tanggal Akhir</th>
-                            <th>Catatan</th>
-                            <th colspan="2">aksi</th>
-                        </tr>
-                        <?php
-                            // $tabel;
-                            if(isset($tabelLaporan)){
-                                while (true) {
-                                    $tabel = $tabelLaporan->fetch_object();
 
-
-                                    if (!$tabel) {
-                                        break;
-                                    }
-
-                                    printf("<tr>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        <td>
-                                            <form action=\"?c=LaporanController&m=deleteLaporan\" method=\"post\">
-                                                <input type=\"hidden\" name=\"laporan_id\" value=\"%s\">
-                                                <button type=\"submit\" class=\"btn btn-sm btn-outline-danger\">Hapus</button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action=\"?c=LaporanController&m=editReport\" method=\"post\">
-                                                <input type=\"hidden\" name=\"laporan_id\" value=\"%s\">
-                                                <input type=\"hidden\" name=\"tanggal_awal\" value=\"%s\">
-                                                <input type=\"hidden\" name=\"tanggal_akhir\" value=\"%s\">
-                                                <input type=\"hidden\" name=\"catatan\" value=\"%s\">
-                                                <button type=\"submit\" class=\"btn btn-sm btn-outline-primary\">Edit</button>
-                                            </form>
-                                        </td>
-                                    </tr>",
-                                        $tabel->user_id,
-                                        $tabel->laporan_id, 
-                                        $tabel->tanggal_awal, 
-                                        $tabel->tanggal_akhir, 
-                                        $tabel->catatan,
-                                        $tabel->laporan_id,
-                                        $tabel->laporan_id,
-                                        $tabel->tanggal_awal, 
-                                        $tabel->tanggal_akhir,
-                                        $tabel->catatan,
-                                    );
-                                }
-                            }                 
-                        ?>
-                    </table>
-                </div>
-            </div>
-        </div> -->
-        
     </div>
 
         
     <?php include_once __DIR__ . '/../footer.php'; ?>
 
-    <script>
-        // // Opsional: munculkan default ke mingguan/bulanan
-        // document.addEventListener("DOMContentLoaded", () => {
-        //     fetch("?c=LaporanController&m=getListLaporan")
-        //         .then((res) => res.text())
-        //         .then((html) => {
-        //             document.getElementById("listReport").innerHTML = html;
-        //         })
-        //         .catch((err) => console.error("Gagal reload list:", err));
-        // });
-
-        // //Ajax
-        // document.getElementById("addReport").addEventListener("submit", function (e) {
-        //     e.preventDefault();
-
-        //     const formElement = this;
-        //     const formData = new FormData(formElement);
-
-        //     fetch("?c=LaporanController&m=addLaporan", {
-        //         method: "POST",
-        //         body: formData,
-        //     })
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         const errorElement = document.getElementById("errorReport");
-
-        //         if (data.status === "error") {
-        //             errorElement.textContent = data.message;
-        //         } else if (data.status === "success") {
-        //             errorElement.textContent = "";
-        //             formElement.reset();
-
-        //             // Reload list laporan setelah berhasil menambahkan
-        //             fetch("?c=LaporanController&m=getListLaporan")
-        //                 .then((res) => res.text())
-        //                 .then((html) => {
-        //                     document.getElementById("listReport").innerHTML = html;
-        //                 })
-        //                 .catch((err) => console.error("Fetch list error:", err));
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.error("Fetch error:", err);
-        //         document.getElementById("errorReport").textContent = "Terjadi kesalahan saat mengirim data.";
-        //     });
-        // });
-
-        // // untuk delete data Laporan
-        // document.addEventListener("submit", function (e) {
-        //     if (e.target && e.target.name === "deleteReport") {
-        //         e.preventDefault();
-
-        //         const formElement = e.target;
-        //         const formData = new FormData(formElement);
-
-        //         fetch("?c=LaporanController&m=deleteLaporan", {
-        //             method: "POST",
-        //             body: formData,
-        //         })
-        //         .then((res) => res.json())
-        //         .then((data) => {
-
-        //             // Reload daftar laporan
-        //             fetch("?c=LaporanController&m=getListLaporan")
-        //                 .then((res) => res.text())
-        //                 .then((html) => {
-        //                     document.getElementById("listReport").innerHTML = html;
-        //                 })
-        //                 .catch((err) => console.error("Gagal reload list:", err));
-        //         })
-        //         .catch((err) => console.error("Fetch error:", err));
-        //     }
-        // });
-    </script>
-    <script src="views/scripts/laporan.js"></script>
+    <script src="views/scripts/laporanAdmin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
