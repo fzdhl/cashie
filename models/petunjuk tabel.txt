@@ -48,7 +48,7 @@ CREATE TABLE tanggungan (
 
 5. transaksi
 CREATE TABLE transaksi (
-  transaksi_id int NOT NULL,
+  transaksi_id int NOT NULL AUTO_INCREMENT,
   user_id int DEFAULT NULL,
   kategori_id int DEFAULT NULL,
   jumlah bigint DEFAULT NULL,
