@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=adminDashboardController&m=index">Dashboard</a>
+          <a class="nav-link text-white" href="?c=AdminController&m=index">Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=adminKategoriController&m=index">Kategori</a>
