@@ -15,6 +15,19 @@ class Kategori extends Model {
             $result = $stmt->get_result();
             return $result->fetch_all(MYSQLI_ASSOC);
         }
+        $stmt = $this->dbconn->prepare("SELECT * FROM kategori WHERE user_id = ? ORDER BY kategori ASC");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getCategoriesByUserAndType($userId, $tipe) {
+        $stmt = $this->dbconn->prepare("SELECT * FROM kategori WHERE user_id = ? AND tipe = ? ORDER BY kategori ASC");
+        $stmt->bind_param("is", $userId, $tipe);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getCategoryById($kategoriId, $userId) {
@@ -100,3 +113,5 @@ class Kategori extends Model {
         return $stmt->execute();
     }
 }
+}
+?>

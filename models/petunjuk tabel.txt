@@ -45,6 +45,17 @@ CREATE TABLE tanggungan (
 
 4. laporan keuangan
 
+CREATE TABLE `laporan` (
+  `laporan_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `tanggal_awal` date DEFAULT NULL,
+  `tanggal_akhir` date DEFAULT NULL,
+  `catatan` text DEFAULT NULL,
+  PRIMARY KEY (`laporan_id`),
+  UNIQUE KEY `unique_tanggal_awal_akhir` (`tanggal_awal`,`tanggal_akhir`),
+  CONSTRAINT laporan_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id),
+);
+
 
 5. transaksi
 CREATE TABLE transaksi (
