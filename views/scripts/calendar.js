@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const submitButton = addForm.querySelector('.btn-submit-transaction');
         submitButton.textContent = 'Menyimpan...';
         submitButton.disabled = true;
+        console.log(formData);
         
         fetch('?c=TransactionController&m=addProcess', { method: 'POST', body: formData, })
             .then(response => response.json())

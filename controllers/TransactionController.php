@@ -1,7 +1,7 @@
 <?php
-  include_once "controllers/Controller.php";
+include_once "controllers/Controller.php";
 
-  class TransactionController extends Controller {
+class TransactionController extends Controller {
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -9,41 +9,56 @@
     }
 
     private function checkLogin() {
-        if (!isset($_SESSION['user']->user_id)) { /*user_id*/
+        if (!isset($_SESSION['user']->user_id)) { 
             header('Location: ?c=UserController&m=loginView');
             exit();
         }
     }
 
     public function addProcess() {
-        // $this->checkLogin();
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // [MODIFIKASI] Tangkap bill_id dan goal_id dari POST
             $data = [
                 'kategori_id' => $_POST['category_id'],
                 'jumlah' => $_POST['amount'],
                 'keterangan' => $_POST['note'],
                 'date' => $_POST['date'],
-                'user_id' => $_SESSION['user']->user_id, /*user_id*/
+                'user_id' => $_SESSION['user']->user_id, 
                 'tagihan_id' => isset($_POST['bill_id']) ? $_POST['bill_id'] : null,
                 'target_id' => isset($_POST['goal_id']) ? $_POST['goal_id'] : null
             ];
 
             $transactionModel = $this->loadModel('Transaction');
+            $kategoriModel = $this->loadModel('Kategori'); 
+            $tanggunganModel = $this->loadModel('Tanggungan'); 
+
             if ($transactionModel->insertTransaction($data)) {
                 $response = ['status' => 'success', 'message' => 'Transaksi berhasil disimpan!'];
+           
+                $tanggunganInfo = $tanggunganModel->getByIdAndUser($data['tagihan_id'], $data['user_id']);
+
+                if ($tanggunganInfo) {
+                    $namaTanggungan = $tanggunganInfo['tanggungan'];
+                    $jumlahPengeluaran = $data['jumlah'];
+                    $userId = $data['user_id'];
+
+                    $affectedRows = $tanggunganModel->updateStatusByDetails($userId, $namaTanggungan, $jumlahPengeluaran);
+                    
+                    if ($affectedRows > 0) {
+                        $response['message'] .= ' Status tanggungan "' . $namaTanggungan . '" berhasil diperbarui menjadi Selesai.';
+                    }
+                }
+
             } else {
                 $response['message'] = 'Gagal menyimpan transaksi ke database.';
             }
         }
-        
         header('Content-Type: application/json');
         echo json_encode($response);
         exit();
     }
-
+    
     public function getTransaction() {
         $this->checkLogin();
         
@@ -67,13 +82,11 @@
         exit();
     }
 
-    // ...
     public function updateProcess() {
         $this->checkLogin();
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // [MODIFIKASI] Pastikan bill_id dan goal_id disertakan
             $data = [
                 'transaction_id' => $_POST['transaction_id'],
                 'category_id' => $_POST['category_id'],
@@ -97,7 +110,6 @@
         echo json_encode($response);
         exit();
     }
-// ...
 
     public function deleteProcess() {
         $this->checkLogin();
@@ -118,5 +130,4 @@
         echo json_encode($response);
         exit();
     }
-  }
-?>
+}

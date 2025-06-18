@@ -217,6 +217,24 @@ class Tanggungan extends Model
         }
     }
 
+    public function updateStatusByDetails($userId, $tanggunganNama, $jumlah) {
+        $query = "UPDATE tanggungan SET status = 1 WHERE user_id = ? AND tanggungan = ? AND jumlah = ? AND status = 0";
+        $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            error_log("Failed to prepare updateStatusByDetails statement: " . $this->dbconn->error);
+            return false;
+        }
+        $stmt->bind_param("isi", $userId, $tanggunganNama, $jumlah);
+        
+        try {
+            $stmt->execute();
+            return $stmt->affected_rows;
+        } catch (mysqli_sql_exception $e) {
+            error_log("Error updating tanggungan status by details: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function setPermanen($id_user)
     {
         $stmt = $this->dbconn->prepare("UPDATE tanggungan SET permanen = 1 WHERE user_id = ?");
@@ -282,6 +300,4 @@ class Tanggungan extends Model
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
-
-   
 }
