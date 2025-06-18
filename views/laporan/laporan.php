@@ -124,7 +124,7 @@
         
         
         <div class="my-5">
-            <h3 class="mb-4">Grafik Keuangan: <span class="text-success"><?= $_SESSION['user']->username ?></span></h3>
+            <h3 class="mb-4">Grafik Keuangan: <span class="text-success"><?= htmlspecialchars($_SESSION['user']->username) ?></span></h3>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="card p-3 shadow-sm">
@@ -143,7 +143,7 @@
                                             <th>%s</th>
                                             <th>%s</th>
                                             <th>%s</th>
-                                        </tr>", $tabel->tanggal_transaksi, $tabel->jumlah, $tabel->keterangan);
+                                        </tr>", $tabel->tanggal_transaksi, $tabel->jumlah, htmlspecialchars($tabel->keterangan));
                                     }
                                 }
                                 
@@ -168,7 +168,7 @@
                                             <th>%s</th>
                                             <th>%s</th>
                                             <th>%s</th>
-                                        </tr>", $tabel->tanggal_transaksi, $tabel->jumlah, $tabel->keterangan);
+                                        </tr>", $tabel->tanggal_transaksi, $tabel->jumlah, htmlspecialchars($tabel->keterangan));
                                     }
                                 }
                                 

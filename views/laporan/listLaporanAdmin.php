@@ -48,12 +48,12 @@
                                 $tabel->laporan_id, 
                                 $tabel->tanggal_awal, 
                                 $tabel->tanggal_akhir, 
-                                $tabel->catatan,
+                                htmlspecialchars($tabel->catatan),
                                 $tabel->laporan_id,
                                 $tabel->laporan_id,
                                 $tabel->tanggal_awal, 
                                 $tabel->tanggal_akhir,
-                                $tabel->catatan,
+                                htmlspecialchars($tabel->catatan),
                             );
                         }
                     }                 
