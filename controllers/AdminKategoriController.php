@@ -2,7 +2,7 @@
 class AdminKategoriController extends Controller {
     public function __construct() {
         session_start();
-        // Redirect if user is not logged in or doesn't have admin privilege
+        // memastikan pengguna memiliki akses 'admin' kalau ga punya ke halaman user biasa
         if (!isset($_SESSION['user']) || $_SESSION['user']->privilege != 'admin') {
             header('Location: ?c=DashboardController&m=index');
             exit;
@@ -11,14 +11,13 @@ class AdminKategoriController extends Controller {
 
     public function index() {
         $model = $this->loadModel('Kategori'); // Menggunakan model Kategori yang sudah ada
-        // Admin bisa melihat semua kategori, jadi pass null agar getAllCategoriesByUser mengambil semua
+        // Admin bisa melihat semua kategori, memanggil getAllCategoriesByUser(null) untuk mengambil semua kategori
         $categories = $model->getAllCategoriesByUser(null); 
         $this->loadView('adminKategori', ['categories' => $categories]);
     }
 
-    // Metode addCategory ini tidak lagi diperlukan atau diubah agar tidak bisa digunakan
-    // Saya akan mengomentarinya atau mengarahkan ke halaman error/index admin jika diakses.
-    // Untuk tujuan ini, saya akan menghapus fungsionalitas penambahan kategori dari view.
+    // Metode addCategory ini tidak bisa digunakan
+    // mengarahkan ke halaman error/index admin jika diakses.
     // Jika ada permintaan POST ke addCategory dari URL, itu akan dianggap permintaan tidak valid.
     public function addCategory() {
         $response = ['status' => 'error', 'message' => 'Fungsi tambah kategori tidak tersedia untuk admin.'];
@@ -27,6 +26,7 @@ class AdminKategoriController extends Controller {
         exit;
     }
 
+    // memanggil getCategoryByIdAdmin() dari Model untuk mengambil detail kategori tanpa batasan user_id
     public function getCategory() {
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
         if (isset($_GET['id'])) {
@@ -50,6 +50,7 @@ class AdminKategoriController extends Controller {
         exit;
     }
 
+    // memanggil updateCategoryAdmin() dari Model
     public function updateCategory() {
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
