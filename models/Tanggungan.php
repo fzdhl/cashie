@@ -62,7 +62,8 @@ class Tanggungan extends Model
         $result = $stmt->get_result();
         return $result->fetch_assoc();
     }
-
+    
+    // Metode baru yang ditemukan: getNextTanggungan
     public function getNextTanggungan($id_user){
         $stmt = $this->dbconn->prepare("SELECT *, 
             DAY(jadwal_pembayaran) - DAY(CURDATE()) AS sisa_hari
@@ -76,6 +77,7 @@ class Tanggungan extends Model
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+
 
     public function insert($data)
     {
@@ -245,6 +247,60 @@ class Tanggungan extends Model
             return $stmt->affected_rows;
         } catch (mysqli_sql_exception $e) {
             error_log("Error updating tanggungan status by details: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Memperbarui status tanggungan menjadi 'Selesai' (1) berdasarkan tanggungan_id, user_id, dan jumlah.
+     * Hanya akan memperbarui jika status tanggungan saat ini adalah 'Belum dibayar' (0).
+     * Ini adalah metode yang lebih akurat untuk sinkronisasi berdasarkan pilihan tagihan.
+     *
+     * @param int $userId ID pengguna yang memiliki tanggungan.
+     * @param int $tanggunganId ID tanggungan yang akan diperbarui.
+     * @param int $jumlah Jumlah nominal tanggungan yang harus cocok.
+     * @return int|bool Jumlah baris yang terpengaruh jika berhasil, atau false jika ada error.
+     */
+    public function updateStatusByBillIdAndAmount($userId, $tanggunganId, $jumlah) {
+        $query = "UPDATE tanggungan SET status = 1 WHERE tanggungan_id = ? AND user_id = ? AND jumlah = ? AND status = 0";
+        $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            error_log("Failed to prepare updateStatusByBillIdAndAmount statement: " . $this->dbconn->error);
+            return false;
+        }
+        $stmt->bind_param("iii", $tanggunganId, $userId, $jumlah);
+        
+        try {
+            $stmt->execute();
+            return $stmt->affected_rows;
+        } catch (mysqli_sql_exception $e) {
+            error_log("Error updating tanggungan status by bill_id and amount: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Mengatur status tanggungan kembali menjadi 'Belum dibayar' (0) berdasarkan tanggungan_id dan user_id.
+     * Ini akan digunakan ketika transaksi terkait dihapus.
+     *
+     * @param int $userId ID pengguna yang memiliki tanggungan.
+     * @param int $tanggunganId ID tanggungan yang akan direset statusnya.
+     * @return int|bool Jumlah baris yang terpengaruh jika berhasil, atau false jika ada error.
+     */
+    public function resetStatusByBillIdAndUser($userId, $tanggunganId) {
+        $query = "UPDATE tanggungan SET status = 0 WHERE tanggungan_id = ? AND user_id = ?";
+        $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            error_log("Failed to prepare resetStatusByBillIdAndUser statement: " . $this->dbconn->error);
+            return false;
+        }
+        $stmt->bind_param("ii", $tanggunganId, $userId);
+        
+        try {
+            $stmt->execute();
+            return $stmt->affected_rows;
+        } catch (mysqli_sql_exception $e) {
+            error_log("Error resetting tanggungan status by bill_id and user: " . $e->getMessage());
             return false;
         }
     }

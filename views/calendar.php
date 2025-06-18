@@ -1,4 +1,5 @@
 <?php
+    // Memberikan nilai default untuk mencegah warning "Undefined variable"
     $selected_date = $selected_date ?? date('Y-m-d');
     $summary = $summary ?? ['expense' =>
 0, 'income' => 0, 'balance' => 0, 'total' => 0]; $transactions = $transactions
@@ -150,8 +151,7 @@
             <select id="bill_id" name="bill_id">
               <option value="">Tidak ada</option>
               <?php foreach ($data['tagihan'] as $bill): ?>
-              <option value="<?= $bill['tanggungan_id'] ?>">
-                <?= htmlspecialchars($bill['tanggungan']) ?>
+              <option value="<?= $bill['tanggungan_id'] ?>" data-amount="<?= htmlspecialchars($bill['jumlah']) ?>"> <?= htmlspecialchars($bill['tanggungan']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -194,7 +194,6 @@
       </div>
     </div>
 
-    <!-- EDIT -->
     <div id="editTransactionModal" class="modal">
       <div class="modal-content">
         <span class="close-btn">&times;</span>
@@ -211,6 +210,7 @@
             <label for="editDate">Tanggal:</label>
             <input type="date" id="editDate" name="date" required />
           </div>
+
           <div class="form-group">
             <label for="editTransactionCategory">Kategori Transaksi:</label>
             <select id="editTransactionCategory" name="category_id" required>
@@ -234,9 +234,7 @@
             <label for="edit_bill_id">Pilih Tagihan (Opsional):</label>
             <select id="edit_bill_id" name="bill_id">
               <option value="">Tidak ada</option>
-              <?php foreach ($data['tagihan'] as $bill): ?>
-              <option value="<?= $bill['tanggungan_id'] ?>">
-                <?= htmlspecialchars($bill['tanggungan']) ?>
+              <?php foreach ($data['tagihan'] as $bill): ?> <option value="<?= $bill['tanggungan_id'] ?>" data-amount="<?= htmlspecialchars($bill['jumlah']) ?>"> <?= htmlspecialchars($bill['tanggungan']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -250,8 +248,7 @@
             <label for="edit_goal_id">Pilih Target (Opsional):</label>
             <select id="edit_goal_id" name="goal_id">
               <option value="">Tidak ada</option>
-              <?php foreach ($data['target'] as $goal): ?>
-              <option value="<?= $goal['target_id'] ?>">
+              <?php foreach ($data['target'] as $goal): ?> <option value="<?= $goal['target_id'] ?>">
                 <?= htmlspecialchars($goal['target']) ?>
               </option>
               <?php endforeach; ?>
