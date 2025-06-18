@@ -8,6 +8,14 @@ class Kategori extends Model {
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    // admin
+    public function getAllCategories() {
+        $stmt = $this->dbconn->prepare("SELECT k.*, u.username FROM kategori k JOIN user u ON k.user_id = u.user_id ORDER BY k.kategori_id DESC");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function getCategoryById($kategoriId, $userId) {
         $stmt = $this->dbconn->prepare("SELECT * FROM kategori WHERE kategori_id = ? AND user_id = ?");
         $stmt->bind_param("ii", $kategoriId, $userId);
@@ -49,5 +57,29 @@ class Kategori extends Model {
         $stmt = $this->dbconn->prepare("DELETE FROM kategori WHERE kategori_id = ? AND user_id = ?");
         $stmt->bind_param("ii", $kategoriId, $userId);
         return $stmt->execute();
+    }
+
+    // admin
+    public function updateAdmin($kategori_id, $kategori_name, $type, $icon) {
+        $stmt = $this->dbconn->prepare("UPDATE kategori SET kategori = ?, tipe = ?, icon = ? WHERE kategori_id = ?");
+        $stmt->bind_param("sssi", $kategori_name, $type, $icon, $kategori_id);
+        return $stmt->execute();
+    }
+
+    // admin
+    public function deleteAdmin($kategori_id) {
+        $stmt = $this->dbconn->prepare("DELETE FROM kategori WHERE kategori_id = ?");
+        $stmt->bind_param("i", $kategori_id);
+        return $stmt->execute();
+    }
+
+
+    // admin
+    public function getByIdAdmin($kategori_id) {
+        $stmt = $this->dbconn->prepare("SELECT k.*, u.username FROM kategori k JOIN user u ON k.user_id = u.user_id WHERE k.kategori_id = ?");
+        $stmt->bind_param("i", $kategori_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
     }
 }
