@@ -11,11 +11,34 @@
         }
 
         public function index() {
+
+            $userId = $_SESSION['user']->user_id;
+            $transactionModel = $this->loadModel('Transaction');
+            $targetModel = $this->loadModel('Target');
+
+            $summary = $transactionModel->getSummaryByUserId($userId);
+            $pemasukan = $summary['total_pemasukan'] ?? 0;
+            $pengeluaran = $summary['total_pengeluaran'] ?? 0;
+            $saldo = $pemasukan - $pengeluaran;
+
+            // Mengambil data target
+            $targetData = [
+                "total" => $targetModel->getTotalByUserId($userId),
+                "data" => $targetModel->getByUserId($userId, 3)
+            ];
+
+            // $this->loadView("dashboard", [
+            //     "target" => [
+            //         "total" => $this->loadModel('Target')->getTotalByUserId($_SESSION['user']->user_id),
+            //         "data" => $this->loadModel('Target')->getByUserId($_SESSION['user']->user_id, 3)
+            //     ]
+            // ]);
+
             $this->loadView("dashboard", [
-                "target" => [
-                    "total" => $this->loadModel('Target')->getTotalByUserId($_SESSION['user']->user_id),
-                    "data" => $this->loadModel('Target')->getByUserId($_SESSION['user']->user_id, 3)
-                ]
+                "pemasukan" => $pemasukan,
+                "pengeluaran" => $pengeluaran,
+                "saldo" => $saldo,
+                "target" => $targetData
             ]);
         }
 
