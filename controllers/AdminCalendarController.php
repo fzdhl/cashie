@@ -45,7 +45,7 @@
             exit();
         }
 
-        public function deleteTransaction() {
+        public function delete() {
             header('Content-Type: application/json');
             if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) {
                 echo json_encode(["isSuccess" => false, "info" => "Permintaan tidak valid."]);
