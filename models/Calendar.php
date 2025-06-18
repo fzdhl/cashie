@@ -33,7 +33,7 @@
       $expense = 0;
       
       foreach ($transactions as $transaction) {
-        if (stripos($transaction['tipe'], 'pemasukan') !== false || stripos($transaction['type'], 'income') !== false) {
+        if (stripos($transaction['tipe'], 'pemasukan') !== false || stripos($transaction['tipe'], 'pemasukan') !== false) {
           $income += $transaction['jumlah'];
         } else {
           $expense += $transaction['jumlah'];

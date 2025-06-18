@@ -9,14 +9,14 @@
     }
 
     private function checkLogin() {
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user']->user_id)) { /*user_id*/
             header('Location: ?c=UserController&m=loginView');
             exit();
         }
     }
 
     public function addProcess() {
-        $this->checkLogin();
+        // $this->checkLogin();
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,7 +26,7 @@
                 'jumlah' => $_POST['amount'],
                 'keterangan' => $_POST['note'],
                 'date' => $_POST['date'],
-                'user_id' => $_SESSION['user_id'],
+                'user_id' => $_SESSION['user']->user_id, /*user_id*/
                 'tagihan_id' => isset($_POST['bill_id']) ? $_POST['bill_id'] : null,
                 'target_id' => isset($_POST['goal_id']) ? $_POST['goal_id'] : null
             ];
@@ -50,7 +50,7 @@
         if (isset($_GET['id'])) {
             $transactionId = $_GET['id'];
             $transactionModel = $this->loadModel('Transaction');
-            $transaction = $transactionModel->getTransactionById($transactionId, $_SESSION['user_id']);
+            $transaction = $transactionModel->getTransactionById($transactionId, $_SESSION['user']->user_id);
 
             if ($transaction) {
                 header('Content-Type: application/json');
@@ -80,7 +80,7 @@
                 'amount' => $_POST['amount'],
                 'note' => $_POST['note'],
                 'date' => $_POST['date'],
-                'user_id' => $_SESSION['user_id'],
+                'user_id' => $_SESSION['user']->user_id,
                 'bill_id' => isset($_POST['bill_id']) ? $_POST['bill_id'] : null,
                 'goal_id' => isset($_POST['goal_id']) ? $_POST['goal_id'] : null
             ];
@@ -107,7 +107,7 @@
             $transactionId = $_POST['transaction_id'];
             $transactionModel = $this->loadModel('Transaction');
             
-            if ($transactionModel->deleteTransaction($transactionId, $_SESSION['user_id'])) {
+            if ($transactionModel->deleteTransaction($transactionId, $_SESSION['user']->user_id)) {
                 $response = ['status' => 'success', 'message' => 'Transaksi berhasil dihapus!'];
             } else {
                 $response['message'] = 'Gagal menghapus transaksi.';

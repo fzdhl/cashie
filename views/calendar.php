@@ -78,16 +78,16 @@
             <div class="description__row">
               <img src="resources/assets/car-icon.png" class="icon-small" />
               <div class="description__item">
-                <?= htmlspecialchars($transaction['category']) ?>
+                <?= htmlspecialchars($transaction['kategori']) ?>
               </div>
               <div
                 class="description__item"
-                style="color: <?= $transaction['type'] == 'income' ? 'green' : '#c5172e' ?>;"
+                style="color: <?= $transaction['tipe'] == 'income' ? 'green' : '#c5172e' ?>;"
               >
-                Rp<?= number_format($transaction['amount'], 0, ',', '.') ?>
-                <?php if (!empty($transaction['note'])): ?>
+                Rp<?= number_format($transaction['jumlah'], 0, ',', '.') ?>
+                <?php if (!empty($transaction['keterangan'])): ?>
                 <div class="description__timestamp">
-                  <?= htmlspecialchars($transaction['note']) ?>
+                  <?= htmlspecialchars($transaction['keterangan']) ?>
                 </div>
                 <?php endif; ?>
               </div>
@@ -134,12 +134,12 @@
             <label for="transactionCategory">Kategori Transaksi:</label>
             <select id="transactionCategory" name="category_id" required>
               <option value="" disabled selected>Pilih Kategori</option>
-              <?php foreach ($categories as $category): ?>
+              <?php foreach ($data['kategori'] as $category): ?>
               <option
-                value="<?= $category['category_id'] ?>"
-                data-type="<?= htmlspecialchars(strtolower(trim($category['type']))) ?>"
+                value="<?= $category['kategori_id'] ?>"
+                data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"
               >
-                <?= htmlspecialchars($category['category']) ?>
+                <?= htmlspecialchars($category['kategori']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -149,9 +149,9 @@
             <label for="bill_id">Pilih Tagihan (Opsional):</label>
             <select id="bill_id" name="bill_id">
               <option value="">Tidak ada</option>
-              <?php foreach ($bills as $bill): ?>
-              <option value="<?= $bill['bill_id'] ?>">
-                <?= htmlspecialchars($bill['bill']) ?>
+              <?php foreach ($data['tagihan'] as $bill): ?>
+              <option value="<?= $bill['tanggungan_id'] ?>">
+                <?= htmlspecialchars($bill['tanggungan']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -161,9 +161,9 @@
             <label for="goal_id">Pilih Target (Opsional):</label>
             <select id="goal_id" name="goal_id">
               <option value="">Tidak ada</option>
-              <?php foreach ($goals as $goal): ?>
-              <option value="<?= $goal['goal_id'] ?>">
-                <?= htmlspecialchars($goal['goal']) ?>
+              <?php foreach ($data['target'] as $goal): ?>
+              <option value="<?= $goal['target_id'] ?>">
+                <?= htmlspecialchars($goal['target']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -218,10 +218,10 @@
               <option value="" disabled>Pilih Kategori</option>
               <?php foreach ($categories as $category): ?>
               <option
-                value="<?= $category['category_id'] ?>"
-                data-type="<?= htmlspecialchars(strtolower(trim($category['type']))) ?>"
+                value="<?= $category['kategori_id'] ?>"
+                data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"
               >
-                <?= htmlspecialchars($category['category']) ?>
+                <?= htmlspecialchars($category['kategori']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -236,8 +236,8 @@
             <select id="edit_bill_id" name="bill_id">
               <option value="">Tidak ada</option>
               <?php foreach ($bills as $bill): ?>
-              <option value="<?= $bill['bill_id'] ?>">
-                <?= htmlspecialchars($bill['bill']) ?>
+              <option value="<?= $bill['tanggungan_id'] ?>">
+                <?= htmlspecialchars($bill['tanggungan']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -252,8 +252,8 @@
             <select id="edit_goal_id" name="goal_id">
               <option value="">Tidak ada</option>
               <?php foreach ($goals as $goal): ?>
-              <option value="<?= $goal['goal_id'] ?>">
-                <?= htmlspecialchars($goal['goal']) ?>
+              <option value="<?= $goal['target_id'] ?>">
+                <?= htmlspecialchars($goal['target']) ?>
               </option>
               <?php endforeach; ?>
             </select>

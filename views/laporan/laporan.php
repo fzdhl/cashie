@@ -181,103 +181,13 @@
     </div>
  
     <?php include_once __DIR__ . '/../footer.php'; ?>
-    
-    <script>
-        // function toggleLaporan(jenis) {
-        //     const mingguan = document.getElementById('laporan_mingguan_section');
-        //     const bulanan = document.getElementById('laporan_bulanan_section');
-
-        //     if (jenis === 'mingguan') {
-        //         mingguan.classList.remove('d-none');
-        //         bulanan.classList.add('d-none');
-        //     } else {
-        //         bulanan.classList.remove('d-none');
-        //         mingguan.classList.add('d-none');
-        //     }
-        // }
-
-        // // Opsional: munculkan default ke mingguan/bulanan
-        // document.addEventListener("DOMContentLoaded", () => {
-        //     toggleLaporan('mingguan'); // atau 'bulanan'
-        //     fetch("?c=LaporanController&m=getListLaporan")
-        //         .then((res) => res.text())
-        //         .then((html) => {
-        //             document.getElementById("listReport").innerHTML = html;
-        //         })
-        //         .catch((err) => console.error("Gagal reload list:", err));
-        // });
-
-        // //Ajax
-        // document.getElementById("addReport").addEventListener("submit", function (e) {
-        //     e.preventDefault();
-
-        //     const formElement = this;
-        //     const formData = new FormData(formElement);
-
-        //     fetch("?c=LaporanController&m=addLaporan", {
-        //         method: "POST",
-        //         body: formData,
-        //     })
-        //     .then((res) => res.json())
-        //     .then((data) => {
-        //         const errorElement = document.getElementById("errorReport");
-
-        //         if (data.status === "error") {
-        //             errorElement.textContent = data.message;
-        //         } else if (data.status === "success") {
-        //             errorElement.textContent = "";
-        //             formElement.reset();
-
-        //             // Reload list laporan setelah berhasil menambahkan
-        //             fetch("?c=LaporanController&m=getListLaporan")
-        //                 .then((res) => res.text())
-        //                 .then((html) => {
-        //                     document.getElementById("listReport").innerHTML = html;
-        //                 })
-        //                 .catch((err) => console.error("Fetch list error:", err));
-        //         }
-        //     })
-        //     .catch((err) => {
-        //         console.error("Fetch error:", err);
-        //         document.getElementById("errorReport").textContent = "Terjadi kesalahan saat mengirim data.";
-        //     });
-        // });
-
-        // // untuk delete data Laporan
-        // document.addEventListener("submit", function (e) {
-        //     if (e.target && e.target.name === "deleteReport") {
-        //         e.preventDefault();
-
-        //         const formElement = e.target;
-        //         const formData = new FormData(formElement);
-
-        //         fetch("?c=LaporanController&m=deleteLaporan", {
-        //             method: "POST",
-        //             body: formData,
-        //         })
-        //         .then((res) => res.json())
-        //         .then((data) => {
-
-        //             // Reload daftar laporan
-        //             fetch("?c=LaporanController&m=getListLaporan")
-        //                 .then((res) => res.text())
-        //                 .then((html) => {
-        //                     document.getElementById("listReport").innerHTML = html;
-        //                 })
-        //                 .catch((err) => console.error("Gagal reload list:", err));
-
-        //         })
-        //         .catch((err) => console.error("Fetch error:", err));
-        //     }
-        // });
-    </script>
 
     <script>
-        const datePemasukan = <?= json_encode($datePemasukan) ?>;
-        const totalPemasukan = <?= json_encode($totalPemasukan) ?>;
+        const datePemasukan = <?= json_encode($dataPemasukan['date']) ?>;
+        const totalPemasukan = <?= json_encode($dataPemasukan['total']) ?>;
 
-        const datePengeluaran = <?= json_encode($datePengeluaran) ?>;
-        const totalPengeluaran = <?= json_encode($totalPengeluaran) ?>;
+        const datePengeluaran = <?= json_encode($dataPengeluaran['date']) ?>;
+        const totalPengeluaran = <?= json_encode($dataPengeluaran['total']) ?>;
     </script>
     <!-- <script src="views/scripts/laporan.js"></script> -->
     <script src="views/scripts/laporan.js"></script>

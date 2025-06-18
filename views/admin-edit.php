@@ -10,7 +10,7 @@
   <div class="container">
     <div class="card">
       <h2>Edit Akun</h2>
-      <form action="update_user.php" method="POST">
+      <form action="?c=AdminController&m=update&user_id=<?=$_GET['user_id']?>" method="POST">
         <input type="hidden" name="id" value="<?= htmlspecialchars($user->user_id) ?>">
         
         <div class="form-group">
@@ -24,9 +24,8 @@
         </div>
   
         <div class="form-group">
-          <label for="email">Password</label>
-          <!-- <input type="email" name="email" id="email" value="<?= htmlspecialchars($user['email']) ?>" required> -->
-          <a href="change_password.php?id=<?= 29 ?>" class="btn btn-secondary">Ubah Password</a>
+          <label for="password">Password</label>
+          <input type="text" name="password" id="password">
         </div>
   
         <div class="action-group">
