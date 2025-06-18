@@ -26,9 +26,9 @@
                 <tr>
                   <th scope="col" class="text-center" style="width: 5%;">Aksi</th>
                   <th scope="col" style="width: 12%;">Tanggal</th>
-                  <th scope="col" style="width: 10%;">User ID</th>
-                  <th scope="col" style="width: 10%;">Kategori ID</th>
-                  <th scope="col" style="width: 28%;">Keterangan</th>
+                  <th scope="col" style="width: 10%;">Pengguna</th>
+                  <th scope="col" style="width: 15%;">Kategori</th>
+                  <th scope="col" style="width: 23%;">Keterangan</th>
                   <th scope="col" class="text-end" style="width: 15%;">Jumlah</th>
                 </tr>
               </thead>
@@ -38,7 +38,6 @@
                     <?php foreach ($transactions as $t): ?>
                         <?php
                             $transaksiId = $t['transaksi_id'];
-                            // Ambil tanggal saja (YYYY-MM-DD) untuk input type="date"
                             $tanggal = date('Y-m-d', strtotime($t['tanggal_transaksi']));
                         ?>
                         <tr data-transaction-id="<?= $transaksiId ?>">
@@ -46,8 +45,27 @@
                                 <button type="button" class="btn btn-sm btn-danger w-100" onclick="hapusTransaksi(this)">Hapus</button>
                             </td>
                             <td><input type="date" name="tanggal_transaksi_<?= $transaksiId ?>" class="form-control form-control-sm" value="<?= $tanggal ?>"></td>
-                            <td><input type="number" name="user_id_<?= $transaksiId ?>" class="form-control form-control-sm" value="<?= htmlspecialchars($t['user_id'] ?? '') ?>"></td>
-                            <td><input type="number" name="kategori_id_<?= $transaksiId ?>" class="form-control form-control-sm" value="<?= htmlspecialchars($t['kategori_id'] ?? '') ?>"></td>
+                            
+                            <td>
+                                <select name="user_id_<?= $transaksiId ?>" class="form-select form-select-sm">
+                                    <?php foreach ($users as $user): ?>
+                                        <option value="<?= htmlspecialchars($user['user_id']) ?>" <?= ($user['user_id'] == ($t['user_id'] ?? '')) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($user['username']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+
+                            <td>
+                                <select name="kategori_id_<?= $transaksiId ?>" class="form-select form-select-sm">
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?= htmlspecialchars($category['kategori_id']) ?>" <?= ($category['kategori_id'] == ($t['kategori_id'] ?? '')) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($category['kategori']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+
                             <td><input type="text" name="keterangan_<?= $transaksiId ?>" class="form-control form-control-sm" value="<?= htmlspecialchars($t['keterangan']) ?>"></td>
                             <td><input type="number" step="any" name="jumlah_<?= $transaksiId ?>" class="form-control form-control-sm text-end" value="<?= htmlspecialchars($t['jumlah']) ?>"></td>
                         </tr>

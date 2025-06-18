@@ -10,9 +10,20 @@
         }
 
         public function index() {
-            $model = $this->loadModel('Transaction'); // Load model Transaction
-            $transactions = $model->getAllTransactions(); // Panggil method baru untuk mendapatkan semua transaksi
-            $this->loadView('adminCalendar', ['transactions' => $transactions]); // Load view admin baru dengan data transaksi
+            $transactionModel = $this->loadModel('Transaction'); // Load model Transaction
+            $userModel = $this->loadModel('User');
+            $kategoriModel = $this->loadModel('Kategori');
+
+
+            $transactions = $transactionModel->getAllTransactions(); // Panggil method baru untuk mendapatkan semua transaksi
+            $users = $userModel->getAll();
+            $categories = $kategoriModel->getAllCategoriesByUser(null);
+
+            $this->loadView('adminCalendar', [
+                'transactions' => $transactions,
+                'users' => $users,
+                'categories' => $categories
+            ]);
         }
 
         public function update() {
@@ -45,7 +56,7 @@
             exit();
         }
 
-        public function deleteTransaction() {
+        public function delete() {
             header('Content-Type: application/json');
             if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) {
                 echo json_encode(["isSuccess" => false, "info" => "Permintaan tidak valid."]);
