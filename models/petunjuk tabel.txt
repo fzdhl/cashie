@@ -22,11 +22,11 @@ CREATE TABLE kategori (
   UNIQUE KEY user_id (user_id,kategori),
   KEY fk_user (user_id),
   CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user (user_id)
-)
+);;;
 
 3. tanggungan
 CREATE TABLE tanggungan (
-  tanggungan_id int NOT NULL,
+  tanggungan_id int NOT NULL AUTO_INCREMENT,
   user_id int DEFAULT NULL,
   tanggungan varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   jadwal_pembayaran date DEFAULT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE `laporan` (
   `catatan` text DEFAULT NULL,
   PRIMARY KEY (`laporan_id`),
   UNIQUE KEY `unique_tanggal_awal_akhir` (`tanggal_awal`,`tanggal_akhir`),
-  CONSTRAINT laporan_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id),
+  CONSTRAINT laporan_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id)
 );
 
 
@@ -82,15 +82,18 @@ CREATE TABLE transaksi (
 6. target 
 CREATE TABLE target (
   target_id int NOT NULL AUTO_INCREMENT,
-  user_id int DEFAULT NULL,
-  target varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  user_id int NOT NULL,
+  kategori_id int NOT NULL,
+  target varchar(255) NOT NULL,
   jumlah bigint DEFAULT NULL,
   created_at date DEFAULT (curdate()),
   PRIMARY KEY (target_id),
   UNIQUE KEY user_id_2 (user_id,target),
   KEY user_id (user_id),
-  CONSTRAINT target_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (user_id)
-)
+  KEY fk_target_kategori (kategori_id),
+  CONSTRAINT fk_target_kategori FOREIGN KEY (kategori_id) REFERENCES kategori (kategori_id),
+  CONSTRAINT fk_target_user FOREIGN KEY (user_id) REFERENCES user (user_id)
+);
 
 7. arsip
 CREATE TABLE arsip (

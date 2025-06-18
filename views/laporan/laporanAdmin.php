@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <?php include_once __DIR__ . '/../header.php'; ?>
+    <?php include_once __DIR__ . '/../header-admin.php'; ?>
 
     <div class="container my-4">
 

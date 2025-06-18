@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCategorySelect = document.getElementById('transactionCategory');
     const addBillGroup = document.getElementById('bill-form-group');
     const addGoalGroup = document.getElementById('goal-form-group');
+    const addBillSelect = document.getElementById('bill_id'); // Elemen Pilih Tagihan (ADD)
+    const addTransactionAmountInput = document.getElementById('transactionAmount'); // Input Jumlah (ADD)
 
     // Elemen Modal Edit
     const editModal = document.getElementById('editTransactionModal');
@@ -28,6 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const editCategorySelect = document.getElementById('editTransactionCategory');
     const editBillGroup = document.getElementById('edit-bill-form-group');
     const editGoalGroup = document.getElementById('edit-goal-form-group');
+    const editBillSelect = document.getElementById('edit_bill_id'); // Elemen Pilih Tagihan (EDIT)
+    const editTransactionAmountInput = document.getElementById('editAmount'); // Input Jumlah (EDIT)
     
     let currentDate = new Date();
 
@@ -179,6 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeAddModalBtn) {
         closeAddModalBtn.addEventListener('click', () => addModal.style.display = 'none');
     }
+
+    // Mengatur tampilan grup Pilih Tagihan/Target berdasarkan Kategori Transaksi
     addCategorySelect.addEventListener('change', function() {
         addBillGroup.style.display = 'none';
         addGoalGroup.style.display = 'none';
@@ -187,10 +193,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const type = selectedOption.getAttribute('data-type');
         if (type === 'pengeluaran') {
             addBillGroup.style.display = 'block';
+            addGoalGroup.style.display = 'none'; // Pastikan goal group disembunyikan
         } else if (type === 'pemasukan') {
             addGoalGroup.style.display = 'block';
+            addBillGroup.style.display = 'none'; // Pastikan bill group disembunyikan
         }
+        // Atur ulang nilai jumlah jika kategori berubah dan tidak terkait tagihan/target
+        addTransactionAmountInput.value = ''; 
     });
+
+    // Logika baru untuk mengisi Jumlah secara otomatis saat Pilih Tagihan (ADD) diubah
+    if (addBillSelect) { 
+        addBillSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            // Pastikan opsi yang dipilih valid dan memiliki data-amount
+            if (selectedOption && selectedOption.value !== "") {
+                const amount = selectedOption.getAttribute('data-amount');
+                if (amount) {
+                    addTransactionAmountInput.value = amount;
+                } else {
+                    addTransactionAmountInput.value = ''; // Kosongkan jika tidak ada data-amount
+                }
+            } else {
+                addTransactionAmountInput.value = ''; // Kosongkan jika memilih "Tidak ada"
+            }
+        });
+    }
+
     addForm.addEventListener('submit', function(event) {
         event.preventDefault();
         const formData = new FormData(addForm);
@@ -205,8 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.status === 'success') {
                     addModal.style.display = 'none';
                     addForm.reset();
+                    // Reset visibility of bill/goal groups and amount after form submission
                     addBillGroup.style.display = 'none';
                     addGoalGroup.style.display = 'none';
+                    addTransactionAmountInput.value = ''; // Pastikan jumlah direset
                     const activeDate = document.querySelector('.date.active');
                     if (activeDate) {
                         fetchAndDisplayTransactions(activeDate.dataset.fulldate);
@@ -243,7 +274,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('editNote').value = t.keterangan;
                 document.getElementById('edit_bill_id').value = t.tanggungan_id || '';
                 document.getElementById('edit_goal_id').value = t.target_id || '';
-                editCategorySelect.dispatchEvent(new Event('change'));
+                
+                // Memicu perubahan untuk menampilkan/menyembunyikan grup yang benar
+                editCategorySelect.dispatchEvent(new Event('change')); 
+                // Jika bill_id ada, picu perubahan pada select bill_id untuk mengisi amount
+                if (t.tanggungan_id && editBillSelect) {
+                    editBillSelect.value = t.tanggungan_id;
+                    // Secara manual isi jumlah jika tanggungan_id ada, karena event change tidak selalu memicu pada pemuatan nilai
+                    const selectedOption = editBillSelect.options[editBillSelect.selectedIndex];
+                    if (selectedOption && selectedOption.value !== "") {
+                        const amount = selectedOption.getAttribute('data-amount');
+                        if (amount) {
+                            editTransactionAmountInput.value = amount;
+                        }
+                    }
+                }
+
                 editModal.style.display = 'block';
             } else {
                 alert(result.message);
@@ -266,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         closeEditModalBtn.addEventListener('click', () => editModal.style.display = 'none');
     }
 
+    // Mengatur tampilan grup Pilih Tagihan/Target berdasarkan Kategori Transaksi di EDIT modal
     editCategorySelect.addEventListener('change', function() {
         editBillGroup.style.display = 'none';
         editGoalGroup.style.display = 'none';
@@ -274,10 +321,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const type = selectedOption.getAttribute('data-type');
         if (type === 'pengeluaran') {
             editBillGroup.style.display = 'block';
+            editGoalGroup.style.display = 'none'; // Pastikan goal group disembunyikan
         } else if (type === 'pemasukan') {
             editGoalGroup.style.display = 'block';
+            editBillGroup.style.display = 'none'; // Pastikan bill group disembunyikan
         }
+        // Atur ulang nilai jumlah jika kategori berubah dan tidak terkait tagihan/target
+        // editTransactionAmountInput.value = ''; // Mungkin tidak selalu diinginkan saat edit
     });
+
+    // Logika baru untuk mengisi Jumlah secara otomatis saat Pilih Tagihan (EDIT) diubah
+    if (editBillSelect) { // Pastikan elemen ditemukan
+        editBillSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            // Pastikan opsi yang dipilih valid dan memiliki data-amount
+            if (selectedOption && selectedOption.value !== "") {
+                const amount = selectedOption.getAttribute('data-amount');
+                if (amount) {
+                    editTransactionAmountInput.value = amount;
+                } else {
+                    editTransactionAmountInput.value = ''; // Kosongkan jika tidak ada data-amount
+                }
+            } else {
+                editTransactionAmountInput.value = ''; // Kosongkan jika memilih "Tidak ada"
+            }
+        });
+    }
 
     editForm.addEventListener('submit', function(event) {
         event.preventDefault();
