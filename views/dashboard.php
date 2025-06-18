@@ -14,8 +14,14 @@
 
   <main class="container my-4">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 header-date-row">
-      <h2 class="fw-bold text-center text-md-start mb-3 mb-md-0">Dashboard</h2>
+      <h2 class="fw-bold text-center text-md-start mb-2 mb-md-0">
+        Dashboard
+      </h2>
+      <h4 class="fw-semibold text-center text-md-end text-muted mb-0">
+        Halo, <?= htmlspecialchars($username) ?>
+      </h4>
     </div>
+
 
     <div class="row g-3 g-md-4 mb-4">
       <div class="col-md-4">
@@ -42,6 +48,13 @@
 
       <div class="col-lg-8">
         <div class="bg-white p-4 rounded shadow-sm">
+          <div class="d-flex justify-content-between mb-3">
+            <strong class="fs-5">Transaksi</strong>
+            
+            <div class="action-group">
+              <a href="?c=CalendarController&m=index"><button class="btn btn-success">Tambah transaksi</button></a>
+            </div>
+          </div>
           <?php
           $tanggal_sebelumnya = null;
 

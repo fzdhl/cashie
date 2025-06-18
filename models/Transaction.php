@@ -3,7 +3,6 @@
 
   class Transaction extends Model {
     
-
     public function getRecentTransaction($userId){
         $query = "SELECT * FROM transaksi t JOIN kategori k ON k.kategori_id = t.kategori_id WHERE t.user_id= ? ORDER BY tanggal_transaksi ASC LIMIT 10";
 
@@ -25,8 +24,9 @@
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    // [MODIFIKASI] Mengambil semua tagihan (bills) yang belum lunas milik pengguna, termasuk kolom 'jumlah'
     public function getBillsByUser($userId) {
-        $query = "SELECT tanggungan_id, tanggungan FROM tanggungan WHERE user_id = ? AND status = 0";
+        $query = "SELECT tanggungan_id, tanggungan, jumlah FROM tanggungan WHERE user_id = ? AND status = 0"; // <<==== TAMBAHAN: ", jumlah" ====
         $stmt = $this->dbconn->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -94,8 +94,6 @@
             $data['transaksi_id'],
             $data['user_id']
         );
-
-        // return $stmt->execute();
 
         $stmt->execute();
 
@@ -235,4 +233,3 @@
     }
   }
 ?>
-
