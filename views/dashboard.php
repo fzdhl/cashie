@@ -21,40 +21,91 @@
       <div class="col-md-4">
         <div class="text-center p-4 summary-card">
           <h5 class="text-muted">Pengeluaran</h5>
-          <p class="text-danger fw-bold">Rp2.000.000</p>
+          <p class="text-danger fw-bold">Rp<?= number_format($pengeluaran ?? 0, 0, ',', '.') ?></p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="text-center p-4 summary-card">
           <h5 class="text-muted">Pemasukan</h5>
-          <p class="text-success fw-bold">Rp5.000.000</p>
+          <p class="text-success fw-bold">Rp<?= number_format($pemasukan ?? 0, 0, ',', '.') ?>  </p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="text-center p-4 summary-card">
           <h5 class="text-muted">Saldo</h5>
-          <p class="text-warning fw-bold">Rp3.000.000</p>
+          <p class="text-warning fw-bold">Rp<?= number_format($saldo ?? 0, 0, ',', '.') ?></p>
         </div>
       </div>
     </div>
 
     <div class="row g-3 g-md-4">
+
       <div class="col-lg-8">
         <div class="bg-white p-4 rounded shadow-sm">
-          <h5 class="mb-3">Hari ini, 18 Maret</h5>
-          <p class="text-muted">Tidak ada catatan hari ini</p>
-          <h5 class="mt-4 mb-3">Senin, 17 Maret</h5>
-          <div class="d-flex justify-content-between border-bottom py-2">
-            <span>🚗 Transportasi</span>
-            <span class="text-danger">- Rp12.000</span>
-          </div>
-          <div class="d-flex justify-content-between py-2">
-            <span>🍽️ Makan</span>
-            <span class="text-danger">- Rp24.000</span>
-          </div>
+          <?php
+          $tanggal_sebelumnya = null;
+
+          foreach ($data_transaksi as $data):
+              $tanggal = date('d F Y', strtotime($data['tanggal_transaksi']));
+
+              if ($tanggal !== $tanggal_sebelumnya):
+          ?>
+            <h5 class="mt-4 mb-3"><?= htmlspecialchars($tanggal) ?></h5>
+          <?php
+              $tanggal_sebelumnya = $tanggal;
+              endif;
+
+              $class_warna = ($data['tipe'] === 'pengeluaran') ? 'text-danger' : 'text-success';
+          ?>
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <div>
+                <strong><?= htmlspecialchars($data['kategori']) ?></strong>
+              </div>
+              <div>
+                <span class="<?= $class_warna ?>">
+                  Rp<?= number_format($data['jumlah'], 2, ',', '.') ?>
+                </span>
+              </div>
+            </div>
+          <?php endforeach; ?>
+
+          <?php if (empty($data_transaksi)): ?>
+            <p class="text-muted">Tidak ada catatan transaksi.</p>
+          <?php endif; ?>
         </div>
       </div>
+
       <div class="col-lg-4">
+
+        <div class="card border-0 p-3 mb-3">
+          <div class="d-flex justify-content-between mb-3">
+            <strong class="fs-5">Tanggungan</strong>
+          </div>
+
+          <?php
+          $tanggal_sebelumnya = null;
+          foreach ($data_tanggungan as $data1):
+            $tanggal = date('d F Y', strtotime($data1['jadwal_pembayaran']));
+
+            if ($tanggal !== $tanggal_sebelumnya):
+          ?>
+            <h6 class="mt-3 mb-2 text-muted"><?= htmlspecialchars($tanggal) ?></h6>
+          <?php
+            $tanggal_sebelumnya = $tanggal;
+            endif;
+          ?>
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <span><?= htmlspecialchars($data1['tanggungan']) ?></span>
+              <span>Rp<?= number_format($data1['jumlah'], 2, ',', '.') ?></span>
+            </div>
+          <?php endforeach; ?>
+
+          <?php if (empty($data_tanggungan)): ?>
+            <p class="text-muted">Tidak ada tanggungan saat ini.</p>
+          <?php endif; ?>
+        </div>
+
+
         <div class="card border-0 p-3">
           <div class="d-flex justify-content-between">
             <strong>Target</strong><strong>Total: Rp<?=number_format($target['total']['total'], 2, ',', '.')?></strong>

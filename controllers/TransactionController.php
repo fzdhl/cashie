@@ -99,10 +99,22 @@ class TransactionController extends Controller {
             ];
 
             $transactionModel = $this->loadModel('Transaction');
-            if ($transactionModel->updateTransaction($data)) {
+            $affectedrows = $transactionModel->updateTransaction($data);
+
+
+            // if ($transactionModel->updateTransaction($data)) {
+            //     $response = ['status' => 'success', 'message' => 'Transaksi berhasil diperbarui!'];
+            // } else {
+            //     $response['message'] = 'Gagal memperbarui transaksi.';
+            // }
+
+            die (var_dump($affectedrows));
+            if ($affectedrows > 0) {
                 $response = ['status' => 'success', 'message' => 'Transaksi berhasil diperbarui!'];
+            } else if ($affectedrows == 0) {
+                $response['message'] = 'Tidak ada perubahan yang dilakukan atau data tidak ditemukan.';
             } else {
-                $response['message'] = 'Gagal memperbarui transaksi.';
+                $response['message'] = 'Gagal memperbarui transaksi di database.';
             }
         }
         

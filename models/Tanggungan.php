@@ -63,6 +63,20 @@ class Tanggungan extends Model
         return $result->fetch_assoc();
     }
 
+    public function getNextTanggungan($id_user){
+        $stmt = $this->dbconn->prepare("SELECT *, 
+            DAY(jadwal_pembayaran) - DAY(CURDATE()) AS sisa_hari
+            FROM tanggungan
+            WHERE user_id = ? 
+            AND DAY(jadwal_pembayaran) - DAY(CURDATE()) >= 0
+            ORDER BY sisa_hari ASC
+            LIMIT 3");
+        $stmt->bind_param("i", $id_user);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function insert($data)
     {
         $status_db = ($data[5] === 'Selesai') ? 1 : 0;

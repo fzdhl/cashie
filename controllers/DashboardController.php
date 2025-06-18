@@ -11,11 +11,39 @@
         }
 
         public function index() {
+
+            $userId = $_SESSION['user']->user_id;
+            $transactionModel = $this->loadModel('Transaction');
+            $targetModel = $this->loadModel('Target');
+            $tanggunganModel = $this->loadModel('Tanggungan');
+
+            $summary = $transactionModel->getSummaryByUserId($userId);
+            $pemasukan = $summary['total_pemasukan'] ?? 0;
+            $pengeluaran = $summary['total_pengeluaran'] ?? 0;
+            $saldo = $pemasukan - $pengeluaran;
+            $data_transaksi = $transactionModel->getRecentTransaction($userId);
+            $data_tanggungan = $tanggunganModel->getNextTanggungan($userId);
+
+            // Mengambil data target
+            $targetData = [
+                "total" => $targetModel->getTotalByUserId($userId),
+                "data" => $targetModel->getByUserId($userId, 3)
+            ];
+
+            // $this->loadView("dashboard", [
+            //     "target" => [
+            //         "total" => $this->loadModel('Target')->getTotalByUserId($_SESSION['user']->user_id),
+            //         "data" => $this->loadModel('Target')->getByUserId($_SESSION['user']->user_id, 3)
+            //     ]
+            // ]);
+
             $this->loadView("dashboard", [
-                "target" => [
-                    "total" => $this->loadModel('Target')->getTotalByUserId($_SESSION['user']->user_id),
-                    "data" => $this->loadModel('Target')->getByUserId($_SESSION['user']->user_id, 3)
-                ]
+                "pemasukan" => $pemasukan,
+                "pengeluaran" => $pengeluaran,
+                "data_transaksi" => $data_transaksi,
+                "data_tanggungan" => $data_tanggungan,
+                "saldo" => $saldo,
+                "target" => $targetData
             ]);
         }
 

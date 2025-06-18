@@ -34,7 +34,7 @@
                                         id="tanggal_awal" 
                                         name="tanggal_awal" 
                                         class="form-control shadow-sm mb-3" 
-                                        value="<?php echo $tanggal_awal ?>" 
+                                        value="<?php echo htmlspecialchars($tanggal_awal) ?>" 
                                         required
                                     >
                                 </div>
@@ -45,7 +45,7 @@
                                         id="tanggal_akhir" 
                                         name="tanggal_akhir" 
                                         class="form-control shadow-sm" 
-                                        value="<?php echo $tanggal_akhir ?>" 
+                                        value="<?php echo htmlspecialchars($tanggal_akhir) ?>" 
                                         required
                                     >
                                 </div>
@@ -59,7 +59,7 @@
                                     id="catatan" 
                                     rows="5" 
                                     class="form-control shadow-sm h-80"
-                                ><?php echo $catatan ?? null ?></textarea>
+                                ><?php echo htmlspecialchars($catatan) ?? null ?></textarea>
                             </div>
 
                             <input type="hidden" name="laporan_id" value="<?php echo $laporan_id ?>">

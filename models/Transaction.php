@@ -2,7 +2,22 @@
   include_once "models/Model.php";
 
   class Transaction extends Model {
+<<<<<<< HEAD
     
+=======
+
+    public function getRecentTransaction($userId){
+        $query = "SELECT * FROM transaksi t JOIN kategori k ON k.kategori_id = t.kategori_id WHERE t.user_id= ? ORDER BY tanggal_transaksi ASC LIMIT 10";
+
+        $stmt = $this->dbconn->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Mengambil semua kategori milik seorang pengguna
+>>>>>>> 49980600572b20ef3ea281e10794069b57143166
     public function getCategoriesByUser($userId) {
         $query = "SELECT * FROM kategori WHERE user_id= ?";
 
@@ -71,8 +86,12 @@
         $goal_id = !empty($data['target_id']) ? $data['target_id'] : NULL;
         
         $stmt->bind_param(
+<<<<<<< HEAD
             "iissiiii", 
 
+=======
+            "isssiiii", 
+>>>>>>> 49980600572b20ef3ea281e10794069b57143166
             $data['kategori_id'],
             $data['jumlah'],
             $data['keterangan'],
@@ -82,7 +101,16 @@
             $data['transaksi_id'],
             $data['user_id']
         );
-        return $stmt->execute();
+
+        // return $stmt->execute();
+
+        $stmt->execute();
+
+        $affected_rows = $stmt->affected_rows;
+
+        $stmt->close();
+
+        return $affected_rows;
     }
 
     public function deleteTransaction($transactionId, $userId) {
@@ -91,5 +119,30 @@
         $stmt->bind_param("ii", $transactionId, $userId);
         return $stmt->execute();
     }
+
+    // [BARU] Menambahkan metode untuk mendapatkan ringkasan pemasukan dan pengeluaran
+    public function getSummaryByUserId($userId) {
+        $query = "SELECT
+                SUM(CASE WHEN k.tipe = 'pemasukan' THEN t.jumlah ELSE 0 END) as total_pemasukan,
+                SUM(CASE WHEN k.tipe = 'pengeluaran' THEN t.jumlah ELSE 0 END) as total_pengeluaran
+            FROM
+                transaksi AS t
+            JOIN
+                kategori AS k ON t.kategori_id = k.kategori_id
+            WHERE
+                t.user_id = ?
+        ";
+        $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            // Handle error, misalnya dengan logging atau mengembalikan array kosong
+            error_log("Query preparation failed: " . $this->dbconn->error);
+            return ['total_pemasukan' => 0, 'total_pengeluaran' => 0];
+        }
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
   }
 ?>
+
