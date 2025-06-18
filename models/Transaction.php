@@ -134,5 +134,102 @@
         $result = $stmt->get_result();
         return $result->fetch_assoc();
     }
+
+    public function getAllTransactions() {
+        $query = "SELECT 
+                t.transaksi_id,
+                t.tanggal_transaksi,
+                t.jumlah,
+                t.keterangan,
+                u.username,
+                k.kategori,
+                k.tipe
+            FROM 
+                transaksi AS t
+            JOIN 
+                user AS u ON t.user_id = u.user_id
+            JOIN 
+                kategori AS k ON t.kategori_id = k.kategori_id
+            ORDER BY 
+                t.tanggal_transaksi DESC
+        ";
+        $stmt = $this->dbconn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+     // [BARU] Menghapus satu transaksi berdasarkan ID-nya saja (untuk admin)
+    public function deleteTransactionByIdAdmin($transactionId) {
+        $query = "DELETE FROM transaksi WHERE transaksi_id = ?";
+        $stmt = $this->dbconn->prepare($query);
+        $stmt->bind_param("i", $transactionId);
+        return $stmt->execute();
+    }
+
+    public function deleteAllTransactions() {
+        $query = "TRUNCATE TABLE transaksi"; // TRUNCATE lebih efisien daripada DELETE FROM
+        $stmt = $this->dbconn->prepare($query);
+        return $stmt->execute();
+    }
+
+    // [BARU] Update transaksi secara dinamis oleh Admin
+    public function updateTransactionAdmin($transactionId, $data)
+    {
+        $setClauses = [];
+        $types = "";
+        $params = [];
+
+        // Bangun query secara dinamis berdasarkan data yang diterima
+        if (isset($data['tanggal_transaksi'])) {
+            $setClauses[] = "tanggal_transaksi = ?";
+            $types .= "s";
+            $params[] = $data['tanggal_transaksi'];
+        }
+        if (isset($data['user_id'])) {
+            $setClauses[] = "user_id = ?";
+            $types .= "i";
+            $params[] = $data['user_id'];
+        }
+        if (isset($data['kategori_id'])) {
+            $setClauses[] = "kategori_id = ?";
+            $types .= "i";
+            $params[] = $data['kategori_id'];
+        }
+        if (isset($data['keterangan'])) {
+            $setClauses[] = "keterangan = ?";
+            $types .= "s";
+            $params[] = $data['keterangan'];
+        }
+        if (isset($data['jumlah'])) {
+            $setClauses[] = "jumlah = ?";
+            $types .= "d"; // Tipe 'd' untuk double/decimal
+            $params[] = $data['jumlah'];
+        }
+
+        if (empty($setClauses)) {
+            // Tidak ada data untuk diupdate
+            return false;
+        }
+
+        $query = "UPDATE transaksi SET " . implode(", ", $setClauses) . " WHERE transaksi_id = ?";
+        $types .= "i";
+        $params[] = $transactionId;
+
+        $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            error_log("Gagal mempersiapkan statement update: " . $this->dbconn->error);
+            return false;
+        }
+        
+        $stmt->bind_param($types, ...$params);
+
+        try {
+            return $stmt->execute();
+        } catch (mysqli_sql_exception $e) {
+            error_log("Error saat update transaksi admin: " . $e->getMessage());
+            return false;
+        }
+    }
   }
 ?>

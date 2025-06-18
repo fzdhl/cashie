@@ -11,16 +11,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-    href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
     />
     <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <link rel="stylesheet" href="./views/styles/styleCalendar.css" />
     <title>Calendar</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <?php include_once "header.php" ?>
@@ -76,7 +79,12 @@
             <p>Tidak ada transaksi pada tanggal ini.</p>
             <?php else: ?>
             <?php foreach ($transactions as $transaction): ?>
-            <div class="description__row" data-transaction-id="<?= htmlspecialchars($transaction['transaksi_id']) ?>" style="cursor: pointer;" title="Klik untuk ubah">
+            <div
+              class="description__row"
+              data-transaction-id="<?= htmlspecialchars($transaction['transaksi_id']) ?>"
+              style="cursor: pointer"
+              title="Klik untuk ubah"
+            >
               <img src="resources/assets/car-icon.png" class="icon-small" />
               <div class="description__item">
                 <?= htmlspecialchars($transaction['kategori']) ?>

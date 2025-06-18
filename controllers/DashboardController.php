@@ -13,6 +13,7 @@
         public function index() {
 
             $userId = $_SESSION['user']->user_id;
+            $username = $_SESSION['user']->username;
             $transactionModel = $this->loadModel('Transaction');
             $targetModel = $this->loadModel('Target');
             $tanggunganModel = $this->loadModel('Tanggungan');
@@ -38,6 +39,7 @@
             // ]);
 
             $this->loadView("dashboard", [
+                "username" => $username,
                 "pemasukan" => $pemasukan,
                 "pengeluaran" => $pengeluaran,
                 "data_transaksi" => $data_transaksi,

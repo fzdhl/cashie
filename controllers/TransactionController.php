@@ -1,7 +1,7 @@
 <?php
-include_once "controllers/Controller.php";
+  include_once "controllers/Controller.php";
 
-class TransactionController extends Controller {
+  class TransactionController extends Controller {
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -15,8 +15,12 @@ class TransactionController extends Controller {
         }
     }
 
+<<<<<<< HEAD
     public function addProcess() {
         // $this->checkLogin(); // Pastikan login diaktifkan jika diperlukan
+=======
+   public function addProcess() {
+>>>>>>> ec56437a775f3a66b03ad5a47b5d82c90ee0c791
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
         // die(var_dump($_POST)); // Gunakan ini untuk debugging jika perlu melihat data POST
 
@@ -98,11 +102,13 @@ class TransactionController extends Controller {
         exit();
     }
 
+    // ...
     public function updateProcess() {
         $this->checkLogin();
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // [MODIFIKASI] Pastikan bill_id dan goal_id disertakan
             $data = [
                 'transaction_id' => $_POST['transaction_id'],
                 'category_id' => $_POST['category_id'],
@@ -131,6 +137,7 @@ class TransactionController extends Controller {
         echo json_encode($response);
         exit();
     }
+// ...
 
     public function deleteProcess() {
         $this->checkLogin();
@@ -175,4 +182,5 @@ class TransactionController extends Controller {
         echo json_encode($response);
         exit();
     }
-}
+  }
+?>

@@ -16,7 +16,7 @@
           <a class="nav-link text-white" href="?c=TanggunganController&m=index">Tanggungan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=adminLaporanController&m=report">Laporan Keuangan</a>
+          <a class="nav-link text-white" href="?c=LaporanController&m=report">Laporan Keuangan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=adminCalendarController&m=index">Kalender</a>
