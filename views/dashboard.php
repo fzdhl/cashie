@@ -76,6 +76,36 @@
       </div>
 
       <div class="col-lg-4">
+
+        <div class="card border-0 p-3 mb-3">
+          <div class="d-flex justify-content-between mb-3">
+            <strong class="fs-5">Tanggungan</strong>
+          </div>
+
+          <?php
+          $tanggal_sebelumnya = null;
+          foreach ($data_tanggungan as $data1):
+            $tanggal = date('d F Y', strtotime($data1['jadwal_pembayaran']));
+
+            if ($tanggal !== $tanggal_sebelumnya):
+          ?>
+            <h6 class="mt-3 mb-2 text-muted"><?= htmlspecialchars($tanggal) ?></h6>
+          <?php
+            $tanggal_sebelumnya = $tanggal;
+            endif;
+          ?>
+            <div class="d-flex justify-content-between border-bottom py-2">
+              <span><?= htmlspecialchars($data1['tanggungan']) ?></span>
+              <span>Rp<?= number_format($data1['jumlah'], 2, ',', '.') ?></span>
+            </div>
+          <?php endforeach; ?>
+
+          <?php if (empty($data_tanggungan)): ?>
+            <p class="text-muted">Tidak ada tanggungan saat ini.</p>
+          <?php endif; ?>
+        </div>
+
+
         <div class="card border-0 p-3">
           <div class="d-flex justify-content-between">
             <strong>Target</strong><strong>Total: Rp<?=number_format($target['total']['total'], 2, ',', '.')?></strong>
