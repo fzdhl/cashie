@@ -237,7 +237,7 @@
             <label for="edit_bill_id">Pilih Tagihan (Opsional):</label>
             <select id="edit_bill_id" name="bill_id">
               <option value="">Tidak ada</option>
-              <?php foreach ($bills as $bill): ?>
+              <?php foreach ($data['tagihan'] as $bill): ?>
               <option value="<?= $bill['tanggungan_id'] ?>">
                 <?= htmlspecialchars($bill['tanggungan']) ?>
               </option>
@@ -253,7 +253,7 @@
             <label for="edit_goal_id">Pilih Target (Opsional):</label>
             <select id="edit_goal_id" name="goal_id">
               <option value="">Tidak ada</option>
-              <?php foreach ($goals as $goal): ?>
+              <?php foreach ($data['target'] as $goal): ?>
               <option value="<?= $goal['target_id'] ?>">
                 <?= htmlspecialchars($goal['target']) ?>
               </option>

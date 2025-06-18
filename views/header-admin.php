@@ -10,13 +10,13 @@
           <a class="nav-link text-white" href="?c=AdminController&m=index">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=adminKategoriController&m=index">Kategori</a>
+          <a class="nav-link text-white" href="?c=AdminKategoriController&m=index">Kategori</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=TanggunganController&m=index">Tanggungan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=adminDashboardController&m=report">Laporan Keuangan</a>
+          <a class="nav-link text-white" href="?c=adminLaporanController&m=report">Laporan Keuangan</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=adminCalendarController&m=index">Kalender</a>
