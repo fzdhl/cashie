@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=adminDashboardController&m=index">Dashboard</a>
+          <a class="nav-link text-white" href="?c=AdminController&m=index">Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=adminKategoriController&m=index">Kategori</a>
@@ -25,7 +25,7 @@
           <a class="nav-link text-white" href="?c=adminTargetController&m=index">Target</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=amdinArsipController&m=index">Arsip</a>
+          <a class="nav-link text-white" href="?c=AdminArsipController&m=index">Arsip</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
