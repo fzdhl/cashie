@@ -2,9 +2,7 @@
   include_once "models/Model.php";
 
   class Transaction extends Model {
-<<<<<<< HEAD
     
-=======
 
     public function getRecentTransaction($userId){
         $query = "SELECT * FROM transaksi t JOIN kategori k ON k.kategori_id = t.kategori_id WHERE t.user_id= ? ORDER BY tanggal_transaksi ASC LIMIT 10";
@@ -17,7 +15,6 @@
     }
 
     // Mengambil semua kategori milik seorang pengguna
->>>>>>> 49980600572b20ef3ea281e10794069b57143166
     public function getCategoriesByUser($userId) {
         $query = "SELECT * FROM kategori WHERE user_id= ?";
 
@@ -86,12 +83,8 @@
         $goal_id = !empty($data['target_id']) ? $data['target_id'] : NULL;
         
         $stmt->bind_param(
-<<<<<<< HEAD
             "iissiiii", 
 
-=======
-            "isssiiii", 
->>>>>>> 49980600572b20ef3ea281e10794069b57143166
             $data['kategori_id'],
             $data['jumlah'],
             $data['keterangan'],
