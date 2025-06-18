@@ -10,7 +10,7 @@
           <a class="nav-link text-white" href="?c=AdminController&m=index">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="?c=adminKategoriController&m=index">Kategori</a>
+          <a class="nav-link text-white" href="?c=AdminKategoriController&m=index">Kategori</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="?c=TanggunganController&m=index">Tanggungan</a>
