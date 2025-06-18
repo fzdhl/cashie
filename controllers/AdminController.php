@@ -8,8 +8,15 @@
         }
 
         public function index() {
+            $privilege = $_SESSION['user']->privilege;
             $model = $this->loadModel('User');
-            $users = $model->getAll();
+            if($privilege == "admin"){
+                $users = $model->getAllUser();
+            }
+            else if($privilege == "owner"){
+                $users = $model->getAll();
+            }
+            
             $this->loadView('admin', ['users' => $users]);
         }
 
@@ -30,7 +37,12 @@
             $username = $_POST['username'];
 
             $model = $this->loadModel('User');
-            $user = $model->updateUser($user_id, $username, $password, $email);
+            if(empty($password)){
+                $user = $model->updateUser($user_id, $username, $email);
+            }
+            else{
+                $user = $model->updateDataUser($user_id, $username, $password, $email);
+            }
 
             echo json_encode(['status' => 'success']);
             header('Location: ?c=AdminController&m=index');

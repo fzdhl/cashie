@@ -7,48 +7,6 @@
             }
         }
 
-        // public function addLaporan() {
-        //     $model = $this->loadModel("Laporan");
-        //     $session = $_SESSION['user'];
-
-        //     if(isset($_POST['user_id'])){
-        //         $user_id = $_POST['user_id'];
-        //     }
-        //     else{
-        //         $username = $session->username;
-                
-        //         $userTable = $model->getByUsername($username);
-        //         $user_id = $userTable->user_id;
-        //     }
-            
-        //     $tanggal_awal = $_POST['tanggal_awal'] ?? null;
-        //     $tanggal_akhir = $_POST['tanggal_akhir'] ?? null;
-        //     $catatan = $_POST['catatan'] ?? '';
-
-        //     $errorMsg = $this->cekTanggalLaporan($tanggal_awal, $tanggal_akhir);
-        //     if ($errorMsg) {
-        //         $error['error_addlaporan'] = $errorMsg;
-        //     }
-
-        //     if(!($model->cekID($user_id))){
-        //         $error['error_userID'] = "User ID tidak ditemukan";
-        //     }
-
-        //     if (isset($error)) {
-        //         if($session->privilege == 'admin'){
-        //             $this->adminReport($error);
-        //         }
-        //         else $this->report($error);
-        //     } else {
-        //         $model->insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan);
-        //         header("Location: ?c=LaporanController&m=report");
-        //         exit;
-        //     }
-        // }
-        
-        
-
-
         public function adminReport($error = []){
             $username = $_SESSION['user'];
             if($username->privilege != 'admin'){
@@ -81,48 +39,24 @@
                 $this->setLaporanType($laporan_Type, $laporan_id);
 
                 $transactionData = $this->getTransactionMingguan($laporan_id, $username, 'Pemasukan');
-                // if($averagePemasukan = $this->calcAverageData($transactionData)){
-                //     $averagePemasukan = $this->calcAverageData($transactionData);
-                // }
-                // else $averagePemasukan = 0;
 
-                $dateAndTotal = $this->setDateAndTotalMingguan($transactionData, $laporan_id);
-                $datePemasukan = $dateAndTotal['date'];
-                $totalPemasukan = $dateAndTotal['total'];
+                $dataPemasukan = $this->setDateAndTotalMingguan($transactionData, $laporan_id);
                 $listPemasukan = $this->getFullTableMingguan($laporan_id, $username, 'Pemasukan');
 
                 $transactionData = $this->getTransactionMingguan($laporan_id, $username, 'Pengeluaran');
-                // if($averagePengeluaran = $this->calcAverageData($transactionData)){
-                //     $averagePengeluaran = $this->calcAverageData($transactionData);
-                // }
-                // else $averagePengeluaran = 0;
 
-                $dateAndTotal = $this->setDateAndTotalMingguan($transactionData, $laporan_id);
-                $datePengeluaran = $dateAndTotal['date'];
-                $totalPengeluaran = $dateAndTotal['total'];
+                $dataPengeluaran = $this->setDateAndTotalMingguan($transactionData, $laporan_id);
                 $listPengeluaran = $this->getFullTableMingguan($laporan_id, $username, 'Pengeluaran');
             }
             else{
                 $transactionData = $this->getTransactionData($username, $selectedMonth, $selectedYear, "Pemasukan");
-                // $averagePemasukan = $this->calcAverageData($transactionData);
-                // if($averagePemasukan = $this->calcAverageData($transactionData)){
-                //     $averagePemasukan = $this->calcAverageData($transactionData);
-                // }
-                // else $averagePemasukan = 0;
                 
-                $dateAndTotal = $this->setDateAndTotal($transactionData, $selectedMonth, $selectedYear);
-                $datePemasukan = $dateAndTotal['date'];
-                $totalPemasukan = $dateAndTotal['total'];
+                $dataPemasukan = $this->setDateAndTotal($transactionData, $selectedMonth, $selectedYear);
                 $listPemasukan = $this->getFullTableBy($username, $selectedMonth, $selectedYear, "Pemasukan");
 
                 $transactionData = $this->getTransactionData($username, $selectedMonth, $selectedYear, "Pengeluaran");
-                // if($averagePengeluaran = $this->calcAverageData($transactionData)){
-                //     $averagePengeluaran = $this->calcAverageData($transactionData);
-                // }
-                // else $averagePengeluaran = 0;
-                $dateAndTotal = $this->setDateAndTotal($transactionData, $selectedMonth, $selectedYear);
-                $datePengeluaran = $dateAndTotal['date'];
-                $totalPengeluaran = $dateAndTotal['total'];
+
+                $dataPengeluaran = $this->setDateAndTotal($transactionData, $selectedMonth, $selectedYear);
                 $listPengeluaran = $this->getFullTableBy($username, $selectedMonth, $selectedYear, "Pengeluaran");
             }
             
@@ -133,17 +67,13 @@
                 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
             ];
 
-            $listLaporanMingguan = $this->getTableLaporanMingguan($username);
-
             $data = [
                 'username' => $username,
                 'selectedMonth' => $selectedMonth,
                 'selectedYear' => $selectedYear,
                 'transactionData' => $transactionData,
-                'datePemasukan' => $datePemasukan,
-                'totalPemasukan' => $totalPemasukan,
-                'datePengeluaran' => $datePengeluaran,
-                'totalPengeluaran' => $totalPengeluaran,
+                'dataPemasukan' => $dataPemasukan,
+                'dataPengeluaran' => $dataPengeluaran,
                 'listPemasukan' => $listPemasukan,
                 'listPengeluaran' => $listPengeluaran,
                 'bulanList' => $bulanList
@@ -243,14 +173,6 @@
                 $listLaporanMingguan = $model->getDaftarLaporan($user_id);
                 include "views/laporan/listLaporan.php";
             }  
-        }
-
-        public function getTableLaporanMingguan($username){
-            $model = $this->loadModel("Laporan");
-            $user = $model->getByUsername($username);
-            $user_id = $user->user_id;
-            $listLaporanMingguan = $model->getDaftarLaporan($user_id);
-            return $listLaporanMingguan;
         }
 
         public function getFullTableBy($username, $selectedMonth, $selectedYear, $reportType){
@@ -353,7 +275,7 @@
             if (isset($error)) {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => implode(', ', $error) // bisa lebih detail jika perlu
+                    'message' => implode(', ', $error)
                 ]);
             } else {
                 $model->insertLaporanMingguan($user_id, $tanggal_awal, $tanggal_akhir, $catatan);
@@ -362,16 +284,6 @@
 
             exit;
         }
-
-
-        // public function deleteLaporan(){
-        //     $laporan_id = $_POST['laporan_id'];
-
-        //     $model = $this->loadModel("Laporan");
-
-        //     $model->deleteLaporan($user_id, $laporan_id);
-        //     header("Location: ?c=LaporanController&m=report");
-        // }
 
         public function deleteLaporan() {
             header('Content-Type: application/json');
