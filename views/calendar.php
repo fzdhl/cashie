@@ -1,5 +1,4 @@
 <?php
-    // Memberikan nilai default untuk mencegah warning "Undefined variable"
     $selected_date = $selected_date ?? date('Y-m-d');
     $summary = $summary ?? ['expense' =>
 0, 'income' => 0, 'balance' => 0, 'total' => 0]; $transactions = $transactions
@@ -110,7 +109,6 @@
       </button>
     </main>
 
-    <!-- ADD -->
     <div id="addTransactionModal" class="modal">
       <div class="modal-content">
         <span class="close-btn">&times;</span>
@@ -213,7 +211,6 @@
             <label for="editDate">Tanggal:</label>
             <input type="date" id="editDate" name="date" required />
           </div>
-
           <div class="form-group">
             <label for="editTransactionCategory">Kategori Transaksi:</label>
             <select id="editTransactionCategory" name="category_id" required>

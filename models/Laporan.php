@@ -74,11 +74,7 @@
         }
 
         public function getLaporanMingguan($laporan_id, $reportType, $username) {
-            $query = "SELECT DAY(ck.tanggal_transaksi) AS hari, 
-                CASE 
-                    WHEN k.tipe = 'pengeluaran' THEN -1 * SUM(ck.jumlah)
-                    ELSE SUM(ck.jumlah)
-                END AS total_harian
+            $query = "SELECT DAY(ck.tanggal_transaksi) AS hari, SUM(ck.jumlah) AS total_harian
                 FROM transaksi ck
                 JOIN user u ON ck.user_id = u.user_id
                 JOIN laporan l ON l.user_id = u.user_id AND l.laporan_id = ?
@@ -122,11 +118,7 @@
         }
 
         public function getLaporanBulanan($username, $selectedMonth, $selectedYear, $reportType){
-            $stmt = $this->dbconn->prepare("SELECT DAY(tanggal_transaksi) AS hari, 
-                CASE 
-                    WHEN k.tipe = 'pengeluaran' THEN -1 * SUM(jumlah)
-                    ELSE SUM(jumlah)
-                    END AS total_harian
+            $stmt = $this->dbconn->prepare("SELECT DAY(tanggal_transaksi) AS hari, SUM(jumlah) AS total_harian
                 FROM transaksi ck 
                 JOIN user u ON ck.user_id = u.user_id
                 JOIN kategori k ON ck.kategori_id = k.kategori_id 
