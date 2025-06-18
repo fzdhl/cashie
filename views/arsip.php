@@ -12,7 +12,7 @@
 <body>
   <?php include_once "header.php" ?>
 
-  <div class="container py-4">
+  <div class="container py-4" id="main">
     <h2 class="mb-4 text-center text-md-start">Arsip Struk</h2>
 
     <div class="card p-3 mb-4 shadow-sm">
