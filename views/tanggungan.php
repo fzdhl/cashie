@@ -254,7 +254,6 @@
         if (response.headers.get('content-type')?.includes('application/json')) {
           const result = await response.json();
           if (response.ok && result.isSuccess) {
-            alert('Tanggungan berhasil dihapus!');
             window.location.reload();
           } else {
             alert('Gagal menghapus tanggungan: ' + (result.info || 'Terjadi kesalahan tidak dikenal.'));
@@ -286,7 +285,6 @@
             });
 
             if (response.ok || response.redirected) {
-                alert('Semua status tanggungan berhasil direset!');
                 window.location.reload();
             } else {
                 alert('Gagal mereset semua tanggungan. Terjadi kesalahan server.');
@@ -384,7 +382,6 @@
         }
 
         if (allSuccess && updates.length > 0) {
-            alert('Semua perubahan tanggungan berhasil diproses!');
         } else if (successCount > 0 && errorMessages.length > 0) {
             alert('Beberapa perubahan tanggungan berhasil diproses, namun ada kesalahan:\n' + errorMessages.join('\n'));
         } else if (updates.length === 0) {
@@ -424,7 +421,6 @@
             });
             const result = await response.json();
             if (response.ok && result.isSuccess) {
-                alert('Tanggungan baru berhasil ditambahkan!');
                 const addTanggunganModal = bootstrap.Modal.getInstance(document.getElementById('addTanggunganModal'));
                 addTanggunganModal.hide();
                 form.reset();
