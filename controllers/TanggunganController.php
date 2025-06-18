@@ -25,11 +25,14 @@ class TanggunganController extends Controller
 
         if ($this->isAdmin()) {
             $tanggungan = $model->getAll();
+            // Untuk admin, mungkin Anda masih ingin melihat semua kategori atau menambahkan filter terpisah jika diperlukan
+            // Untuk tujuan ini, kita akan tetap mengambil semua kategori untuk admin.
             $categories = $kategoriModel->getAllCategoriesByUser(null); 
         } else {
             $id_user = $_SESSION['user']->user_id;
             $tanggungan = $model->getByUser($id_user);
-            $categories = $kategoriModel->getAllCategoriesByUser($id_user); 
+            // Ambil hanya kategori dengan tipe 'pengeluaran' untuk pengguna biasa
+            $categories = $kategoriModel->getCategoriesByUserAndType($id_user, 'pengeluaran');
         }
 
         $this->loadView("tanggungan", [
