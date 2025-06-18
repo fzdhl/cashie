@@ -1,7 +1,7 @@
 <?php
-include_once "controllers/Controller.php";
+  include_once "controllers/Controller.php";
 
-class TransactionController extends Controller {
+  class TransactionController extends Controller {
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -9,13 +9,13 @@ class TransactionController extends Controller {
     }
 
     private function checkLogin() {
-        if (!isset($_SESSION['user']->user_id)) { 
+        if (!isset($_SESSION['user']->user_id)) { /*user_id*/
             header('Location: ?c=UserController&m=loginView');
             exit();
         }
     }
 
-    public function addProcess() {
+   public function addProcess() {
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -58,7 +58,7 @@ class TransactionController extends Controller {
         echo json_encode($response);
         exit();
     }
-    
+
     public function getTransaction() {
         $this->checkLogin();
         
@@ -82,11 +82,13 @@ class TransactionController extends Controller {
         exit();
     }
 
+    // ...
     public function updateProcess() {
         $this->checkLogin();
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // [MODIFIKASI] Pastikan bill_id dan goal_id disertakan
             $data = [
                 'transaction_id' => $_POST['transaction_id'],
                 'category_id' => $_POST['category_id'],
@@ -122,6 +124,7 @@ class TransactionController extends Controller {
         echo json_encode($response);
         exit();
     }
+// ...
 
     public function deleteProcess() {
         $this->checkLogin();
@@ -142,4 +145,5 @@ class TransactionController extends Controller {
         echo json_encode($response);
         exit();
     }
-}
+  }
+?>
