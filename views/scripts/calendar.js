@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableHTML = '<p>Tidak ada transaksi pada tanggal ini.</p>';
             } else {
                 data.transactions.forEach(transaction => {
-                    const amountColor = (transaction.type.toLowerCase().includes('pemasukan') || transaction.type.toLowerCase().includes('income')) ? 'green' : '#c5172e';
+                    const amountColor = (transaction.tipe.toLowerCase().includes('pemasukan') || transaction.tipe.toLowerCase().includes('income')) ? 'green' : '#c5172e';
                     // Baris di bawah ini diberi data-transaction-id dan cursor pointer
                     tableHTML += `
                         <div class="description__row" data-transaction-id="${transaction.transaction_id}" style="cursor: pointer;" title="Klik untuk ubah">
@@ -188,8 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const submitButton = addForm.querySelector('.btn-submit-transaction');
         submitButton.textContent = 'Menyimpan...';
         submitButton.disabled = true;
-
-        fetch('?c=TransactionController&m=addProcess', { method: 'POST', body: formData })
+        
+        fetch('?c=TransactionController&m=addProcess', { method: 'POST', body: formData, })
             .then(response => response.json())
             .then(data => {
                 alert(data.message);

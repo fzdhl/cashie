@@ -49,7 +49,7 @@
       }
       
       $calendarModel = $this->loadModel('Calendar');
-      $userId = $_SESSION['user_id'];
+      $userId = $_SESSION['user']->user_id;
       $data = $calendarModel->getTransactionsByDate($date, $userId);
 
       header('Content-Type: application/json'); //Mengatur header respons untuk memberitahu browser bahwa data yang dikirim adalah format JSON.

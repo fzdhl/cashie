@@ -47,7 +47,7 @@
 
         // Tipe data disesuaikan dengan skema: user(i), category(i), amount(d), note(s), date(s), bill(i), goal(i)
         $stmt->bind_param(
-            "idssii",
+            "iiissii",
             $data['user_id'],
             $data['kategori_id'],
             $data['jumlah'],

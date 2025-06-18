@@ -9,7 +9,7 @@
     }
 
     private function checkLogin() {
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user']->user_id)) { /*user_id*/
             header('Location: ?c=UserController&m=loginView');
             exit();
         }
@@ -18,8 +18,6 @@
     public function addProcess() {
         // $this->checkLogin();
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
-        
-        die(var_dump($_SERVER['REQUEST_METHOD']));
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // [MODIFIKASI] Tangkap bill_id dan goal_id dari POST
@@ -28,7 +26,7 @@
                 'jumlah' => $_POST['amount'],
                 'keterangan' => $_POST['note'],
                 'date' => $_POST['date'],
-                'user_id' => $_SESSION['user_id'],
+                'user_id' => $_SESSION['user']->user_id, /*user_id*/
                 'tagihan_id' => isset($_POST['bill_id']) ? $_POST['bill_id'] : null,
                 'target_id' => isset($_POST['goal_id']) ? $_POST['goal_id'] : null
             ];
@@ -42,7 +40,6 @@
         }
         
         header('Content-Type: application/json');
-        die(var_dump($response));
         echo json_encode($response);
         exit();
     }
