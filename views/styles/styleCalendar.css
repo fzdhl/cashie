@@ -402,7 +402,18 @@ main.container {
   margin-bottom: 20px;
 }
 
+#editTransactionForm .form-group {
+  margin-bottom: 20px;
+}
+
 #transactionForm label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+#editTransactionForm label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
@@ -421,6 +432,18 @@ main.container {
   font-size: 0.95em;
 }
 
+#editTransactionForm input[type="number"],
+#editTransactionForm select,
+#editTransactionForm textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95em;
+}
+
 #transactionForm input[type="number"]:focus,
 #transactionForm select:focus,
 #transactionForm textarea:focus {
@@ -429,7 +452,20 @@ main.container {
   box-shadow: 0 0 0 0.2rem rgba(106, 156, 137, 0.25);
 }
 
+#editTransactionForm input[type="number"]:focus,
+#editTransactionForm select:focus,
+#editTransactionForm textarea:focus {
+  border-color: #6A9C89;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(106, 156, 137, 0.25);
+}
+
 #transactionForm textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+#editTransactionForm textarea {
   resize: vertical;
   min-height: 80px;
 }
@@ -452,3 +488,30 @@ main.container {
   background-color: #5a8c79; /* Warna sedikit lebih gelap saat hover */
 }
 
+.form-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 500;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* Penyesuaian untuk tombol simpan di dalam .form-buttons */
+.form-buttons .btn-submit-transaction {
+  width: 100%;
+}

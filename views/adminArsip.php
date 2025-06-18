@@ -9,33 +9,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="views/styles/arsip.css" rel="stylesheet"> <link href="views/styles/admin.css" rel="stylesheet"> </head>
 <body>
-  <?php include_once "header-admin.php" ?> <div class="container py-4">
+  <?php include_once "header-admin.php" ?> <div class="container py-4" id="main">
     <h2 class="mb-4 text-center text-md-start">Kelola Arsip Struk <small class="text-muted">(Admin)</small></h2>
-
-    <?php // Form upload dihapus karena admin tidak lagi bisa mengupload data. ?>
-    <?php /*
-    <div class="card p-3 mb-4 shadow-sm">
-        <h5 class="mb-3">Upload Struk Baru (Oleh Admin)</h5>
-        <form action="?c=AdminArsipController&m=upload" method="post" enctype="multipart/form-data" class="row g-3">
-            <div class="col-md-4">
-                <label for="userId" class="form-label">ID Pengguna</label>
-                <input type="number" name="user_id" id="userId" class="form-control" placeholder="ID Pengguna" required>
-            </div>
-            <div class="col-md-4">
-                <label for="strukFile" class="form-label">Pilih File Struk (JPG, PNG, PDF)</label>
-                <input type="file" name="struk" id="strukFile" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required>
-            </div>
-            <div class="col-md-4">
-                <label for="descriptionInput" class="form-label">Deskripsi Struk</label>
-                <input type="text" name="description" id="descriptionInput" class="form-control" placeholder="Contoh: Struk belanja bulanan" required>
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-success w-100">Upload Struk</button>
-            </div>
-        </form>
-    </div>
-    */ ?>
-
     <div class="card p-3 shadow-sm">
         <h5 class="mb-3">Daftar Semua Arsip</h5>
         <?php if (isset($arsipList) && is_object($arsipList) && $arsipList->num_rows > 0): ?>

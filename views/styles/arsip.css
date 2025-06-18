@@ -7,6 +7,10 @@ body {
     min-height: 100vh;
 }
 
+#main {
+    flex: 1;
+}
+
 .container {
     padding-top: 20px; /* Added for consistent top padding */
     padding-bottom: 20px; /* Added for consistent bottom padding */

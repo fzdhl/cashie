@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.status === 'success') {
                 const t = result.data;
-                document.getElementById('editTransactionId').value = t.transaksi;
+                document.getElementById('editTransactionId').value = t.transaksi_id;
                 document.getElementById('editDate').value = t.tanggal_transaksi;
                 document.getElementById('editTransactionCategory').value = t.kategori_id;
                 document.getElementById('editAmount').value = t.jumlah;

@@ -4,6 +4,7 @@
     $summary = $summary ?? ['expense' =>
 0, 'income' => 0, 'balance' => 0, 'total' => 0]; $transactions = $transactions
 ?? []; ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -64,7 +65,7 @@
             <div class="description__money" id="description-date">
               <?php
                     $date = new DateTime($selected_date);
-                    echo $date->format('d F Y'); ?>
+                    echo $date->format(format: 'd F Y'); ?>
             </div>
             <div class="description__datenow" id="description-total">
               Rp<?= number_format($summary['total'] ?? 0, 0, ',', '.') ?>
@@ -75,7 +76,7 @@
             <p>Tidak ada transaksi pada tanggal ini.</p>
             <?php else: ?>
             <?php foreach ($transactions as $transaction): ?>
-            <div class="description__row">
+            <div class="description__row" data-transaction-id="<?= htmlspecialchars($transaction['transaksi_id']) ?>" style="cursor: pointer;" title="Klik untuk ubah">
               <img src="resources/assets/car-icon.png" class="icon-small" />
               <div class="description__item">
                 <?= htmlspecialchars($transaction['kategori']) ?>
@@ -130,6 +131,7 @@
               required
             />
           </div>
+
           <div class="form-group">
             <label for="transactionCategory">Kategori Transaksi:</label>
             <select id="transactionCategory" name="category_id" required>
@@ -216,7 +218,7 @@
             <label for="editTransactionCategory">Kategori Transaksi:</label>
             <select id="editTransactionCategory" name="category_id" required>
               <option value="" disabled>Pilih Kategori</option>
-              <?php foreach ($categories as $category): ?>
+              <?php foreach ($data['kategori'] as $category): ?>
               <option
                 value="<?= $category['kategori_id'] ?>"
                 data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"

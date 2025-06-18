@@ -10,7 +10,7 @@
 <body>
   <?php include_once "header-admin.php" ?>
 
-  <div class="container py-5">
+  <div class="container py-5" id="main">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2>Kelola Akun</h2>
       <a href="?c=DashboardController&m=logout" class="btn btn-success">Keluar</a>

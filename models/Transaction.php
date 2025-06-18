@@ -80,7 +80,7 @@
         $goal_id = !empty($data['target_id']) ? $data['target_id'] : NULL;
         
         $stmt->bind_param(
-            "idssii", // Tipe data: amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
+            "iissiiii", // Tipe data: amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
             // Saya ralat urutan dan tipe bind_param agar sesuai query
             // category(i), amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
             $data['kategori_id'],
