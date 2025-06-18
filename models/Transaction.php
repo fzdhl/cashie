@@ -45,7 +45,6 @@
         $bill_id = !empty($data['tagihan_id']) ? $data['tagihan_id'] : NULL;
         $goal_id = !empty($data['target_id']) ? $data['target_id'] : NULL;
 
-        // Tipe data disesuaikan dengan skema: user(i), category(i), amount(d), note(s), date(s), bill(i), goal(i)
         $stmt->bind_param(
             "iiissii",
             $data['user_id'],
@@ -80,9 +79,7 @@
         $goal_id = !empty($data['target_id']) ? $data['target_id'] : NULL;
         
         $stmt->bind_param(
-            "iissiiii", // Tipe data: amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
-            // Saya ralat urutan dan tipe bind_param agar sesuai query
-            // category(i), amount(d), note(s), date(s), bill(i), goal(i), transaction_id(i), user_id(i)
+            "isssiiii", 
             $data['kategori_id'],
             $data['jumlah'],
             $data['keterangan'],
@@ -92,7 +89,16 @@
             $data['transaksi_id'],
             $data['user_id']
         );
-        return $stmt->execute();
+
+        // return $stmt->execute();
+
+        $stmt->execute();
+
+        $affected_rows = $stmt->affected_rows;
+
+        $stmt->close();
+
+        return $affected_rows;
     }
 // ...
 

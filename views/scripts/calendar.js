@@ -31,14 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentDate = new Date();
 
-    if (descriptionTableEl) {
-        descriptionTableEl.addEventListener('click', (event) => {
-            const row = event.target.closest('.description__row');
-            if (row && row.dataset.transactionId) {
-                openEditModal(row.dataset.transactionId);
-            }
-        });
-    }
+    // if (descriptionTableEl) {
+    //     descriptionTableEl.addEventListener('click', (event) => {
+    //         const row = event.target.closest('.description__row');
+    //         if (row && row.dataset.transactionId) {
+    //             openEditModal(row.dataset.transactionId);
+    //         }
+    //     });
+    // }
 
     // =================================================================
     // FUNGSI UTAMA KALENDER & RENDER TAMPILAN
@@ -290,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     editModal.style.display = 'none';
                     const activeDate = document.querySelector('.date.active');
                     if (activeDate) fetchAndDisplayTransactions(activeDate.dataset.fulldate);
+                    // location.reload();
                 }
             })
             .catch(err => alert('Terjadi kesalahan.'));
