@@ -113,5 +113,4 @@ class Kategori extends Model {
         return $stmt->execute();
     }
 }
-}
 ?>
