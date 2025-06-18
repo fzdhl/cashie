@@ -20,6 +20,7 @@
             $pemasukan = $summary['total_pemasukan'] ?? 0;
             $pengeluaran = $summary['total_pengeluaran'] ?? 0;
             $saldo = $pemasukan - $pengeluaran;
+            $data_transaksi = $transactionModel->getRecentTransaction($userId) ;
 
             // Mengambil data target
             $targetData = [
@@ -37,6 +38,7 @@
             $this->loadView("dashboard", [
                 "pemasukan" => $pemasukan,
                 "pengeluaran" => $pengeluaran,
+                "data_transaksi" => $data_transaksi,
                 "saldo" => $saldo,
                 "target" => $targetData
             ]);

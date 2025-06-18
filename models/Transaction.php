@@ -2,7 +2,17 @@
   include_once "models/Model.php";
 
   class Transaction extends Model {
-    
+
+    public function getRecentTransaction($userId){
+        $query = "SELECT * FROM transaksi t JOIN kategori k ON k.kategori_id = t.kategori_id WHERE t.user_id= ? ORDER BY tanggal_transaksi ASC LIMIT 10";
+
+        $stmt = $this->dbconn->prepare($query);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
     // Mengambil semua kategori milik seorang pengguna
     public function getCategoriesByUser($userId) {
         // $query = "SELECT kategori_id, kategori, tipe FROM kategori WHERE user_id = ?";
