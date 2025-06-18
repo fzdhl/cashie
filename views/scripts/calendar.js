@@ -31,6 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentDate = new Date();
 
+    if (descriptionTableEl) {
+        descriptionTableEl.addEventListener('click', (event) => {
+            const row = event.target.closest('.description__row');
+            if (row && row.dataset.transactionId) {
+                openEditModal(row.dataset.transactionId);
+            }
+        });
+    }
+
     // =================================================================
     // FUNGSI UTAMA KALENDER & RENDER TAMPILAN
     // =================================================================
@@ -61,12 +70,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const amountColor = (transaction.tipe.toLowerCase().includes('pemasukan') || transaction.tipe.toLowerCase().includes('income')) ? 'green' : '#c5172e';
                     // Baris di bawah ini diberi data-transaction-id dan cursor pointer
                     tableHTML += `
-                        <div class="description__row" data-transaction-id="${transaction.transaction_id}" style="cursor: pointer;" title="Klik untuk ubah">
+                        <div class="description__row" data-transaction-id="${transaction.transaksi_id}" style="cursor: pointer;" title="Klik untuk ubah">
                             <img src="resources/assets/car-icon.png" class="icon-small" />
-                            <div class="description__item">${transaction.category}</div>
+                            <div class="description__item">${transaction.kategori}</div>
                             <div class="description__item" style="color: ${amountColor};">
-                                ${formatCurrency(transaction.amount)}
-                                ${transaction.note ? `<div class="description__timestamp">${transaction.note}</div>` : ''}
+                                ${formatCurrency(transaction.jumlah)}
+                                ${transaction.keterangan ? `<div class="description__timestamp">${transaction.keterangan}</div>` : ''}
                             </div>
                         </div>
                     `;
@@ -227,13 +236,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (result.status === 'success') {
                 const t = result.data;
-                document.getElementById('editTransactionId').value = t.transaction_id;
-                document.getElementById('editDate').value = t.date;
-                document.getElementById('editTransactionCategory').value = t.category_id;
-                document.getElementById('editAmount').value = t.amount;
-                document.getElementById('editNote').value = t.note;
-                document.getElementById('edit_bill_id').value = t.bill_id || '';
-                document.getElementById('edit_goal_id').value = t.goal_id || '';
+                document.getElementById('editTransactionId').value = t.transaksi;
+                document.getElementById('editDate').value = t.tanggal_transaksi;
+                document.getElementById('editTransactionCategory').value = t.kategori_id;
+                document.getElementById('editAmount').value = t.jumlah;
+                document.getElementById('editNote').value = t.keterangan;
+                document.getElementById('edit_bill_id').value = t.tanggungan_id || '';
+                document.getElementById('edit_goal_id').value = t.target_id || '';
                 editCategorySelect.dispatchEvent(new Event('change'));
                 editModal.style.display = 'block';
             } else {
