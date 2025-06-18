@@ -108,5 +108,30 @@
         $stmt->bind_param("ii", $transactionId, $userId);
         return $stmt->execute();
     }
+
+    // [BARU] Menambahkan metode untuk mendapatkan ringkasan pemasukan dan pengeluaran
+    public function getSummaryByUserId($userId) {
+        $query = "SELECT
+                SUM(CASE WHEN k.tipe = 'pemasukan' THEN t.jumlah ELSE 0 END) as total_pemasukan,
+                SUM(CASE WHEN k.tipe = 'pengeluaran' THEN t.jumlah ELSE 0 END) as total_pengeluaran
+            FROM
+                transaksi AS t
+            JOIN
+                kategori AS k ON t.kategori_id = k.kategori_id
+            WHERE
+                t.user_id = ?
+        ";
+        $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            // Handle error, misalnya dengan logging atau mengembalikan array kosong
+            error_log("Query preparation failed: " . $this->dbconn->error);
+            return ['total_pemasukan' => 0, 'total_pengeluaran' => 0];
+        }
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
   }
 ?>
+
