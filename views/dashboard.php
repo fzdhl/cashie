@@ -21,19 +21,19 @@
       <div class="col-md-4">
         <div class="text-center p-4 summary-card">
           <h5 class="text-muted">Pengeluaran</h5>
-          <p class="text-danger fw-bold">Rp2.000.000</p>
+          <p class="text-danger fw-bold">Rp<?= number_format($pengeluaran ?? 0, 0, ',', '.') ?></p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="text-center p-4 summary-card">
           <h5 class="text-muted">Pemasukan</h5>
-          <p class="text-success fw-bold">Rp5.000.000</p>
+          <p class="text-success fw-bold">Rp<?= number_format($pemasukan ?? 0, 0, ',', '.') ?>  </p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="text-center p-4 summary-card">
           <h5 class="text-muted">Saldo</h5>
-          <p class="text-warning fw-bold">Rp3.000.000</p>
+          <p class="text-warning fw-bold">Rp<?= number_format($saldo ?? 0, 0, ',', '.') ?></p>
         </div>
       </div>
     </div>
