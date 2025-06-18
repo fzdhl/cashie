@@ -218,10 +218,10 @@
               <option value="" disabled>Pilih Kategori</option>
               <?php foreach ($categories as $category): ?>
               <option
-                value="<?= $category['category_id'] ?>"
-                data-type="<?= htmlspecialchars(strtolower(trim($category['type']))) ?>"
+                value="<?= $category['kategori_id'] ?>"
+                data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"
               >
-                <?= htmlspecialchars($category['category']) ?>
+                <?= htmlspecialchars($category['kategori']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -236,8 +236,8 @@
             <select id="edit_bill_id" name="bill_id">
               <option value="">Tidak ada</option>
               <?php foreach ($bills as $bill): ?>
-              <option value="<?= $bill['bill_id'] ?>">
-                <?= htmlspecialchars($bill['bill']) ?>
+              <option value="<?= $bill['tanggungan_id'] ?>">
+                <?= htmlspecialchars($bill['tanggungan']) ?>
               </option>
               <?php endforeach; ?>
             </select>
@@ -252,8 +252,8 @@
             <select id="edit_goal_id" name="goal_id">
               <option value="">Tidak ada</option>
               <?php foreach ($goals as $goal): ?>
-              <option value="<?= $goal['goal_id'] ?>">
-                <?= htmlspecialchars($goal['goal']) ?>
+              <option value="<?= $goal['target_id'] ?>">
+                <?= htmlspecialchars($goal['target']) ?>
               </option>
               <?php endforeach; ?>
             </select>
