@@ -50,6 +50,10 @@
         <div class="bg-white p-4 rounded shadow-sm">
           <div class="d-flex justify-content-between mb-3">
             <strong class="fs-5">Transaksi</strong>
+            
+            <div class="action-group">
+              <a href="?c=CalendarController&m=index"><button class="btn btn-success">Tambah transaksi</button></a>
+            </div>
           </div>
           <?php
           $tanggal_sebelumnya = null;
