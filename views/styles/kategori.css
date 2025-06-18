@@ -167,7 +167,7 @@ body {
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   overflow: hidden;
-  padding: 1.25rem; /* Use rem */
+  padding: 2rem; /* Use rem */
   min-height: 9.375rem; /* Use rem */
   display: block;
   border: 1px solid #e0e0e0;

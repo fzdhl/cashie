@@ -111,10 +111,9 @@
                   <td><input type="date" name="jadwal_pembayaran_<?= $tanggunganId ?>" class="form-control form-control-sm" value="<?= $jadwalPembayaran ?>" <?= $inputDisabled ?>></td>
                                             
                   <td>
-                      <?php if (isset($isAdmin) && $isAdmin): // Jika admin, tampilkan sebagai teks statis?>
+                      <?php if (isset($isAdmin) && $isAdmin): ?>
                           <span class="form-control form-control-sm border-0 bg-transparent">
                               <?php
-                              // Cari nama kategori berdasarkan $kategoriId
                               $namaKategori = 'Tidak Diketahui';
                               if (isset($categories) && is_array($categories)) {
                                   foreach ($categories as $category) {
@@ -128,7 +127,7 @@
                               ?>
                           </span>
                           <input type="hidden" name="kategori_id_<?= $tanggunganId ?>" value="<?= htmlspecialchars($kategoriId) ?>">
-                      <?php else: // Jika bukan admin, tampilkan dropdown seperti biasa?>
+                      <?php else:?>
                           <select name="kategori_id_<?= $tanggunganId ?>" class="form-select form-select-sm" <?= $inputDisabled ?>>
                               <?php
                               if (isset($categories) && is_array($categories)) {
@@ -307,7 +306,6 @@
             const tanggunganId = row.dataset.tanggunganId;
             const tanggungan = row.querySelector(`input[name="tanggungan_${tanggunganId}"]`).value;
             const jadwal_pembayaran = row.querySelector(`input[name="jadwal_pembayaran_${tanggunganId}"]`).value;
-            // Kategori ID diambil dari input hidden jika admin, atau select jika user
             const kategori_id_element = row.querySelector(`[name="kategori_id_${tanggunganId}"]`);
             const kategori_id = kategori_id_element ? kategori_id_element.value : '';
 
@@ -319,7 +317,6 @@
                     status = statusSelect.value;
                 }
             } else {
-                // Untuk non-admin, status adalah input type text yang disabled
                 status = row.querySelector(`input[name="status_${tanggunganId}"]`).value;
             }
 

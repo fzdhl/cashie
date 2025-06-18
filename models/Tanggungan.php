@@ -282,4 +282,6 @@ class Tanggungan extends Model
         $stmt->bind_param("i", $id);
         return $stmt->execute();
     }
+
+   
 }
