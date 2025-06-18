@@ -64,7 +64,7 @@
             <div class="description__money" id="description-date">
               <?php
                     $date = new DateTime($selected_date);
-                    echo $date->format('d F Y'); ?>
+                    echo $date->format(format: 'd F Y'); ?>
             </div>
             <div class="description__datenow" id="description-total">
               Rp<?= number_format($summary['total'] ?? 0, 0, ',', '.') ?>
@@ -75,7 +75,7 @@
             <p>Tidak ada transaksi pada tanggal ini.</p>
             <?php else: ?>
             <?php foreach ($transactions as $transaction): ?>
-            <div class="description__row">
+            <div class="description__row" data-transaction-id="<?= htmlspecialchars($transaction['transaksi_id']) ?>" style="cursor: pointer;" title="Klik untuk ubah">
               <img src="resources/assets/car-icon.png" class="icon-small" />
               <div class="description__item">
                 <?= htmlspecialchars($transaction['kategori']) ?>
