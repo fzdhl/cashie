@@ -10,9 +10,20 @@
         }
 
         public function index() {
-            $model = $this->loadModel('Transaction'); // Load model Transaction
-            $transactions = $model->getAllTransactions(); // Panggil method baru untuk mendapatkan semua transaksi
-            $this->loadView('adminCalendar', ['transactions' => $transactions]); // Load view admin baru dengan data transaksi
+            $transactionModel = $this->loadModel('Transaction'); // Load model Transaction
+            $userModel = $this->loadModel('User');
+            $kategoriModel = $this->loadModel('Kategori');
+
+
+            $transactions = $transactionModel->getAllTransactions(); // Panggil method baru untuk mendapatkan semua transaksi
+            $users = $userModel->getAll();
+            $categories = $kategoriModel->getAllCategoriesByUser(null);
+
+            $this->loadView('adminCalendar', [
+                'transactions' => $transactions,
+                'users' => $users,
+                'categories' => $categories
+            ]);
         }
 
         public function update() {
