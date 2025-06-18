@@ -4,6 +4,7 @@
     $summary = $summary ?? ['expense' =>
 0, 'income' => 0, 'balance' => 0, 'total' => 0]; $transactions = $transactions
 ?? []; ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -130,6 +131,7 @@
               required
             />
           </div>
+
           <div class="form-group">
             <label for="transactionCategory">Kategori Transaksi:</label>
             <select id="transactionCategory" name="category_id" required>
@@ -216,7 +218,7 @@
             <label for="editTransactionCategory">Kategori Transaksi:</label>
             <select id="editTransactionCategory" name="category_id" required>
               <option value="" disabled>Pilih Kategori</option>
-              <?php foreach ($categories as $category): ?>
+              <?php foreach ($data['kategori'] as $category): ?>
               <option
                 value="<?= $category['kategori_id'] ?>"
                 data-type="<?= htmlspecialchars(strtolower(trim($category['tipe']))) ?>"
