@@ -85,7 +85,9 @@
               style="cursor: pointer"
               title="Klik untuk ubah"
             > 
-              <i class="icon-small fas fa-<?= htmlspecialchars($transaction['icon'])?>" ></i>
+              <div class="d-flex justify-content-center align-items-center rounded-circle" style="width: 50px; height: 50px;">
+                <i class=" fas fa-<?= htmlspecialchars($transaction['icon'])?> fs-5" ></i>
+              </div>
               <div class="description__item">
                 <?= htmlspecialchars($transaction['kategori']) ?>
               </div>
