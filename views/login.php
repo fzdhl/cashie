@@ -17,7 +17,7 @@
     <main>
       <div class="login">
         <div class="login-leftside">
-          <img class="login-icon" src="logopemweb_satu.png" alt="logo" />
+          <img class="login-icon" src="resources/logopemweb_satu.png" alt="logo" />
           <h1>Hello!</h1>
           <p>Welcome back to our site.</p>
         </div>
@@ -54,7 +54,7 @@
                 <a href="google ue">
                   <img
                     class="account-logo_google"
-                    src="google_icon.png"
+                    src="resources/google_icon.png"
                     alt="google"
                   />
                 </a>
@@ -63,7 +63,7 @@
                 <a href="https://youtu.be/hWOB5QYcmh0?si=aFF4cR_QIQSRp4yn">
                   <img
                     class="account-logo_gmail"
-                    src="gmail_icon.png"
+                    src="resources/gmail_icon.png"
                     alt="gmail"
                   />
                 </a>
@@ -72,7 +72,7 @@
                 <a href="https://id.wikipedia.org/wiki/Fufufafa">
                   <img
                     class="account-logo_apple"
-                    src="apple_icon.png"
+                    src="resources/apple_icon.png"
                     alt="apple"
                   />
                 </a>
