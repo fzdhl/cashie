@@ -89,4 +89,17 @@
             $result = $stmt->get_result();
             return $result->fetch_all(MYSQLI_ASSOC);
         }
+
+        public function updateTargetAdmin($target_id, $user_id, $target, $amount) {
+            try {
+                $stmt = $this->dbconn->prepare("UPDATE target SET user_id = ?, target = ?, jumlah = ? WHERE target_id = ?");
+                $stmt->bind_param("isii", $user_id, $target, $amount, $target_id);
+                
+                $stmt->execute();
+                return true; // Return true on success
+            } catch(mysqli_sql_exception $e) {
+                error_log("Database error updating target by admin: " . $e->getMessage());
+                return false; // Return false on failure
+            }
+        }
     }
