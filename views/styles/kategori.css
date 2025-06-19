@@ -270,17 +270,19 @@ body {
 
 /* Modal Styles */
 .modal {
-  display: none;
+  display: none; /* redy untuk dinyalakan, mode on aktif telah dinyalakan*/
   position: fixed;
   z-index: 1050;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow: auto; /* auto scroll kalau konten panjang */
   background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
+  /* Tambahan untuk penataan modal di tengah vertikal saat konten tidak terlalu tinggi */
+  display: flex; /* Menggunakan flexbox untuk penataan */
+  align-items: center; /* Pusatkan secara vertikal */
+  justify-content: center; /* Pusatkan secara horizontal */
   padding: 1.25rem; /* Menggunakan rem */
 }
 
@@ -297,6 +299,9 @@ body {
   padding: 1.875rem; /* Menggunakan rem (30px) */
   position: relative;
   animation: fadeInScale 0.3s ease-out;
+  /* Atur margin atas untuk memberikan ruang dari header */
+  margin-top: 50px; /* Nilai awal, akan disesuaikan di media query */
+  margin-bottom: 50px;
 }
 
 @keyframes fadeInScale {
@@ -315,6 +320,10 @@ body {
 }
 
 .close-btn {
+  color: #aaa;
+  float: right;
+  font-size: 30px;
+  font-weight: bold;
   position: absolute;
   top: 0.9375rem; /* Menggunakan rem (15px) */
   right: 0.9375rem; /* Menggunakan rem (15px) */
@@ -324,8 +333,11 @@ body {
   transition: color 0.3s;
 }
 
-.close-btn:hover {
-  color: var(--dark-color);
+.close-btn:hover,
+.close-btn:focus {
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* Form Styles */
@@ -350,7 +362,8 @@ body {
 
 .form-group input[type="text"],
 .form-group select,
-.form-group input[type="number"] { /* Menambahkan input[type="number"] */
+.form-group input[type="number"] {
+  /* Menambahkan input[type="number"] */
   width: 100%;
   padding: 0.625rem 0.75rem; /* Menggunakan rem */
   border: 1px solid #ddd;
@@ -361,7 +374,8 @@ body {
 }
 .form-group input[type="text"]:focus,
 .form-group select:focus,
-.form-group input[type="number"]:focus { /* Menambahkan input[type="number"] */
+.form-group input[type="number"]:focus {
+  /* Menambahkan input[type="number"] */
   border-color: var(--primary-color);
   outline: none;
   box-shadow: 0 0 0 0.125rem rgba(25, 135, 84, 0.25); /* Menggunakan rem */
@@ -532,7 +546,6 @@ body {
   /* Tingkatkan padding-top dari main-content untuk jarak dari header */
   .main-content {
     padding-top: calc(1rem + 2rem); /* Padding header + padding konten utama */
-    /* 1rem (padding atas/bawah header) + 2rem (padding awal konten utama) */
   }
   .categories-header h2 {
     font-size: 2rem;
@@ -564,6 +577,8 @@ body {
   .modal-content {
     max-width: 37.5rem; /* 600px */
     padding: 2.1875rem; /* 35px */
+    margin-top: auto; /* Reset margin-top ke default agar align-items: center bekerja */
+    margin-bottom: auto; /* Reset margin-bottom ke default */
   }
   .icons-grid {
     grid-template-columns: repeat(auto-fill, minmax(3.125rem, 1fr)); /* 50px */
@@ -631,6 +646,8 @@ body {
   .modal-content {
     max-width: 34.375rem; /* 550px */
     padding: 1.875rem; /* 30px */
+    margin-top: 80px; /* Dorong ke bawah agar tidak terpotong header */
+    margin-bottom: 20px;
   }
   .icons-grid {
     grid-template-columns: repeat(auto-fill, minmax(2.8125rem, 1fr)); /* 45px */
@@ -715,9 +732,13 @@ body {
     height: 2.125rem;
     font-size: 0.85rem;
   }
+  .modal {
+    /* `top` dan `padding-top` pada `.modal` dihapus dari sini karena sekarang ditangani di luar media query. */
+    /* Ini memungkinkan `align-items: center` di `.modal` untuk bekerja lebih baik. */
+  }
   .modal-content {
     /* Padding di dalam modal-content, disesuaikan untuk layar kecil */
-    padding: 1.25rem; /* 20px - Mengurangi padding internal modal untuk memberikan lebih banyak ruang konten */
+    padding: 1rem; /* 16px - Mengurangi padding internal modal untuk memberikan lebih banyak ruang konten */
     margin: 10% auto; /* Mengatur margin vertikal agar tidak terlalu mepet atas/bawah */
     width: calc(100% - 2rem); /* Mengatur lebar modal agar ada ruang di sisi-sisi (100% - 32px) */
     max-width: 28rem; /* Batasan maksimum agar tidak terlalu lebar di tablet kecil */
@@ -726,6 +747,7 @@ body {
   .modal-content h3 {
     font-size: 1.2rem; /* Mengurangi ukuran font judul modal */
     margin-bottom: 1rem; /* Mengurangi margin bawah judul */
+    padding-right: 2rem; /* Memberi ruang yang cukup untuk tombol 'x' */
   }
 
   .form-group label {
@@ -776,23 +798,58 @@ body {
 
 /* Penyesuaian lebih lanjut untuk layar sangat kecil (misal: 425px ke bawah) */
 @media (max-width: 425px) {
-    .modal-content {
-        /* Mengurangi padding vertikal dan menambah padding horizontal agar lebih ada ruang dari ujung device */
-        padding: 1rem; /* 16px */
-        width: calc(100% - 1.5rem); /* Memberikan ruang 0.75rem di setiap sisi (total 1.5rem) */
-        margin: 8% auto; /* Sedikit lebih tinggi dari tengah */
-    }
+  .modal-content {
+    /* Mengurangi padding vertikal dan menambah padding horizontal agar lebih ada ruang dari ujung device */
+    padding: 0.8rem; /* Lebih kecil lagi: 12.8px */
+    width: calc(100% - 1.5rem); /* Memberikan ruang 0.75rem di setiap sisi (total 1.5rem) */
+    margin: 5% auto; /* Disesuaikan untuk tampilan yang lebih baik */
+  }
 
-    .close-btn {
-      top: 0.6rem; /* Lebih kecil lagi untuk layar sangat kecil */
-      right: 0.6rem; /* Lebih kecil lagi untuk layar sangat kecil */
-      font-size: 1.4rem; /* Lebih kecil lagi ukuran ikon 'x' */
-    }
+  .close-btn {
+    top: 0.4rem; /* Lebih kecil lagi untuk layar sangat kecil */
+    right: 0.4rem; /* Lebih kecil lagi untuk layar sangat kecil */
+    font-size: 1.2rem; /* Lebih kecil lagi ukuran ikon 'x' */
+  }
 
-    .modal-content h3 {
-      font-size: 1.1rem; /* Ukuran font judul modal untuk layar sangat kecil */
-      padding-right: 1.8rem; /* Memberi ruang yang cukup untuk tombol 'x' */
-    }
+  .modal-content h3 {
+    font-size: 1rem; /* Ukuran font judul modal untuk layar sangat kecil */
+    padding-right: 1.5rem; /* Memberi ruang yang cukup untuk tombol 'x' */
+    margin-bottom: 0.8rem; /* Mengurangi margin bawah judul */
+  }
+  .form-group label {
+    font-size: 0.8rem; /* Lebih kecil lagi untuk label */
+    margin-bottom: 0.2rem;
+  }
+  .form-group input[type="text"],
+  .form-group select,
+  .form-group input[type="number"] {
+    padding: 0.4rem 0.5rem; /* Lebih kecil lagi untuk input */
+    font-size: 0.8rem;
+  }
+  .radio-group {
+    gap: 0.5rem;
+  }
+  .radio-group label {
+    font-size: 0.8rem;
+  }
+  .icons-grid {
+    grid-template-columns: repeat(auto-fill, minmax(1.8rem, 1fr)); /* Mengurangi ukuran ikon */
+    gap: 0.2rem;
+    max-height: 8rem;
+  }
+  .icon-option {
+    font-size: 0.9rem;
+    padding: 0.3rem;
+  }
+  .form-actions {
+    gap: 0.4rem;
+  }
+  .modal .form-actions .btn-secondary,
+  .modal .form-actions .btn-primary,
+  .modal .form-actions .btn-danger {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.8rem;
+  }
 }
 
 /* Penyesuaian khusus untuk header (navbar) yang menggunakan Bootstrap */
