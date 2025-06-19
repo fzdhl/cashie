@@ -16,9 +16,9 @@
     </style>
 </head>
 <body>
-    <?php include_once __DIR__ . '/../header.php'; ?>
+    <?php include_once __DIR__ . '/./header.php'; ?>
 
-    <div class="container my-4">
+    <div class="container my-4 fullscreen-section">
 
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 header-date-row">
             <h2 class="fw-bold text-center text-md-start mb-3 mb-md-0">Laporan</h2>
@@ -180,7 +180,7 @@
         </div>
     </div>
  
-    <?php include_once __DIR__ . '/../footer.php'; ?>
+    <?php include_once __DIR__ . '/./footer.php'; ?>
 
     <script>
         const datePemasukan = <?= json_encode($dataPemasukan['date']) ?>;

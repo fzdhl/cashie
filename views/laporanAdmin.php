@@ -16,9 +16,9 @@
     </style>
 </head>
 <body>
-    <?php include_once __DIR__ . '/../header-admin.php'; ?>
+    <?php include_once __DIR__ . '/./header.php'; ?>
 
-    <div class="container my-4">
+    <div class="container my-4 fullscreen-section">
 
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 header-date-row">
             <h2 class="fw-bold text-center text-md-start mb-3 mb-md-0">Laporan Admin</h2>
@@ -79,7 +79,7 @@
     </div>
 
         
-    <?php include_once __DIR__ . '/../footer.php'; ?>
+    <?php include_once __DIR__ . '/./footer.php'; ?>
 
     <script src="views/scripts/laporanAdmin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

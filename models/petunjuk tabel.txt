@@ -83,15 +83,12 @@ CREATE TABLE transaksi (
 CREATE TABLE target (
   target_id int NOT NULL AUTO_INCREMENT,
   user_id int NOT NULL,
-  kategori_id int NOT NULL,
   target varchar(255) NOT NULL,
   jumlah bigint DEFAULT NULL,
   created_at date DEFAULT (curdate()),
   PRIMARY KEY (target_id),
   UNIQUE KEY user_id_2 (user_id,target),
   KEY user_id (user_id),
-  KEY fk_target_kategori (kategori_id),
-  CONSTRAINT fk_target_kategori FOREIGN KEY (kategori_id) REFERENCES kategori (kategori_id),
   CONSTRAINT fk_target_user FOREIGN KEY (user_id) REFERENCES user (user_id)
 );
 
