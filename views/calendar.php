@@ -85,7 +85,6 @@
               style="cursor: pointer"
               title="Klik untuk ubah"
             >
-              <img src="resources/assets/car-icon.png" class="icon-small" />
               <div class="description__item">
                 <?= htmlspecialchars($transaction['kategori']) ?>
               </div>
