@@ -7,10 +7,10 @@ body {
 }
 
 :root {
-    --primary-color: #198754;
-    --secondary-color: #eef8f3;
-    --red-color: #dc3545;
-    --balance-color: #ffc107;
+    --hijau-utama: #5cb85c;
+    --hijau-latar: #eef8f3;
+    --merah: #dc3545;
+    --kuning: #ffc107;
     
+    --main-font: 'Inter', sans-serif;
 }
-
