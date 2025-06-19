@@ -68,4 +68,25 @@
 
             return $result->fetch_assoc();
         }
+
+        public function getAllTargetsWithUsernames() {
+            $stmt = $this->dbconn->prepare("
+                SELECT 
+                    t.target_id, 
+                    t.user_id, 
+                    t.target, 
+                    t.jumlah, 
+                    t.created_at,
+                    u.username
+                FROM 
+                    target AS t
+                JOIN 
+                    user AS u ON t.user_id = u.user_id
+                ORDER BY 
+                    t.created_at DESC
+            ");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_all(MYSQLI_ASSOC);
+        }
     }
