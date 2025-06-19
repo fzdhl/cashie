@@ -29,7 +29,7 @@
                   <th scope="col" style="width: 10%;">Pengguna</th>
                   <th scope="col" style="width: 15%;">Kategori</th>
                   <th scope="col" style="width: 23%;">Keterangan</th>
-                  <th scope="col" class="text-end" style="width: 15%;">Jumlah</th>
+                  <th scope="col" class="" style="width: 15%;">Jumlah</th>
                 </tr>
               </thead>
 
@@ -67,7 +67,7 @@
                             </td>
 
                             <td><input type="text" name="keterangan_<?= $transaksiId ?>" class="form-control form-control-sm" value="<?= htmlspecialchars($t['keterangan']) ?>"></td>
-                            <td><input type="number" step="any" name="jumlah_<?= $transaksiId ?>" class="form-control form-control-sm text-end" value="<?= htmlspecialchars($t['jumlah']) ?>"></td>
+                            <td><input type="number" step="any" name="jumlah_<?= $transaksiId ?>" class="form-control form-control-sm" value="<?= htmlspecialchars($t['jumlah']) ?>"></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>

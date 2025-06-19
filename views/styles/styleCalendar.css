@@ -133,7 +133,7 @@ main.container {
 
 .date:hover,
 .date.active {
-  background: #6a9c89;
+  background: var(--hijau-utama);
   color: #fff;
 }
 
