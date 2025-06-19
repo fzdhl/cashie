@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="views/styles/arsip.css" rel="stylesheet"> <link href="views/styles/admin.css" rel="stylesheet"> </head>
 <body>
-  <?php include_once "header-admin.php" ?> <div class="container py-4" id="main">
+  <?php include_once "header.php" ?> <div class="container py-4" id="main">
     <h2 class="mb-4 text-center text-md-start">Kelola Arsip Struk <small class="text-muted">(Admin)</small></h2>
     <div class="card p-3 shadow-sm">
         <h5 class="mb-3">Daftar Semua Arsip</h5>
