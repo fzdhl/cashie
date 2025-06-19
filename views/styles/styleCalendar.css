@@ -326,6 +326,7 @@ main.container {
       flex-direction: column; /* Tombol Hapus dan Simpan akan tersusun vertikal */
       gap: 10px;
     }
+    /* sigma */
 }
 
 /* Penyesuaian lebih lanjut untuk layar sangat kecil (misal: 425px) */
