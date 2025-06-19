@@ -200,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // Atur ulang nilai jumlah jika kategori berubah dan tidak terkait tagihan/target
         addTransactionAmountInput.value = ''; 
+        // addTransactionAmountInput.disabled = false;
     });
 
     // Logika baru untuk mengisi Jumlah secara otomatis saat Pilih Tagihan (ADD) diubah
