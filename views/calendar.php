@@ -84,7 +84,8 @@
               data-transaction-id="<?= htmlspecialchars($transaction['transaksi_id']) ?>"
               style="cursor: pointer"
               title="Klik untuk ubah"
-            >
+            > 
+              <i class="icon-small fas fa-<?php echo $kategori['icon']?>" ></i>
               <div class="description__item">
                 <?= htmlspecialchars($transaction['kategori']) ?>
               </div>

@@ -26,6 +26,7 @@
 
       // [MODIFIKASI] Ambil juga data categories, bills, dan goals
       $data['kategori'] = $transactionModel->getCategoriesByUser($userId);
+      $data['icon'] = $transactionModel->getCategoriesByUser($userId); //testing
       $data['tagihan'] = $transactionModel->getBillsByUser($userId);
       $data['target'] = $transactionModel->getGoalsByUser($userId);
 

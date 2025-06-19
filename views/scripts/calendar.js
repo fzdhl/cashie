@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Baris di bawah ini diberi data-transaction-id dan cursor pointer
                     tableHTML += `
                         <div class="description__row" data-transaction-id="${transaction.transaksi_id}" style="cursor: pointer;" title="Klik untuk ubah">
+                            <i class="icon-small fas fa-<?php echo $['']?>" ></i>
                             <div class="description__item">${transaction.kategori}</div>
                             <div class="description__item" style="color: ${amountColor};">
                                 ${formatCurrency(transaction.jumlah)}
