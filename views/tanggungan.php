@@ -163,6 +163,10 @@
                 }
                 ?>
               <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="<?= ($isAdmin ? '7' : '6') ?>" class="text-center text-muted py-4">Belum ada tanggungan.</td>
+                </tr>
             <?php endif; ?>
           </tbody>
         </table>
@@ -227,46 +231,137 @@
 
   <script>
     const isAdmin = <?= json_encode($isAdmin ?? false) ?>;
-    document.getElementById('aktif').innerText = 'Rp. <?= number_format($totalAktif, 0, ',', '.') ?>';
-    document.getElementById('terbayar').innerText = 'Rp. <?= number_format($totalBayar, 0, ',', '.') ?>';
+    let currentTotalAktif = <?= (int)$totalAktif ?>;
+    let currentTotalBayar = <?= (int)$totalBayar ?>;
 
-    async function hapusTanggungan(buttonElement) {
-      if (!confirm('Hapus tanggungan ini?')) {
-        return;
-      }
+    const updateSummaryDisplay = () => {
+        document.getElementById('aktif').innerText = 'Rp. ' + currentTotalAktif.toLocaleString('id-ID');
+        document.getElementById('terbayar').innerText = 'Rp. ' + currentTotalBayar.toLocaleString('id-ID');
+    };
 
-      const rowElement = buttonElement.closest('tr');
-      const tanggunganId = rowElement.dataset.tanggunganId;
+    updateSummaryDisplay();
 
-      try {
-        const data = new URLSearchParams();
-        data.append('id', tanggunganId);
+    const formatRupiah = (number) => {
+        return 'Rp. ' + new Intl.NumberFormat('id-ID').format(number);
+    };
 
-        const response = await fetch(`?c=TanggunganController&m=hapus`, {
-          method: 'POST',
-          body: data,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+    const renderTanggunganRow = (tanggungan) => {
+        const tanggunganId = tanggungan.tanggungan_id;
+        const tanggunganNama = tanggungan.tanggungan;
+        const jadwalPembayaran = tanggungan.jadwal_pembayaran;
+        const kategoriId = tanggungan.kategori_id;
+        const jumlah = tanggungan.jumlah;
+        const status = tanggungan.status;
+        const username = tanggungan.username || '';
+        const userIdVal = tanggungan.user_id || '';
+
+        const isSelesai = (status === 'Selesai');
+        const inputDisabled = (!isAdmin && isSelesai) ? 'disabled' : '';
+
+        let kategoriOptionsHtml = '';
+        const categories = <?= json_encode($categories) ?>;
+        let namaKategoriDisplay = 'Tidak Diketahui';
+        categories.forEach(category => {
+            const catId = category.kategori_id;
+            const catNama = category.kategori;
+            const selected = (kategoriId == catId) ? 'selected' : '';
+            kategoriOptionsHtml += `<option value="${catId}" ${selected}>${catNama}</option>`;
+            if (kategoriId == catId) {
+                namaKategoriDisplay = category.kategori;
+            }
         });
 
-        if (response.headers.get('content-type')?.includes('application/json')) {
-          const result = await response.json();
-          if (response.ok && result.isSuccess) {
-            window.location.reload();
-          } else {
-            alert('Gagal menghapus tanggungan: ' + (result.info || 'Terjadi kesalahan tidak dikenal.'));
-          }
-        } else {
-          console.error('Server did not return JSON. Likely a redirect or error.');
-          alert('Gagal menghapus tanggungan. Terjadi kesalahan server.');
-          window.location.reload();
+        let rowHtml = `
+            <tr data-tanggungan-id="${tanggunganId}" data-row-type="existing">
+                <td class="text-center">
+                    <div class="d-flex flex-column gap-1">
+                        ${((!isAdmin && !isSelesai) || isAdmin) ? 
+                            `<button type="button" class="btn btn-sm btn-danger w-100 btn-hapus-tanggungan" onclick="hapusTanggungan(this)">Hapus</button>` :
+                            `<button class="btn btn-sm btn-secondary w-100" disabled>Selesai</button>`
+                        }
+                    </div>
+                </td>
+        `;
+
+        if (isAdmin) {
+            rowHtml += `<td><input type="number" name="user_id_${tanggunganId}" class="form-control form-control-sm" value="${userIdVal}" ${inputDisabled}></td>`;
         }
 
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan saat berkomunikasi dengan server untuk hapus.');
-      }
+        rowHtml += `
+                <td><input type="text" name="tanggungan_${tanggunganId}" class="form-control form-control-sm" value="${tanggunganNama}" ${inputDisabled}></td>
+                <td><input type="date" name="jadwal_pembayaran_${tanggunganId}" class="form-control form-control-sm" value="${jadwalPembayaran}" ${inputDisabled}></td>
+                <td>
+                    ${isAdmin ? 
+                        `<span class="form-control form-control-sm border-0 bg-transparent">${namaKategoriDisplay}</span><input type="hidden" name="kategori_id_${tanggunganId}" value="${kategoriId}">` :
+                        `<select name="kategori_id_${tanggunganId}" class="form-select form-select-sm" ${inputDisabled}>${kategoriOptionsHtml}</select>`
+                    }
+                </td>
+                <td><input type="number" name="jumlah_${tanggunganId}" class="form-control form-control-sm" value="${jumlah}" ${inputDisabled}></td>
+                <td>
+                    ${isAdmin ?
+                        `<select name="status_${tanggunganId}" class="form-select form-select-sm">
+                            <option value="Belum dibayar" ${(status === 'Belum dibayar' ? 'selected' : '')}>Belum dibayar</option>
+                            <option value="Selesai" ${(status === 'Selesai' ? 'selected' : '')}>Selesai</option>
+                        </select>` :
+                        `<input type="text" name="status_${tanggunganId}" value="${status}" class="form-control form-control-sm" disabled>`
+                    }
+                </td>
+            </tr>
+        `;
+        return rowHtml;
+    };
+
+
+    async function hapusTanggungan(buttonElement) {
+        if (!confirm('Hapus tanggungan ini?')) {
+            return;
+        }
+
+        const rowElement = buttonElement.closest('tr');
+        const tanggunganId = rowElement.dataset.tanggunganId;
+
+        try {
+            const data = new URLSearchParams();
+            data.append('id', tanggunganId);
+
+            const response = await fetch(`?c=TanggunganController&m=hapus`, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            if (response.headers.get('content-type')?.includes('application/json')) {
+                const result = await response.json();
+                if (response.ok && result.isSuccess) {
+                    alert(result.info);
+                    rowElement.remove();
+                    const jumlahDihapus = parseInt(rowElement.querySelector(`input[name="jumlah_${tanggunganId}"]`)?.value || '0');
+                    const statusDihapus = rowElement.querySelector(`input[name="status_${tanggunganId}"]`)?.value || rowElement.querySelector(`select[name="status_${tanggunganId}"]`)?.value;
+
+                    if (statusDihapus === 'Selesai') {
+                        currentTotalBayar -= jumlahDihapus;
+                    } else {
+                        currentTotalAktif -= jumlahDihapus;
+                    }
+                    updateSummaryDisplay();
+
+                    if (document.querySelectorAll('#tabelDaftarTanggungan tr[data-row-type="existing"]').length === 0) {
+                        document.getElementById('tabelDaftarTanggungan').innerHTML = `<tr><td colspan="${isAdmin ? '7' : '6'}" class="text-center text-muted py-4">Belum ada tanggungan.</td></tr>`;
+                    }
+                } else {
+                    alert('Gagal menghapus tanggungan: ' + (result.info || 'Terjadi kesalahan tidak dikenal.'));
+                }
+            } else {
+                console.error('Server did not return JSON. Likely a redirect or error.');
+                alert('Gagal menghapus tanggungan. Terjadi kesalahan server.');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Terjadi kesalahan saat berkomunikasi dengan server untuk hapus.');
+        }
     }
 
     <?php if (isset($isAdmin) && $isAdmin): ?>
@@ -282,12 +377,23 @@
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             });
-
-            if (response.ok || response.redirected) {
-                window.location.reload();
+             if (response.headers.get('content-type')?.includes('application/json')) {
+                const result = await response.json();
+                if (response.ok && result.isSuccess) {
+                    document.querySelectorAll('#tabelDaftarTanggungan tr[data-row-type="existing"]').forEach(row => {
+                        const statusInput = row.querySelector(`select[name^="status_"]`);
+                        if (statusInput) {
+                            statusInput.value = 'Belum dibayar';
+                        }
+                    });
+                    currentTotalAktif += currentTotalBayar;
+                    currentTotalBayar = 0;
+                    updateSummaryDisplay();
+                } else {
+                    alert('Gagal mereset semua tanggungan: ' + (result.info || 'Terjadi kesalahan tidak dikenal.'));
+                }
             } else {
                 alert('Gagal mereset semua tanggungan. Terjadi kesalahan server.');
-                window.location.reload();
             }
         } catch (error) {
             console.error('Error:', error);
@@ -301,34 +407,42 @@
 
         const rows = document.querySelectorAll('#tabelDaftarTanggungan tr[data-row-type="existing"]');
         const updates = [];
+        const originalData = {};
 
-        for (const row of rows) {
+        rows.forEach(row => {
             const tanggunganId = row.dataset.tanggunganId;
             const tanggungan = row.querySelector(`input[name="tanggungan_${tanggunganId}"]`).value;
             const jadwal_pembayaran = row.querySelector(`input[name="jadwal_pembayaran_${tanggunganId}"]`).value;
             const kategori_id_element = row.querySelector(`[name="kategori_id_${tanggunganId}"]`);
             const kategori_id = kategori_id_element ? kategori_id_element.value : '';
 
-            const jumlah = row.querySelector(`input[name="jumlah_${tanggunganId}"]`).value;
+            const jumlah = parseInt(row.querySelector(`input[name="jumlah_${tanggunganId}"]`).value || '0');
             let status = null;
+            let originalStatus = null;
             if (isAdmin) {
                 const statusSelect = row.querySelector(`select[name="status_${tanggunganId}"]`);
                 if (statusSelect) {
                     status = statusSelect.value;
+                    const originalSelect = <?= json_encode($tanggungan) ?>.find(t => t.tanggungan_id == tanggunganId);
+                    originalStatus = originalSelect ? originalSelect.status : null;
                 }
             } else {
                 status = row.querySelector(`input[name="status_${tanggunganId}"]`).value;
+                originalStatus = status;
             }
 
 
             let user_id_val = null;
+            let originalUserId = null;
             if (isAdmin) {
                 const userIdInput = row.querySelector(`input[name="user_id_${tanggunganId}"]`);
                 if (userIdInput) {
                     user_id_val = userIdInput.value;
+                    const originalSelect = <?= json_encode($tanggungan) ?>.find(t => t.tanggungan_id == tanggunganId);
+                    originalUserId = originalSelect ? originalSelect.user_id : null;
                 }
             }
-
+            
             updates.push({
                 tanggungan_id: tanggunganId,
                 tanggungan: tanggungan,
@@ -338,11 +452,20 @@
                 status: status, 
                 user_id: user_id_val
             });
-        }
+
+            originalData[tanggunganId] = {
+                jumlah: jumlah,
+                status: originalStatus,
+                user_id: originalUserId
+            };
+        });
 
         let allSuccess = true;
         let successCount = 0;
         let errorMessages = [];
+
+        currentTotalAktif = 0;
+        currentTotalBayar = 0;
 
         for (const data of updates) {
             const formData = new URLSearchParams();
@@ -367,27 +490,41 @@
                 const result = await response.json();
                 if (response.ok && result.isSuccess) {
                     successCount++;
+                    if (data.status === 'Selesai') {
+                        currentTotalBayar += data.jumlah;
+                    } else {
+                        currentTotalAktif += data.jumlah;
+                    }
                 } else {
                     allSuccess = false;
                     errorMessages.push('Gagal memperbarui tanggungan ID ' + data.tanggungan_id + ': ' + (result.info || 'Terjadi kesalahan.'));
+                    if (originalData[data.tanggungan_id].status === 'Selesai') {
+                        currentTotalBayar += originalData[data.tanggungan_id].jumlah;
+                    } else {
+                        currentTotalAktif += originalData[data.tanggungan_id].jumlah;
+                    }
                 }
             } catch (error) {
                 allSuccess = false;
                 errorMessages.push('Kesalahan jaringan saat memperbarui tanggungan ID ' + data.tanggungan_id + '.');
                 console.error('Error updating tanggungan:', data, error);
+                if (originalData[data.tanggungan_id].status === 'Selesai') {
+                    currentTotalBayar += originalData[data.tanggungan_id].jumlah;
+                } else {
+                    currentTotalAktif += originalData[data.tanggungan_id].jumlah;
+                }
             }
         }
+        
+        updateSummaryDisplay();
 
-        if (allSuccess && updates.length > 0) {
-        } else if (successCount > 0 && errorMessages.length > 0) {
-            alert('Beberapa perubahan tanggungan berhasil diproses, namun ada kesalahan:\n' + errorMessages.join('\n'));
-        } else if (updates.length === 0) {
-            alert('Tidak ada perubahan untuk disimpan.');
-        } else {
-            alert('Gagal memproses semua perubahan tanggungan:\n' + errorMessages.join('\n'));
+        if (!allSuccess || updates.length === 0) {
+             if (errorMessages.length > 0) {
+                alert('Gagal memproses semua perubahan tanggungan:\n' + errorMessages.join('\n'));
+            } else if (updates.length === 0) {
+                alert('Tidak ada perubahan untuk disimpan.');
+            }
         }
-
-        window.location.reload();
     });
 
     document.getElementById('addTanggunganForm').addEventListener('submit', async function(event) {
@@ -399,7 +536,7 @@
         const tanggungan = form.querySelector('[name="tanggungan"]').value;
         const jadwal_pembayaran = form.querySelector('[name="jadwal_pembayaran"]').value;
         const kategori_id = form.querySelector('[name="kategori_id"]').value;
-        const jumlah = form.querySelector('[name="jumlah"]').value;
+        const jumlah = parseInt(form.querySelector('[name="jumlah"]').value || '0');
         let user_id = null;
         if (isAdmin) {
           user_id = form.querySelector('[name="user_id"]').value;
@@ -421,7 +558,33 @@
                 const addTanggunganModal = bootstrap.Modal.getInstance(document.getElementById('addTanggunganModal'));
                 addTanggunganModal.hide();
                 form.reset();
-                window.location.reload();
+                
+                const tabelDaftarTanggungan = document.getElementById('tabelDaftarTanggungan');
+                const noTanggunganRow = tabelDaftarTanggungan.querySelector('tr > td[colspan]');
+                if (noTanggunganRow) {
+                    noTanggunganRow.closest('tr').remove();
+                }
+
+                const selectedCategoryOption = form.querySelector(`[name="kategori_id"] option[value="${kategori_id}"]`);
+                const kategoriNama = selectedCategoryOption ? selectedCategoryOption.textContent : 'Tidak Diketahui';
+                
+                const newTanggungan = {
+                    tanggungan_id: result.insertId || Date.now(),
+                    user_id: user_id || <?= $_SESSION['user']->user_id ?>,
+                    tanggungan: tanggungan,
+                    jadwal_pembayaran: jadwal_pembayaran,
+                    kategori_id: kategori_id,
+                    jumlah: jumlah,
+                    status: 'Belum dibayar',
+                    username: '<?= htmlspecialchars($_SESSION['user']->username) ?>',
+                    kategori: kategoriNama
+                };
+                
+                tabelDaftarTanggungan.insertAdjacentHTML('beforeend', renderTanggunganRow(newTanggungan));
+                
+                currentTotalAktif += jumlah;
+                updateSummaryDisplay();
+
             } else {
                 alert('Gagal menambahkan tanggungan baru: ' + (result.info || 'Terjadi kesalahan tidak dikenal.'));
             }

@@ -41,8 +41,8 @@ class TanggunganController extends Controller
 
     public function insert()
     {
+        header('Content-Type: application/json');
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Content-Type: application/json');
             echo json_encode(["isSuccess" => false, "info" => "Metode request tidak diizinkan."]);
             exit();
         }
@@ -59,13 +59,11 @@ class TanggunganController extends Controller
         $status = "Belum dibayar"; 
 
         if (empty($tanggungan) || empty($jadwal_pembayaran) || empty($kategori_id) || !is_numeric($jumlah) || $jumlah <= 0) {
-            header('Content-Type: application/json');
             echo json_encode(["isSuccess" => false, "info" => "Data yang dikirim tidak lengkap atau tidak valid."]);
             exit();
         }
 
         if ($this->isAdmin() && (empty($id_user) || !is_numeric($id_user))) {
-            header('Content-Type: application/json');
             echo json_encode(["isSuccess" => false, "info" => "ID Pengguna harus ditentukan dan berupa angka oleh admin."]);
             exit();
         }
@@ -85,7 +83,6 @@ class TanggunganController extends Controller
 
         $result = $model->insert($data);
 
-        header('Content-Type: application/json');
         echo json_encode($result);
         exit();
     }
@@ -93,6 +90,10 @@ class TanggunganController extends Controller
     public function update()
     {
         header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+             echo json_encode(["isSuccess" => false, "info" => "Metode request tidak diizinkan."]);
+             exit();
+        }
 
         $model = $this->loadModel("Tanggungan");
 
@@ -139,10 +140,8 @@ class TanggunganController extends Controller
 
         if ($tanggungan_id) {
             if ($this->isAdmin()) {
-                // Admin menggunakan updateById karena bisa mengubah data tanggungan user lain
                 $result = $model->updateById($tanggungan_id, $data);
             } else {
-                // User biasa menggunakan update (yang juga memverifikasi user_id)
                 $result = $model->update($tanggungan_id, $data);
             }
 
@@ -159,23 +158,23 @@ class TanggunganController extends Controller
 
     public function resetAwalBulan()
     {
-        // Fungsi untuk mereset status tanggungan
         if (!$this->isAdmin()) {
             $id_user = $_SESSION['user']->user_id;
             $model = $this->loadModel("Tanggungan");
-            $model->resetStatus($id_user); // Reset hanya untuk user sendiri
+            $result = $model->resetStatus($id_user);
+            header('Content-Type: application/json');
+            echo json_encode(["isSuccess" => $result, "info" => $result ? "Status tanggungan berhasil direset." : "Gagal mereset status tanggungan."]);
         } else {
             $model = $this->loadModel("Tanggungan");
-            $model->resetAllStatuses(); // Admin bisa mereset semua tanggungan
+            $result = $model->resetAllStatuses();
+            header('Content-Type: application/json');
+            echo json_encode(["isSuccess" => $result, "info" => $result ? "Semua status tanggungan berhasil direset." : "Gagal mereset semua status tanggungan."]);
         }
-
-        header('Location: ?c=TanggunganController&m=index');
         exit();
     }
 
     public function sinkronDariCatatan()
     {
-        // Fungsi ini tidak relevan dengan diskusi kita, tetapi dipertahankan
         $id_user = $_SESSION['user']->user_id;
         $model = $this->loadModel("Tanggungan");
         $pengeluaran = $model->getPengeluaranUser($id_user);
@@ -202,14 +201,12 @@ class TanggunganController extends Controller
 
         if ($id_tanggungan) {
             if ($this->isAdmin()) {
-                // Admin bisa menghapus tanggungan siapa pun
                 if ($model->deleteAnyById($id_tanggungan)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus oleh admin."]);
                 } else {
                     echo json_encode(["isSuccess" => false, "info" => "Gagal menghapus tanggungan oleh admin."]);
                 }
             } else {
-                // User biasa hanya bisa menghapus tanggungan miliknya
                 if ($model->deleteById($id_tanggungan, $id_user_sesi)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus."]);
                 } else {
@@ -224,7 +221,6 @@ class TanggunganController extends Controller
 
     public function viewUserTanggungan($userId)
     {
-        // Fungsi ini tidak relevan dengan diskusi kita, tetapi dipertahankan
         if (!$this->isAdmin()) {
             header("Location: ?c=UserController&m=loginView");
             exit();

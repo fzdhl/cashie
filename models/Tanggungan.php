@@ -1,8 +1,7 @@
 <?php
 class Tanggungan extends Model
 {
-    public function getByUser($id_user)
-    {
+    public function getByUser($id_user) {
         $stmt = $this->dbconn->prepare("
             SELECT 
                 t.tanggungan_id, t.user_id, t.tanggungan, t.jadwal_pembayaran, t.kategori_id, t.jumlah, 
@@ -23,8 +22,7 @@ class Tanggungan extends Model
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getAll()
-    {
+    public function getAll() {
         $stmt = $this->dbconn->prepare("
             SELECT 
                 t.tanggungan_id, t.user_id, t.tanggungan, t.jadwal_pembayaran, t.kategori_id, t.jumlah, 
@@ -44,8 +42,7 @@ class Tanggungan extends Model
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getByIdAndUser($id_tanggungan, $id_user)
-    {
+    public function getByIdAndUser($id_tanggungan, $id_user) {
         $stmt = $this->dbconn->prepare("
             SELECT 
                 t.tanggungan_id, t.user_id, t.tanggungan, t.jadwal_pembayaran, t.kategori_id, t.jumlah, 
@@ -78,8 +75,7 @@ class Tanggungan extends Model
     }
 
 
-    public function insert($data)
-    {
+    public function insert($data) {
         $status_db = ($data[5] === 'Selesai') ? 1 : 0;
         $stmt = $this->dbconn->prepare("INSERT INTO tanggungan (user_id, tanggungan, jadwal_pembayaran, kategori_id, jumlah, status) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param(
@@ -94,22 +90,20 @@ class Tanggungan extends Model
 
         try {
             $stmt->execute();
-            $result = array("isSuccess" => true);
+            return array("isSuccess" => true, "insertId" => $this->dbconn->insert_id);
         } catch (mysqli_sql_exception $e) {
             $code = $e->getCode();
             if ($code == 1062) {
-                $result = array("isSuccess" => false, "info" => "Terjadi duplikasi data.");
+                return array("isSuccess" => false, "info" => "Terjadi duplikasi data.");
             } elseif ($code == 1452) {
-                $result = array("isSuccess" => false, "info" => "Kategori ID atau User ID tidak ditemukan. Pastikan ID valid.");
+                return array("isSuccess" => false, "info" => "Kategori ID atau User ID tidak ditemukan. Pastikan ID valid.");
             } else {
-                $result = array("isSuccess" => false, "info" => "Error lainnya: " . $e->getMessage());
+                return array("isSuccess" => false, "info" => "Error lainnya: " . $e->getMessage());
             }
         }
-        return $result;
     }
 
-    public function update($id_tanggungan, $data)
-    {
+    public function update($id_tanggungan, $data) {
         if (!isset($data['user_id'])) {
             error_log("Error: user_id is missing for update method.");
             return false;
@@ -170,8 +164,7 @@ class Tanggungan extends Model
         }
     }
 
-    public function updateById($id_tanggungan, $data)
-    {
+    public function updateById($id_tanggungan, $data) {
         $setClauses = [];
         $types = "";
         $params = [];
@@ -250,16 +243,6 @@ class Tanggungan extends Model
         }
     }
 
-    /**
-     * Memperbarui status tanggungan menjadi 'Selesai' (1) berdasarkan tanggungan_id, user_id, dan jumlah.
-     * Hanya akan memperbarui jika status tanggungan saat ini adalah 'Belum dibayar' (0).
-     * Ini adalah metode yang lebih akurat untuk sinkronisasi berdasarkan pilihan tagihan.
-     *
-     * @param int $userId ID pengguna yang memiliki tanggungan.
-     * @param int $tanggunganId ID tanggungan yang akan diperbarui.
-     * @param int $jumlah Jumlah nominal tanggungan yang harus cocok.
-     * @return int|bool Jumlah baris yang terpengaruh jika berhasil, atau false jika ada error.
-     */
     public function updateStatusByBillIdAndAmount($userId, $tanggunganId, $jumlah) {
         $query = "UPDATE tanggungan SET status = 1 WHERE tanggungan_id = ? AND user_id = ? AND jumlah = ? AND status = 0";
         $stmt = $this->dbconn->prepare($query);
@@ -278,14 +261,6 @@ class Tanggungan extends Model
         }
     }
 
-    /**
-     * Mengatur status tanggungan kembali menjadi 'Belum dibayar' (0) berdasarkan tanggungan_id dan user_id.
-     * Ini akan digunakan ketika transaksi terkait dihapus.
-     *
-     * @param int $userId ID pengguna yang memiliki tanggungan.
-     * @param int $tanggunganId ID tanggungan yang akan direset statusnya.
-     * @return int|bool Jumlah baris yang terpengaruh jika berhasil, atau false jika ada error.
-     */
     public function resetStatusByBillIdAndUser($userId, $tanggunganId) {
         $query = "UPDATE tanggungan SET status = 0 WHERE tanggungan_id = ? AND user_id = ?";
         $stmt = $this->dbconn->prepare($query);
@@ -304,28 +279,24 @@ class Tanggungan extends Model
         }
     }
 
-    public function setPermanen($id_user)
-    {
+    public function setPermanen($id_user) {
         $stmt = $this->dbconn->prepare("UPDATE tanggungan SET permanen = 1 WHERE user_id = ?");
         $stmt->bind_param("i", $id_user);
         return $stmt->execute();
     }
 
-    public function resetStatus($id_user)
-    {
+    public function resetStatus($id_user) {
         $stmt = $this->dbconn->prepare("UPDATE tanggungan SET status = 0 WHERE user_id = ?");
         $stmt->bind_param("i", $id_user);
         return $stmt->execute();
     }
 
-    public function resetAllStatuses()
-    {
+    public function resetAllStatuses() {
         $stmt = $this->dbconn->prepare("UPDATE tanggungan SET status = 0");
         return $stmt->execute();
     }
 
-    public function updateStatusSelesai($id_user, $keterangan, $jumlah)
-    {
+    public function updateStatusSelesai($id_user, $keterangan, $jumlah) {
         $stmt = $this->dbconn->prepare("
             UPDATE tanggungan 
             SET status = 1 
@@ -335,8 +306,7 @@ class Tanggungan extends Model
         return $stmt->execute();
     }
 
-    public function getPengeluaranUser($id_user)
-    {
+    public function getPengeluaranUser($id_user) {
         $stmt = $this->dbconn->prepare("
             SELECT keterangan, jumlah 
             FROM catatan_keuangan 
@@ -349,8 +319,7 @@ class Tanggungan extends Model
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function deleteById($id, $id_user)
-    {
+    public function deleteById($id, $id_user) {
         $stmt = $this->dbconn->prepare("
             DELETE FROM tanggungan 
             WHERE tanggungan_id = ? AND user_id = ?
@@ -360,8 +329,7 @@ class Tanggungan extends Model
         return $stmt->execute();
     }
 
-    public function deleteAnyById($id)
-    {
+    public function deleteAnyById($id) {
         $stmt = $this->dbconn->prepare("
             DELETE FROM tanggungan 
             WHERE tanggungan_id = ?
