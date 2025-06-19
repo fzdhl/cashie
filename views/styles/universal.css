@@ -1,3 +1,11 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #eef8f3;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 :root {
     --primary-color: #198754;
     --secondary-color: #eef8f3;
@@ -5,3 +13,4 @@
     --balance-color: #ffc107;
     
 }
+
