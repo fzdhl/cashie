@@ -10,6 +10,9 @@ class KategoriController extends Controller {
             header("Location: ?c=UserController&m=loginView");
             exit;
         }
+        if ($_SESSION['user']->privilege == 'admin') {
+            header('Location: ?c=AdminKategoriController&m=index');
+        }
     }
 
     // Method untuk menampilkan halaman kategori dengan data yang sudah dirender server

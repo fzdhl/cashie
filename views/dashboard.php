@@ -126,7 +126,7 @@
           <ul>
             <?php foreach ($target['data'] as $target1): ?>
             <li class="d-flex justify-content-between">
-              <p><?=$target1['target']?></p><p>Rp<?=number_format($target1['jumlah'], 2, ',', '.')?></p>
+              <p><?=htmlspecialchars($target1['target'])?></p><p>Rp<?=number_format($target1['jumlah'], 2, ',', '.')?></p>
             </li>
             <?php endforeach;?>
           </ul>
