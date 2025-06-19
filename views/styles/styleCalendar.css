@@ -309,6 +309,54 @@ main.container {
   }
 }
 
+/* Penyesuaian untuk Modal pada layar kecil (Mobile) */
+@media (max-width: 767px) {
+    .modal-content {
+        width: 95%;
+        margin: 15% auto; /* Sedikit lebih banyak margin atas pada mobile */
+        padding: 20px; /* Padding dikurangi untuk mobile */
+    }
+
+    .modal h2 {
+        font-size: 1.3rem; /* Ukuran font judul modal lebih kecil */
+        margin-bottom: 20px;
+    }
+    
+    .form-buttons {
+      flex-direction: column; /* Tombol Hapus dan Simpan akan tersusun vertikal */
+      gap: 10px;
+    }
+}
+
+/* Penyesuaian lebih lanjut untuk layar sangat kecil (misal: 425px) */
+@media (max-width: 425px) {
+    .modal-content {
+        padding: 15px; /* Padding dikurangi lebih lanjut */
+    }
+  
+    .modal h2 {
+      font-size: 1.2rem; /* Ukuran font judul lebih kecil lagi */
+    }
+
+    #transactionForm label,
+    #editTransactionForm label {
+      font-size: 0.9em;
+    }
+
+    /* Menyesuaikan ukuran font dan padding pada elemen form */
+    #transactionForm input[type="number"],
+    #transactionForm select,
+    #transactionForm textarea,
+    #editTransactionForm input[type="number"],
+    #editTransactionForm select,
+    #editTransactionForm textarea,
+    .btn-submit-transaction,
+    .btn-delete {
+      font-size: 0.95em;
+      padding: 10px;
+    }
+}
+
 .btn {
   width: 60px;
   height: 60px;
