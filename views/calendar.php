@@ -86,7 +86,7 @@
               title="Klik untuk ubah"
             > 
               <div class="d-flex justify-content-center align-items-center rounded-circle" style="width: 50px; height: 50px;">
-                <i class=" fas fa-<?= htmlspecialchars($transaction['icon'])?> fs-5" ></i>
+                <i class="fas fa-<?= htmlspecialchars($transaction['icon'])?> fs-5" ></i>
               </div>
               <div class="description__item">
                 <?= htmlspecialchars($transaction['kategori']) ?>
