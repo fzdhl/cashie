@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <?php include_once __DIR__ . '/../header.php'; ?>
+    <?php include_once __DIR__ . '/./header.php'; ?>
 
     <div class="container my-4 fullscreen-section">
 
@@ -79,7 +79,7 @@
     </div>
 
         
-    <?php include_once __DIR__ . '/../footer.php'; ?>
+    <?php include_once __DIR__ . '/./footer.php'; ?>
 
     <script src="views/scripts/laporanAdmin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
