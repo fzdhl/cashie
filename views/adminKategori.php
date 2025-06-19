@@ -195,18 +195,6 @@
                 });
             }
 
-            // function openAddCategoryModal() { // Metode ini tidak lagi dipanggil dari UI
-            //     currentAction = 'create';
-            //     modalTitle.textContent = 'Tambah Kategori Baru';
-            //     categoryForm.reset();
-            //     selectedIcon = '';
-            //     document.querySelectorAll('.icon-option').forEach(icon => { icon.classList.remove('selected'); });
-            //     document.querySelector('input[name="tipe"][value="pemasukan"]').checked = true;
-            //     userIdInput.value = ''; 
-            //     userIdInput.readOnly = false; 
-            //     categoryModal.style.display = 'flex';
-            // }
-
             async function openEditCategoryModal(id) {
                 currentAction = 'edit';
                 currentCategoryId = id;

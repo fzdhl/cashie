@@ -54,7 +54,7 @@ class KategoriController extends Controller {
         exit;
     }
 
-    // Method untuk mendapatkan detail kategori tunggal (dipanggil via AJAX GET)
+    // Method untuk mendapatkan detail kategori tunggal (dipanggil via AJAX GET) - edit kategori
     public function getCategory() {
         $response = ['status' => 'error', 'message' => 'Permintaan tidak valid.'];
         if (isset($_GET['id'])) {
