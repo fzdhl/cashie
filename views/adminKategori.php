@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="views/styles/kategori.css">
     <link rel="stylesheet" href="views/styles/admin.css"> </head>
 <body>
-    <?php include_once "header-admin.php" ?>
+    <?php include_once "header.php" ?>
 
     <main class="container main-content">
         <div class="categories-header">
