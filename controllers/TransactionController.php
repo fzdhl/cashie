@@ -16,31 +16,25 @@
     }
 
     public function addProcess() {
-        // $this->checkLogin(); // Pastikan login diaktifkan jika diperlukan
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
-        // die(var_dump($_POST)); // Gunakan ini untuk debugging jika perlu melihat data POST
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'kategori_id' => $_POST['category_id'],
                 'jumlah' => $_POST['amount'],
                 'keterangan' => $_POST['note'],
                 'date' => $_POST['date'],
                 'user_id' => $_SESSION['user']->user_id,
-                // Pastikan bill_id dan target_id adalah integer atau null
                 'tagihan_id' => isset($_POST['bill_id']) && $_POST['bill_id'] !== '' ? (int)$_POST['bill_id'] : null,
                 'target_id' => isset($_POST['goal_id']) && $_POST['goal_id'] !== '' ? (int)$_POST['goal_id'] : null
             ];
 
             $transactionModel = $this->loadModel('Transaction');
-            // KategoriModel tidak lagi diperlukan untuk sinkronisasi bill_id, tetapi mungkin diperlukan untuk fitur lain
-            // $kategoriModel = $this->loadModel('Kategori'); 
             $tanggunganModel = $this->loadModel('Tanggungan'); // Muat model Tanggungan
 
             if ($transactionModel->insertTransaction($data)) {
                 $response = ['status' => 'success', 'message' => 'Transaksi berhasil disimpan!'];
 
-                // === LOGIKA SINKRONISASI BARU BERDASARKAN PILIH TAGIHAN (bill_id) ===
                 // Hanya lakukan sinkronisasi jika bill_id dipilih dan valid
                 if (!empty($data['tagihan_id'])) {
                     // Dapatkan info tanggungan berdasarkan ID yang dipilih di form
