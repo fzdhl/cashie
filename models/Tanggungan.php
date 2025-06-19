@@ -63,7 +63,6 @@ class Tanggungan extends Model
         return $result->fetch_assoc();
     }
     
-    // Metode baru yang ditemukan: getNextTanggungan
     public function getNextTanggungan($id_user){
         $stmt = $this->dbconn->prepare("SELECT *, 
             DAY(jadwal_pembayaran) - DAY(CURDATE()) AS sisa_hari
