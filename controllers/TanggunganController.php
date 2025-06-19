@@ -25,14 +25,11 @@ class TanggunganController extends Controller
 
         if ($this->isAdmin()) {
             $tanggungan = $model->getAll();
-            // Untuk admin, mungkin Anda masih ingin melihat semua kategori atau menambahkan filter terpisah jika diperlukan
-            // Untuk tujuan ini, kita akan tetap mengambil semua kategori untuk admin.
             $categories = $kategoriModel->getAllCategoriesByUser(null); 
         } else {
             $id_user = $_SESSION['user']->user_id;
             $tanggungan = $model->getByUser($id_user);
-            // Ambil hanya kategori dengan tipe 'pengeluaran' untuk pengguna biasa
-            $categories = $kategoriModel->getCategoriesByUserAndType($id_user, 'pengeluaran');
+            $categories = $kategoriModel->getAllCategoriesByUser($id_user); 
         }
 
         $this->loadView("tanggungan", [
@@ -142,8 +139,10 @@ class TanggunganController extends Controller
 
         if ($tanggungan_id) {
             if ($this->isAdmin()) {
+                // Admin menggunakan updateById karena bisa mengubah data tanggungan user lain
                 $result = $model->updateById($tanggungan_id, $data);
             } else {
+                // User biasa menggunakan update (yang juga memverifikasi user_id)
                 $result = $model->update($tanggungan_id, $data);
             }
 
@@ -160,13 +159,14 @@ class TanggunganController extends Controller
 
     public function resetAwalBulan()
     {
+        // Fungsi untuk mereset status tanggungan
         if (!$this->isAdmin()) {
             $id_user = $_SESSION['user']->user_id;
             $model = $this->loadModel("Tanggungan");
-            $model->resetStatus($id_user); 
+            $model->resetStatus($id_user); // Reset hanya untuk user sendiri
         } else {
             $model = $this->loadModel("Tanggungan");
-            $model->resetAllStatuses(); 
+            $model->resetAllStatuses(); // Admin bisa mereset semua tanggungan
         }
 
         header('Location: ?c=TanggunganController&m=index');
@@ -175,6 +175,7 @@ class TanggunganController extends Controller
 
     public function sinkronDariCatatan()
     {
+        // Fungsi ini tidak relevan dengan diskusi kita, tetapi dipertahankan
         $id_user = $_SESSION['user']->user_id;
         $model = $this->loadModel("Tanggungan");
         $pengeluaran = $model->getPengeluaranUser($id_user);
@@ -201,12 +202,14 @@ class TanggunganController extends Controller
 
         if ($id_tanggungan) {
             if ($this->isAdmin()) {
+                // Admin bisa menghapus tanggungan siapa pun
                 if ($model->deleteAnyById($id_tanggungan)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus oleh admin."]);
                 } else {
                     echo json_encode(["isSuccess" => false, "info" => "Gagal menghapus tanggungan oleh admin."]);
                 }
             } else {
+                // User biasa hanya bisa menghapus tanggungan miliknya
                 if ($model->deleteById($id_tanggungan, $id_user_sesi)) {
                     echo json_encode(["isSuccess" => true, "info" => "Tanggungan berhasil dihapus."]);
                 } else {
@@ -221,6 +224,7 @@ class TanggunganController extends Controller
 
     public function viewUserTanggungan($userId)
     {
+        // Fungsi ini tidak relevan dengan diskusi kita, tetapi dipertahankan
         if (!$this->isAdmin()) {
             header("Location: ?c=UserController&m=loginView");
             exit();
