@@ -5,7 +5,11 @@
             if (!isset($_SESSION['user'])) {
                 header("Location: ?c=UserController&m=loginView");
                 exit;
-            }   
+            }
+            if ($_SESSION['user']->privilege == 'admin') {
+                header("Location: ?c=AdminTargetController&m=index");
+                exit;
+            }
         }
 
         private function getProcessedTargets() {
