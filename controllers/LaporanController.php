@@ -17,7 +17,7 @@
                 $data['error'] = $error;
             }
 
-            $this->loadView("laporan/laporanAdmin");
+            $this->loadView("laporanAdmin");
         }
 
         public function report($error = []) {
@@ -83,10 +83,10 @@
             }
 
             if ($_SESSION['user']->privilege == 'admin') {
-                $this->loadView("laporan/laporanAdmin", $data);
+                $this->loadView("laporanAdmin", $data);
             }
             else{
-                $this->loadView("laporan/laporan", $data);
+                $this->loadView("laporan", $data);
             }
             
         }
@@ -110,7 +110,7 @@
                 $data['error'] = $error;
             }
 
-            $this->loadView("laporan/editLaporan", $data);
+            $this->loadView("editLaporan", $data);
         }
         
         public function cekTanggalLaporan($tanggal_awal, $tanggal_akhir){
@@ -163,7 +163,7 @@
             $model = $this->loadModel("Laporan");
             if($session->privilege == 'admin'){
                 $tabelLaporan = $model->getAll();
-                include "views/laporan/listLaporanAdmin.php";
+                include "views/listLaporanAdmin.php";
             }
             else{
                 $username = $session->username;
@@ -171,7 +171,7 @@
                 $user = $model->getByUsername($username);
                 $user_id = $user->user_id;
                 $listLaporanMingguan = $model->getDaftarLaporan($user_id);
-                include "views/laporan/listLaporan.php";
+                include "views/listLaporan.php";
             }  
         }
 

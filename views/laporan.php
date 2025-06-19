@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <?php include_once __DIR__ . '/../header.php'; ?>
+    <?php include_once __DIR__ . '/./header.php'; ?>
 
     <div class="container my-4 fullscreen-section">
 
@@ -180,7 +180,7 @@
         </div>
     </div>
  
-    <?php include_once __DIR__ . '/../footer.php'; ?>
+    <?php include_once __DIR__ . '/./footer.php'; ?>
 
     <script>
         const datePemasukan = <?= json_encode($dataPemasukan['date']) ?>;
