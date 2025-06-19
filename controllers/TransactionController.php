@@ -15,12 +15,8 @@
         }
     }
 
-<<<<<<< HEAD
     public function addProcess() {
         // $this->checkLogin(); // Pastikan login diaktifkan jika diperlukan
-=======
-   public function addProcess() {
->>>>>>> ec56437a775f3a66b03ad5a47b5d82c90ee0c791
         $response = ['status' => 'error', 'message' => 'Invalid request.'];
         // die(var_dump($_POST)); // Gunakan ini untuk debugging jika perlu melihat data POST
 
