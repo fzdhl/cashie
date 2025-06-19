@@ -20,10 +20,12 @@
             </div>
             <p class="text-muted mb-2">Target: Rp<?= number_format($target['jumlah'], 2, ',', '.') ?></p>
             <div class="progress mb-2" style="height: 15px;">
-                <div class="progress-bar bg-success" style="width: 75%;">75%</div>
+                <div class="progress-bar bg-success" style="width: <?= $target['progress_percentage'] ?>%;">
+                    <?= $target['progress_percentage'] ?>%
+                </div>
             </div>
             <small class="text-muted">
-                Rp<?= number_format($target['jumlah'] * 0.75, 2, ',', '.') ?> dari Rp<?= number_format($target['jumlah'], 2, ',', '.') ?>
+                Rp<?= number_format($target['achieved_amount'], 2, ',', '.') ?> dari Rp<?= number_format($target['jumlah'], 2, ',', '.') ?>
             </small>
         </div>
     </div>

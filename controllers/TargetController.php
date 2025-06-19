@@ -8,9 +8,35 @@
             }   
         }
 
+        private function getProcessedTargets() {
+            $userId = $_SESSION['user']->user_id;
+            $targetModel = $this->loadModel('Target');
+            $transactionModel = $this->loadModel('Transaction');
+
+            $targets = $targetModel->getByUserId($userId, 50); // Get all targets for the user
+
+            foreach ($targets as &$target) {
+                $targetId = $target['target_id'];
+                $targetAmount = $target['jumlah'];
+                
+                $achievedAmount = $transactionModel->getSumAmountForTarget($targetId);
+                
+                $target['achieved_amount'] = (float)$achievedAmount;
+                $target['remaining_amount'] = max(0, $targetAmount - $achievedAmount); // Ensure non-negative
+                
+                if ($targetAmount > 0) {
+                    $progressPercentage = min(100, ($achievedAmount / $targetAmount) * 100);
+                } else {
+                    $progressPercentage = 0;
+                }
+                $target['progress_percentage'] = round($progressPercentage); // Round for display
+            }
+            unset($target); // Unset the reference
+            return $targets;
+        }
+
         public function index() {
-            $model = $this->loadModel('Target');
-            $targets = $model->getByUserId($_SESSION['user']->user_id, 50);
+            $targets = $this->getProcessedTargets();
             $this->loadView('target', ['targets' => $targets]);
         }
 
@@ -26,9 +52,8 @@
         }
 
         public function getTargetCards() {
-            $model = $this->loadModel('Target');
-            $targets = $model->getByUserId($_SESSION['user']->user_id, 50);
-            include "views/targetCards.php"; // untuk di inject dengan AJAX pada target.js
+            $targets = $this->getProcessedTargets(); // Call the new private method
+            include "views/targetCards.php"; // to be injected with AJAX in target.js
         }
 
         public function updateProcess() {
