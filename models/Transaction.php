@@ -233,5 +233,19 @@
             return false;
         }
     }
+
+    public function getSumAmountForTarget($targetId) {
+        $query = "SELECT SUM(jumlah) as total_achieved FROM transaksi WHERE target_id = ?";
+        $stmt = $this->dbconn->prepare($query);
+        if (!$stmt) {
+            error_log("Failed to prepare getSumAmountForTarget statement: " . $this->dbconn->error);
+            return 0;
+        }
+        $stmt->bind_param("i", $targetId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['total_achieved'] ?? 0;
+    }
   }
 ?>

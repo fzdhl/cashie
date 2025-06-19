@@ -1,6 +1,8 @@
+// views/scripts/kategori.js
+
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
-    const categoriesList = document.getElementById('categoriesList'); // Tetap ada untuk event delegation
+    const categoriesList = document.getElementById('categoriesList');
     const addCategoryBtn = document.getElementById('addCategoryBtn');
     const categoryModal = document.getElementById('categoryModal');
     const deleteModal = document.getElementById('deleteModal');
@@ -257,11 +259,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Closes the main category modal
     function closeModal() {
         categoryModal.style.display = 'none';
+        // Pastikan juga modal delete tertutup jika entah bagaimana terbuka
+        deleteModal.style.display = 'none';
     }
 
     // Initializes the application on page load
     function init() {
-        // fetchAndRenderCategories() TIDAK DIPANGGIL DI SINI lagi
+        // --- TAMBAH BARIS INI UNTUK MEMASTIKAN MODAL TERSEMBUNYI SAAT INIT ---
+        categoryModal.style.display = 'none'; 
+        deleteModal.style.display = 'none';
+        // ------------------------------------------------------------------
+
         renderIcons();
         setupEventListeners();
         setupDragAndDrop(); // Pastikan drag and drop di-setup untuk elemen yang sudah ada
