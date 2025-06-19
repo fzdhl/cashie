@@ -39,17 +39,17 @@
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
 
-            // $stmt = $this->dbconn->prepare("DELETE FROM target WHERE user_id = ?");
-            // $stmt->bind_param("i", $user_id);
-            // $stmt->execute();
+            $stmt = $this->dbconn->prepare("DELETE FROM target WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
 
-            // $stmt = $this->dbconn->prepare("DELETE FROM tanggungan WHERE user_id = ?");
-            // $stmt->bind_param("i", $user_id);
-            // $stmt->execute();
+            $stmt = $this->dbconn->prepare("DELETE FROM tanggungan WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
 
-            // $stmt = $this->dbconn->prepare("DELETE FROM arsip WHERE user_id = ?");
-            // $stmt->bind_param("i", $user_id);
-            // $stmt->execute();
+            $stmt = $this->dbconn->prepare("DELETE FROM arsip WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
 
             $stmt = $this->dbconn->prepare("DELETE FROM profile WHERE user_id = ?");
             $stmt->bind_param("i", $user_id);
