@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Manage Accounts</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="views/styles/universal.css" rel="stylesheet">
   <link href="views/styles/admin.css" rel="stylesheet">
 
 </head>
