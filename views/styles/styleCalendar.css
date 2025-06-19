@@ -216,148 +216,6 @@ main.container {
   margin-top: 2px;
 }
 
-
-/* --- Media Queries --- */
-
-/* Tablet */
-@media (min-width: 768px) {
-  .calendar,
-  .description__container {
-    max-width: 680px;
-    padding: 25px;
-  }
-
-  .monthYear {
-    font-size: 1.25em;
-  }
-
-  .day {
-    padding: 10px 5px;
-    font-size: 0.95em;
-  }
-
-  .date {
-    /* `width: 100%` dan `aspect-ratio: 1/1` diwarisi */
-    max-width: 42px; /* Perbarui max-width untuk tablet */ /* */
-    font-size: 1em; /* */
-    /* padding: 10px; /* Diwarisi, tidak perlu diubah kecuali beda */
-  }
-
-  .calendar__text {
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 1em;
-    margin-top: 20px;
-  }
-
-  .description__header {
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-  }
-
-  .description__money,
-  .description__datenow {
-    font-size: 1.1em;
-  }
-
-  .icon-small {
-    width: 28px;
-    height: 28px;
-  }
-  .description__item {
-    font-size: 1em;
-  }
-  .description__timestamp {
-    font-size: 0.85em;
-  }
-}
-
-/* Desktop/Laptop */
-@media (min-width: 1024px) {
-
-  main.container {
-    flex-direction: row;
-    /* ganti tujuan */
-    align-items: flex-start;
-    justify-content: center;
-    gap: 30px;
-  }
-
-  .calendar,
-  .description__container {
-    max-width: 800px;
-    padding: 30px;
-  }
-
-  .monthYear {
-    font-size: 1.4em;
-  }
-
-  .header button {
-    width: 45px;
-    height: 45px;
-  }
-
-  .date {
-    /* `width: 100%` dan `aspect-ratio: 1/1` diwarisi */
-    max-width: 45px; /* Perbarui max-width untuk desktop */ /* */
-  }
-   .calendar__text {
-    font-size: 1.05em;
-    gap: 15px;
-  }
-}
-
-/* Penyesuaian untuk Modal pada layar kecil (Mobile) */
-@media (max-width: 767px) {
-    .modal-content {
-        width: 95%;
-        margin: 15% auto; /* Sedikit lebih banyak margin atas pada mobile */
-        padding: 20px; /* Padding dikurangi untuk mobile */
-    }
-
-    .modal h2 {
-        font-size: 1.3rem; /* Ukuran font judul modal lebih kecil */
-        margin-bottom: 20px;
-    }
-    
-    .form-buttons {
-      flex-direction: column; /* Tombol Hapus dan Simpan akan tersusun vertikal */
-      gap: 10px;
-    }
-    /* sigma */
-}
-
-/* Penyesuaian lebih lanjut untuk layar sangat kecil (misal: 425px) */
-@media (max-width: 425px) {
-    .modal-content {
-        padding: 15px; /* Padding dikurangi lebih lanjut */
-    }
-  
-    .modal h2 {
-      font-size: 1.2rem; /* Ukuran font judul lebih kecil lagi */
-    }
-
-    #transactionForm label,
-    #editTransactionForm label {
-      font-size: 0.9em;
-    }
-
-    /* Menyesuaikan ukuran font dan padding pada elemen form */
-    #transactionForm input[type="number"],
-    #transactionForm select,
-    #transactionForm textarea,
-    #editTransactionForm input[type="number"],
-    #editTransactionForm select,
-    #editTransactionForm textarea,
-    .btn-submit-transaction,
-    .btn-delete {
-      font-size: 0.95em;
-      padding: 10px;
-    }
-}
-
 .btn {
   width: 60px;
   height: 60px;
@@ -563,4 +421,146 @@ main.container {
 /* Penyesuaian untuk tombol simpan di dalam .form-buttons */
 .form-buttons .btn-submit-transaction {
   width: 100%;
+}
+
+/* --- Media Queries --- */
+
+/* Penyesuaian lebih lanjut untuk layar sangat kecil (misal: 425px) */
+@media (max-width: 425px) {
+    .modal-content {
+        width: 92%;
+        padding: 15px; /* Padding dikurangi lebih lanjut */
+    }
+  
+    .modal h2 {
+      font-size: 1.2rem; /* Ukuran font judul lebih kecil lagi */
+    }
+
+    #transactionForm label,
+    #editTransactionForm label {
+      font-size: 0.9em;
+    }
+
+    /* Menyesuaikan ukuran font dan padding pada elemen form */
+    #transactionForm input[type="number"],
+    #transactionForm select,
+    #transactionForm textarea,
+    #editTransactionForm input[type="number"],
+    #editTransactionForm select,
+    #editTransactionForm textarea,
+    .btn-submit-transaction,
+    .btn-delete {
+      font-size: 0.95em;
+      padding: 10px;
+    }
+}
+
+/* Penyesuaian untuk Modal pada layar kecil (Mobile) */
+@media (max-width: 767px) {
+    .modal-content {
+        width: 90%;
+        margin: 15% auto; /* Sedikit lebih banyak margin atas pada mobile */
+        padding: 20px; /* Padding dikurangi untuk mobile */
+    }
+
+    .modal h2 {
+        font-size: 1.3rem; /* Ukuran font judul modal lebih kecil */
+        margin-bottom: 20px;
+    }
+    
+    .form-buttons {
+      flex-direction: column; /* Tombol Hapus dan Simpan akan tersusun vertikal */
+      gap: 10px;
+    }
+    /* sigma */
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .calendar,
+  .description__container {
+    max-width: 680px;
+    padding: 25px;
+  }
+
+  .monthYear {
+    font-size: 1.25em;
+  }
+
+  .day {
+    padding: 10px 5px;
+    font-size: 0.95em;
+  }
+
+  .date {
+    /* `width: 100%` dan `aspect-ratio: 1/1` diwarisi */
+    max-width: 42px; /* Perbarui max-width untuk tablet */ /* */
+    font-size: 1em; /* */
+    /* padding: 10px; /* Diwarisi, tidak perlu diubah kecuali beda */
+  }
+
+  .calendar__text {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1em;
+    margin-top: 20px;
+  }
+
+  .description__header {
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+  }
+
+  .description__money,
+  .description__datenow {
+    font-size: 1.1em;
+  }
+
+  .icon-small {
+    width: 28px;
+    height: 28px;
+  }
+  .description__item {
+    font-size: 1em;
+  }
+  .description__timestamp {
+    font-size: 0.85em;
+  }
+}
+
+/* Desktop/Laptop */
+@media (min-width: 1024px) {
+
+  main.container {
+    flex-direction: row;
+    /* ganti tujuan */
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .calendar,
+  .description__container {
+    max-width: 800px;
+    padding: 30px;
+  }
+
+  .monthYear {
+    font-size: 1.4em;
+  }
+
+  .header button {
+    width: 45px;
+    height: 45px;
+  }
+
+  .date {
+    /* `width: 100%` dan `aspect-ratio: 1/1` diwarisi */
+    max-width: 45px; /* Perbarui max-width untuk desktop */ /* */
+  }
+   .calendar__text {
+    font-size: 1.05em;
+    gap: 15px;
+  }
 }
