@@ -27,38 +27,47 @@
         }
 
         public function deleteUser($user_id){
-            $stmt = $this->dbconn->prepare("DELETE FROM laporan WHERE user_id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-
+            // 1. Hapus transaksi (paling banyak dependensi)
             $stmt = $this->dbconn->prepare("DELETE FROM transaksi WHERE user_id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
 
-            $stmt = $this->dbconn->prepare("DELETE FROM kategori WHERE user_id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-
-            $stmt = $this->dbconn->prepare("DELETE FROM target WHERE user_id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-
-            $stmt = $this->dbconn->prepare("DELETE FROM tanggungan WHERE user_id = ?");
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-
+            // 2. Hapus arsip
             $stmt = $this->dbconn->prepare("DELETE FROM arsip WHERE user_id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
 
+            // 3. Hapus laporan
+            $stmt = $this->dbconn->prepare("DELETE FROM laporan WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
+            // 4. Hapus profile
             $stmt = $this->dbconn->prepare("DELETE FROM profile WHERE user_id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
 
+            // 5. Hapus tanggungan
+            $stmt = $this->dbconn->prepare("DELETE FROM tanggungan WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
+            // 6. Hapus target
+            $stmt = $this->dbconn->prepare("DELETE FROM target WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
+            // 7. Hapus kategori
+            $stmt = $this->dbconn->prepare("DELETE FROM kategori WHERE user_id = ?");
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+
+            // 8. Hapus user (terakhir)
             $stmt = $this->dbconn->prepare("DELETE FROM user WHERE user_id = ?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
         }
+
 
         public function updateUser($user_id, $username, $email){
             $stmt = $this->dbconn->prepare("UPDATE user SET email = ?, username = ? WHERE user_id = ?");
