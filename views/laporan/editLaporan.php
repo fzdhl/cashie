@@ -11,7 +11,7 @@
 </head>
 <body>
     <?php include_once __DIR__ . '/../header.php'; ?>
-    <div class="container my-4">
+    <div class="container my-4 fullscreen-section">
         <div class="d-flex justify-content-center"> <!-- Membuat card di tengah -->
             <div class="w-100" style="max-width: 900px;"> <!-- Maksimal lebar card -->
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 header-date-row">

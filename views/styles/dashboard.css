@@ -81,4 +81,7 @@ main {
     /* #eef8f3 */
     }
 }
+.fullscreen-section {
+  min-height: 100vh;
+}
 
