@@ -270,24 +270,22 @@ body {
 
 /* Modal Styles */
 .modal {
-  display: none; /* redy untuk dinyalakan, mode on aktif telah dinyalakan*/
+  display: none; /* Pastikan ini adalah satu-satunya aturan display default untuk .modal */
   position: fixed;
   z-index: 1050;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto; /* auto scroll kalau konten panjang */
+  overflow: auto;
   background-color: rgba(0, 0, 0, 0.5);
-  /* Tambahan untuk penataan modal di tengah vertikal saat konten tidak terlalu tinggi */
-  display: flex; /* Menggunakan flexbox untuk penataan */
-  align-items: center; /* Pusatkan secara vertikal */
-  justify-content: center; /* Pusatkan secara horizontal */
-  padding: 1.25rem; /* Menggunakan rem */
+  align-items: center; /* Tetap pertahankan untuk sentering */
+  justify-content: center; /* Tetap pertahankan untuk sentering */
+  padding: 1.25rem;
 }
 
 .modal.active {
-  display: flex;
+  display: flex; /* Ini adalah aturan yang benar untuk menampilkan modal saat kelas 'active' ditambahkan. */
 }
 
 .modal-content {
