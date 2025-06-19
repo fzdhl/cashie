@@ -33,10 +33,16 @@
     </div>
 
     <!-- Daftar Target -->
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-      <?php include "views/targetCards.php"; ?>
+    <?php if ($targets): ?>
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        <?php include "views/targetCards.php"; ?>
+      </div>
+    <?php else: ?>
+      <div class="row-cols-1 g-4">
+        <p class="text-center">Belum ada target yang ditambahkan.</p>
+      </div>
+    <?php endif; ?>
       <!-- Card tambahan akan muncul di sini, dengan DOM injection melalui ajax -->
-    </div>
   </main>
   <?php include_once "footer.php" ?>
 

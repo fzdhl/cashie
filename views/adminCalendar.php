@@ -11,12 +11,12 @@
 </head>
 
 <body class="d-flex flex-column">
-  <?php include_once "header-admin.php"; ?>
+  <?php include_once "header.php"; ?>
   <div class="container-fluid py-5 flex-grow-1 px-5">
     <h2 class="fw-bold mb-4">Riwayat Transaksi <small class="text-muted">(Admin View)</small></h2>
 
     <div class="d-flex justify-content-start mb-3">
-        <button type="button" class="btn btn-warning" onclick="resetAllTransaksi()">Reset Semua Transaksi</button>
+        <button type="button" class="btn btn-warning" onclick="resetAllTransaksi()">Hapus Semua Transaksi</button>
     </div>
     
     <form id="transactionForm">
