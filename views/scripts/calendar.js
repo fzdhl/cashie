@@ -211,11 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const amount = selectedOption.getAttribute('data-amount');
                 if (amount) {
                     addTransactionAmountInput.value = amount;
+                    addTransactionAmountInput.disabled = true;
                 } else {
                     addTransactionAmountInput.value = ''; // Kosongkan jika tidak ada data-amount
+                    addTransactionAmountInput.disabled = false;
                 }
             } else {
                 addTransactionAmountInput.value = ''; // Kosongkan jika memilih "Tidak ada"
+                addTransactionAmountInput.disabled = false;
             }
         });
     }
