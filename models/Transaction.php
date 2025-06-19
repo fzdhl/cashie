@@ -143,7 +143,9 @@
                 t.keterangan,
                 u.username,
                 k.kategori,
-                k.tipe
+                k.tipe,
+                t.user_id,
+                t.kategori_id
             FROM 
                 transaksi AS t
             JOIN 
